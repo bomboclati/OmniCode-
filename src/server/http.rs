@@ -13,6 +13,16 @@ pub async fn serve_index() -> Response<Body> {
         .unwrap()
 }
 
+pub async fn serve_sw() -> Response<Body> {
+    let sw = include_str!("../web_ui/sw.js");
+    Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, "application/javascript")
+        .header(header::CACHE_CONTROL, "public, max-age=3600")
+        .body(Body::from(sw.to_string()))
+        .unwrap()
+}
+
 pub async fn serve_web_asset(axum::extract::Path(path): axum::extract::Path<String>) -> Response<Body> {
     let asset_path = format!("src/web_ui/{}", path);
     match std::fs::read(&asset_path) {

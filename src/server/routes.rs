@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use crate::config::Config;
 use tower_http::services::ServeDir;
-use crate::server::http::{serve_index, serve_web_asset, serve_logo_asset, serve_icon_asset};
+use crate::server::http::{serve_index, serve_sw, serve_web_asset, serve_logo_asset, serve_icon_asset};
 
 #[derive(Debug, Deserialize)]
 pub struct ChatRequest {
@@ -82,6 +82,7 @@ pub fn create_router(config: &Config) -> Router {
         .route("/assets/icon/{*path}", get(serve_icon_asset))
         .route("/assets/css/{*path}", get(serve_web_asset))
         .route("/assets/js/{*path}", get(serve_web_asset))
+        .route("/sw.js", get(serve_sw))
         .nest_service("/assets", ServeDir::new("src/web_ui"))
 }
 

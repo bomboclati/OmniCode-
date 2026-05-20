@@ -506,168 +506,220 @@ class App {
         const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
         const isAndroid = /Android/.test(navigator.userAgent);
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches;
 
-        let mobileSection = '';
-        if (isAndroid) {
-            mobileSection = `
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Android APK</span>
-                        <span style="font-size:10px;color:var(--text-dim)">12.3 MB</span>
-                    </div>
-                    <div style="font-size:11px;color:var(--text-dim);margin-top:4px">Your device: Android</div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-mobile-512.png','omnicode-icon.png')">Download APK</button>
-                </div>
-            `;
-        } else if (isIOS) {
-            mobileSection = `
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">iOS (App Store)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">Coming Soon</span>
-                    </div>
-                    <div style="font-size:11px;color:var(--text-dim);margin-top:4px">Your device: iOS</div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.showToast('iOS app coming soon')">App Store Link</button>
-                </div>
-            `;
-        } else {
-            mobileSection = `
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Android APK</span>
-                        <span style="font-size:10px;color:var(--text-dim)">12.3 MB</span>
-                    </div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+        let installBanner = '';
+        if (isMobile || isPWA) {
+            installBanner = `
+                <div class="mobile-install-banner">
+                    <h3>OmniCode Mobile App</h3>
+                    <p>Install OmniCode on your device for the best experience</p>
+                    <button class="btn primary" onclick="app.installPWA()">Install on Device</button>
                 </div>
             `;
         }
 
+        let iosInstallHint = '';
+        if (isIOS && !isPWA) {
+            iosInstallHint = `
+                <div class="download-item" style="margin-bottom:16px">
+                    <div style="font-size:12px;color:var(--text);margin-bottom:8px">iOS Installation</div>
+                    <div style="font-size:11px;color:var(--text-dim);line-height:1.6">
+                        Tap the <strong>Share</strong> button in Safari, then scroll down and tap <strong>Add to Home Screen</strong>.
+                    </div>
+                </div>
+            `;
+        }
+
+        let androidInstallHint = '';
+        if (isAndroid && !isPWA) {
+            androidInstallHint = `
+                <div class="download-item" style="margin-bottom:16px">
+                    <div style="font-size:12px;color:var(--text);margin-bottom:8px">Android Installation</div>
+                    <div style="font-size:11px;color:var(--text-dim);line-height:1.6">
+                        Tap the <strong>menu (⋮)</strong> in Chrome, then tap <strong>Install app</strong> or <strong>Add to Home Screen</strong>.
+                    </div>
+                </div>
+            `;
+        }
+
+        const collapsedDesktop = window.mobileUI && window.mobileUI.isSectionCollapsed('desktop');
+        const collapsedMobile = window.mobileUI && window.mobileUI.isSectionCollapsed('mobile');
+        const collapsedLogos = window.mobileUI && window.mobileUI.isSectionCollapsed('logos');
+
+        const collapseIcon = `<svg class="section-collapse-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 8 10 12 14 8"/></svg>`;
+
         content.innerHTML = `
             <div style="font-family:var(--font-sans)">
-                <div style="text-align:center;margin-bottom:16px">
+                <div class="download-logo">
                     <img src="/assets/logo/omnicode-logo-horizontal.svg" alt="OmniCode" style="max-width:280px;height:auto;margin-bottom:8px">
-                    <div style="font-size:10px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase">v0.1.0</div>
+                    <div class="version">v0.1.0</div>
                 </div>
 
-                <h3 style="font-size:13px;margin-bottom:8px;color:var(--text)">Desktop</h3>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Windows (x86_64)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">4.1 MB</span>
-                    </div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-windows-x86_64.zip')">Download ZIP</button>
+                ${installBanner}
+
+                <div class="download-section-header section-collapse-header ${collapsedDesktop ? 'collapsed' : ''}" data-section="desktop" onclick="if(window.mobileUI)window.mobileUI.toggleSection('desktop')">
+                    <h3>Desktop</h3>
+                    ${collapseIcon}
                 </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Linux (x86_64)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">4.5 MB</span>
-                    </div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-linux-x86_64.tar.gz')">Download tar.gz</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">macOS (Apple Silicon)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">4.3 MB</span>
-                    </div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-macos-aarch64.tar.gz')">Download tar.gz</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px">
-                    <span style="font-size:12px;color:var(--text)">Package managers</span>
-                    <div style="font-size:11px;color:var(--text-dim);margin-top:4px;font-family:var(--font-mono);line-height:1.6">
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0">
-                            <span>winget install omnicode</span>
-                            <button class="btn secondary" style="font-size:9px;padding:2px 6px" onclick="app.copyToClipboard('winget install omnicode')">Copy</button>
+                <div id="section-desktop" style="display:${collapsedDesktop ? 'none' : ''}">
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Windows (x86_64)</span>
+                            <span class="download-item-size">4.1 MB</span>
                         </div>
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0">
-                            <span>brew install omnicode</span>
-                            <button class="btn secondary" style="font-size:9px;padding:2px 6px" onclick="app.copyToClipboard('brew install omnicode')">Copy</button>
+                        <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-windows-x86_64.zip')">Download ZIP</button>
+                    </div>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Linux (x86_64)</span>
+                            <span class="download-item-size">4.5 MB</span>
                         </div>
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0">
-                            <span>cargo install omnicode</span>
-                            <button class="btn secondary" style="font-size:9px;padding:2px 6px" onclick="app.copyToClipboard('cargo install omnicode')">Copy</button>
+                        <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-linux-x86_64.tar.gz')">Download tar.gz</button>
+                    </div>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">macOS (Apple Silicon)</span>
+                            <span class="download-item-size">4.3 MB</span>
+                        </div>
+                        <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-macos-aarch64.tar.gz')">Download tar.gz</button>
+                    </div>
+                    <div class="download-item">
+                        <div class="download-item-name">Package managers</div>
+                        <div style="font-size:11px;color:var(--text-dim);margin-top:4px;font-family:var(--font-mono);line-height:1.6">
+                            <div class="cmd-row">
+                                <span>winget install omnicode</span>
+                                <button class="btn secondary" onclick="app.copyToClipboard('winget install omnicode')">Copy</button>
+                            </div>
+                            <div class="cmd-row">
+                                <span>brew install omnicode</span>
+                                <button class="btn secondary" onclick="app.copyToClipboard('brew install omnicode')">Copy</button>
+                            </div>
+                            <div class="cmd-row">
+                                <span>cargo install omnicode</span>
+                                <button class="btn secondary" onclick="app.copyToClipboard('cargo install omnicode')">Copy</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 style="font-size:13px;margin-bottom:8px;color:var(--text)">Mobile</h3>
-                ${mobileSection}
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Install as PWA</span>
-                        <span style="font-size:10px;color:var(--text-dim)">Works on all devices</span>
+                <div class="download-section-header section-collapse-header ${collapsedMobile ? 'collapsed' : ''}" data-section="mobile" onclick="if(window.mobileUI)window.mobileUI.toggleSection('mobile')">
+                    <h3>Mobile</h3>
+                    ${collapseIcon}
+                </div>
+                <div id="section-mobile" style="display:${collapsedMobile ? 'none' : ''}">
+                    ${isAndroid ? `
+                        <div class="download-item">
+                            <div class="download-item-header">
+                                <span class="download-item-name">Android APK</span>
+                                <span class="download-item-size">12.3 MB</span>
+                            </div>
+                            <div class="download-item-desc">Your device: Android</div>
+                            <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+                        </div>
+                    ` : isIOS ? `
+                        <div class="download-item">
+                            <div class="download-item-header">
+                                <span class="download-item-name">iOS (App Store)</span>
+                                <span class="download-item-size">Coming Soon</span>
+                            </div>
+                            <div class="download-item-desc">Your device: iOS</div>
+                            <button class="btn secondary" onclick="app.showToast('iOS app coming soon')">App Store Link</button>
+                        </div>
+                    ` : `
+                        <div class="download-item">
+                            <div class="download-item-header">
+                                <span class="download-item-name">Android APK</span>
+                                <span class="download-item-size">12.3 MB</span>
+                            </div>
+                            <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+                        </div>
+                    `}
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Install as PWA</span>
+                            <span class="download-item-size">All devices</span>
+                        </div>
+                        <div class="download-item-desc">Add OmniCode to your home screen for a native-like experience</div>
+                        <button class="btn primary" onclick="app.installPWA()">Install App</button>
                     </div>
-                    <div style="font-size:11px;color:var(--text-dim);margin-top:4px">Add OmniCode to your home screen for a native-like experience</div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.installPWA()">Install App</button>
+                    ${iosInstallHint}
+                    ${androidInstallHint}
                 </div>
 
-                <h3 style="font-size:13px;margin-bottom:8px;color:var(--text)">Logo & Brand Assets</h3>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Logo (SVG)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">Vector</span>
-                    </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/omnicode-logo-horizontal.svg','omnicode-logo.svg')">Download SVG</button>
+                <div class="download-section-header section-collapse-header ${collapsedLogos ? 'collapsed' : ''}" data-section="logos" onclick="if(window.mobileUI)window.mobileUI.toggleSection('logos')">
+                    <h3>Logo & Brand Assets</h3>
+                    ${collapseIcon}
                 </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Logo (PNG 512px)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">91 KB</span>
+                <div id="section-logos" style="display:${collapsedLogos ? 'none' : ''}">
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Logo (SVG)</span>
+                            <span class="download-item-size">Vector</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/omnicode-logo-horizontal.svg','omnicode-logo.svg')">Download SVG</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-512.png','omnicode-logo-512.png')">Download PNG</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Logo (PNG 256px)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">99 KB</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Logo (PNG 512px)</span>
+                            <span class="download-item-size">91 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-512.png','omnicode-logo-512.png')">Download PNG</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-256.png','omnicode-logo-256.png')">Download PNG</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Logo (PNG 128px)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">38 KB</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Logo (PNG 256px)</span>
+                            <span class="download-item-size">99 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','omnicode-logo-256.png')">Download PNG</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-128.png','omnicode-logo-128.png')">Download PNG</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Logo (PNG 64px)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">14 KB</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Logo (PNG 128px)</span>
+                            <span class="download-item-size">38 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-128.png','omnicode-logo-128.png')">Download PNG</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-64.png','omnicode-logo-64.png')">Download PNG</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Logo (PNG 32px)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">5.6 KB</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Logo (PNG 64px)</span>
+                            <span class="download-item-size">14 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-64.png','omnicode-logo-64.png')">Download PNG</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-32.png','omnicode-logo-32.png')">Download PNG</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Favicon (ICO)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">15 KB</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Logo (PNG 32px)</span>
+                            <span class="download-item-size">5.6 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-32.png','omnicode-logo-32.png')">Download PNG</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/icon/favicon.ico','omnicode-favicon.ico')">Download ICO</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:6px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Mobile Icon (PNG 192px)</span>
-                        <span style="font-size:10px;color:var(--text-dim)">97 KB</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Favicon (ICO)</span>
+                            <span class="download-item-size">15 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/icon/favicon.ico','omnicode-favicon.ico')">Download ICO</button>
                     </div>
-                    <button class="btn secondary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadFile('/assets/logo/png/logo-mobile-192.png','omnicode-mobile-192.png')">Download PNG</button>
-                </div>
-                <div style="padding:8px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px">
-                    <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:12px;color:var(--text)">Full Logo Pack</span>
-                        <span style="font-size:10px;color:var(--text-dim)">All formats</span>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Mobile Icon (PNG 192px)</span>
+                            <span class="download-item-size">97 KB</span>
+                        </div>
+                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-mobile-192.png','omnicode-mobile-192.png')">Download PNG</button>
                     </div>
-                    <button class="btn primary" style="font-size:10px;padding:3px 8px;margin-top:8px;width:100%" onclick="app.downloadAllLogos()">Download All Logos</button>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">Full Logo Pack</span>
+                            <span class="download-item-size">All formats</span>
+                        </div>
+                        <button class="btn primary" onclick="app.downloadAllLogos()">Download All Logos</button>
+                    </div>
                 </div>
 
-                <div style="text-align:center;padding:12px 0;border-top:1px solid var(--border);margin-top:8px">
-                    <div style="font-size:11px;color:var(--text-dim)">Source code available on</div>
-                    <a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener" style="font-size:12px;color:var(--text);text-decoration:none;font-weight:600">GitHub →</a>
+                <div class="download-footer">
+                    <div class="label">Source code available on</div>
+                    <a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener">GitHub →</a>
                 </div>
             </div>
         `;
@@ -1205,4 +1257,9 @@ class App {
 
 const app = new App();
 window.app = app;
+
+if (typeof MobileUI !== 'undefined') {
+    window.mobileUI = new MobileUI(app);
+}
+
 export default app;

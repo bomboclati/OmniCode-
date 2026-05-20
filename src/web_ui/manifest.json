@@ -1,12 +1,15 @@
 {
-  "name": "OmniCode",
+  "name": "OmniCode - AI Coding Agent",
   "short_name": "OmniCode",
-  "description": "Autonomous AI Coding Agent",
+  "description": "Autonomous AI Coding Agent. Build, refactor, fix, and explore your code with AI.",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#09090B",
   "theme_color": "#09090B",
-  "orientation": "any",
+  "categories": ["developer tools", "productivity", "utilities"],
+  "lang": "en",
+  "scope": "/",
   "icons": [
     {
       "src": "/assets/logo/png/logo-mobile-192.png",
@@ -55,6 +58,15 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/logo/png/logo-horizontal-800.png",
+      "sizes": "800x160",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "OmniCode AI Coding Agent"
     }
   ]
 }
