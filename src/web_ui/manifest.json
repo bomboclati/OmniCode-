@@ -2,7 +2,7 @@
   "name": "OmniCode - AI Coding Agent",
   "short_name": "OmniCode",
   "description": "Autonomous AI Coding Agent. Build, refactor, fix, and explore your code with AI.",
-  "start_url": "/",
+  "start_url": "/app/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#09090B",
