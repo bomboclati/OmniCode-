@@ -1,5 +1,5 @@
 use crate::agent::llm_client::LlmClient;
-use crate::agent::tools::{self, ToolResult};
+use crate::agent::tools;
 use crate::config::Config;
 use anyhow::Result;
 use std::sync::Arc;

@@ -30,7 +30,7 @@ impl FileTree {
                 let path = entry.path();
                 let name = path
                     .file_name()
-                    .unwrap_or_default()
+                    .unwrap_or_else(|| std::ffi::OsStr::new(""))
                     .to_string_lossy()
                     .to_string();
                 let is_dir = path.is_dir();

@@ -23,6 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.registerWebviewViewProvider('omniCodeDiff', diffProvider)
     );
 
+    context.subscriptions.push(
+        vscode.window.registerTreeDataProvider('omniCodeStatus', new StatusTreeProvider(omniClient))
+    );
+
     statusBar = new StatusBarManager(omniClient);
     statusBar.initialize();
 
@@ -122,6 +126,28 @@ export function activate(context: vscode.ExtensionContext) {
             }
         })
     );
+}
+
+class StatusTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+    constructor(private client: OmniClient) {
+        client.on('connected', () => this._onDidChangeTreeData.fire());
+        client.on('disconnected', () => this._onDidChangeTreeData.fire());
+    }
+    private _onDidChangeTreeData = new vscode.EventEmitter<vscode.TreeItem | undefined>();
+    readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+    getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
+        return element;
+    }
+
+    getChildren(): vscode.TreeItem[] {
+        const status = this.client.isConnected()
+            ? { label: 'Connected', icon: 'pass-filled', tooltip: 'WebSocket connected' }
+            : { label: 'Disconnected', icon: 'warning', tooltip: 'WebSocket disconnected' };
+        const item = new vscode.TreeItem(status.label);
+        item.tooltip = status.tooltip;
+        return [item];
+    }
 }
 
 export function deactivate() {

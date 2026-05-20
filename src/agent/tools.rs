@@ -1,4 +1,3 @@
-use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 use std::process::Command;
@@ -370,7 +369,7 @@ pub async fn list_files(dir: &Path) -> ToolResult {
             let mut files = Vec::new();
             for entry in entries.flatten() {
                 let path = entry.path();
-                let name = path.file_name().unwrap_or_default().to_string_lossy();
+                let name = path.file_name().unwrap_or_else(|| std::ffi::OsStr::new("")).to_string_lossy();
                 if path.is_dir() {
                     files.push(format!("{}/", name));
                 } else {

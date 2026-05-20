@@ -33,7 +33,7 @@ pub struct IncidentRecord {
 }
 
 pub async fn watch_production(config: &Config) -> Result<()> {
-    let whisperer = IncidentWhisperer {
+    let mut whisperer = IncidentWhisperer {
         is_active: true,
         monitored_services: vec![
             "api".to_string(),

@@ -1,5 +1,4 @@
 use crate::agent::llm_client::LlmClient;
-use crate::cortex::Cortex;
 use crate::config::Config;
 use anyhow::Result;
 use std::path::Path;

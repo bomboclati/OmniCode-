@@ -79,9 +79,12 @@ pub fn run_skill_hook(skill_name: &str, hook: &str) -> Result<()> {
     let hook_path = skills_dir.join(hook);
 
     if hook_path.exists() {
-        use std::os::unix::fs::PermissionsExt;
-        let perms = std::fs::Permissions::from_mode(0o755);
-        let _ = std::fs::set_permissions(&hook_path, perms);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let perms = std::fs::Permissions::from_mode(0o755);
+            let _ = std::fs::set_permissions(&hook_path, perms);
+        }
         let output = std::process::Command::new(hook_path.to_str().unwrap_or("")).output()?;
         if !output.status.success() {
             eprintln!("Skill hook '{}' failed: {}", hook, String::from_utf8_lossy(&output.stderr));

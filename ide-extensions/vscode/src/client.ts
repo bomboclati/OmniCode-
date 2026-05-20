@@ -1,5 +1,14 @@
 import * as vscode from 'vscode';
 
+function getWebSocket(): typeof WebSocket {
+    try {
+        return WebSocket;
+    } catch {
+        return require('ws') as typeof WebSocket;
+    }
+}
+const _WebSocket = getWebSocket();
+
 export interface WsMessage {
     type: string;
     content?: string;
@@ -23,7 +32,7 @@ export class OmniClient {
 
     connect() {
         try {
-            this.ws = new WebSocket(this.url);
+            this.ws = new _WebSocket(this.url);
         } catch (e) {
             console.error('WebSocket creation failed:', e);
             this.scheduleReconnect();
@@ -72,7 +81,7 @@ export class OmniClient {
             timestamp: new Date().toISOString(),
         });
 
-        if (this.connected && this.ws?.readyState === WebSocket.OPEN) {
+        if (this.connected && this.ws?.readyState === _WebSocket.OPEN) {
             this.ws.send(msg);
         } else {
             this.messageQueue.push(msg);
@@ -82,7 +91,7 @@ export class OmniClient {
     private flushQueue() {
         while (this.messageQueue.length > 0) {
             const msg = this.messageQueue.shift()!;
-            if (this.ws?.readyState === WebSocket.OPEN) {
+            if (this.ws?.readyState === _WebSocket.OPEN) {
                 this.ws.send(msg);
             }
         }

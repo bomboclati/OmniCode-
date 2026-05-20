@@ -1,8 +1,6 @@
 use crate::agent::llm_client::LlmClient;
 use crate::agent::sandbox::Sandbox;
-use crate::agent::tools;
 use crate::config::Config;
-use crate::cortex::Cortex;
 use anyhow::Result;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};

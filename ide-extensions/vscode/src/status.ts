@@ -59,13 +59,6 @@ export class StatusBarManager {
         const icon = icons[status] || '$(debug-start)';
         this.statusBarItem.text = `${icon} OmniCode: ${status}`;
 
-        const colors: Record<string, string | undefined> = {
-            idle: undefined,
-            running: '#00FFA3',
-            incident: '#FF4444',
-            guardian: '#FFAA00',
-        };
-
         this.statusBarItem.color = new vscode.ThemeColor(
             'statusBarItem.foreground'
         );

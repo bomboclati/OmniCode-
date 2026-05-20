@@ -55,7 +55,7 @@ pub async fn semantic_search(config: &Config, query: &str) -> Result<Vec<String>
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_file() {
-                let name = path.file_name().unwrap_or_default().to_string_lossy().to_string();
+                let name = path.file_name().unwrap_or_else(|| std::ffi::OsStr::new("")).to_string_lossy().to_string();
                 if !name.starts_with('.') {
                     if let Ok(content) = std::fs::read_to_string(&path) {
                         engine.add_document(

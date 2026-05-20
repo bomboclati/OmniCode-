@@ -30,7 +30,7 @@ impl LlmClient {
             client: Client::builder()
                 .timeout(std::time::Duration::from_secs(120))
                 .build()
-                .unwrap_or_default(),
+                .expect("failed to build HTTP client"),
             profile,
             history: Vec::new(),
         }
@@ -131,7 +131,7 @@ impl LlmClient {
             content: user_message.to_string(),
         });
 
-        let messages = vec![
+        let mut messages = vec![
             Message {
                 role: "system".to_string(),
                 content: self.system_prompt(),

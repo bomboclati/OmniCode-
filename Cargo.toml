@@ -55,6 +55,9 @@ walkdir = "2.4"
 notify = "6.1"
 openssl = { version = "0.10", features = ["vendored"], optional = true }
 
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.52", features = ["Win32_System_Com", "Win32_System_SystemInformation"] }
+
 [build-dependencies]
 rust-embed = { version = "8.0", features = ["interpolate-folder-path"] }
 

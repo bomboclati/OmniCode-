@@ -31,8 +31,9 @@ pub async fn deploy_to_cloud(config: &DeploymentConfig) -> Result<()> {
 }
 
 pub async fn verify_deployment() -> Result<bool> {
+    let null_output = if cfg!(windows) { "NUL" } else { "/dev/null" };
     let output = std::process::Command::new("curl")
-        .args(["-s", "-o", "/dev/null", "-w", "%{http_code}", "http://localhost:9420/"])
+        .args(["-s", "-o", null_output, "-w", "%{http_code}", "http://localhost:9420/"])
         .output()?;
 
     let status = String::from_utf8_lossy(&output.stdout).trim().to_string();

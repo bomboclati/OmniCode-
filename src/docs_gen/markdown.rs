@@ -84,7 +84,7 @@ fn get_project_name() -> String {
             }
         }
     }
-    Path::new(".").file_name().unwrap_or_default().to_string_lossy().to_string()
+    Path::new(".").file_name().unwrap_or_else(|| std::ffi::OsStr::new("")).to_string_lossy().to_string()
 }
 
 fn get_cargo_field(field: &str) -> Option<String> {
