@@ -4,6 +4,13 @@ version = "0.1.0"
 edition = "2021"
 description = "Autonomous AI coding agent with real-time sync"
 license = "MIT"
+homepage = "https://omnicode.ai"
+repository = "https://github.com/bomboclati/OmniCode-"
+documentation = "https://github.com/bomboclati/OmniCode-#readme"
+readme = "README.md"
+keywords = ["ai", "coding-agent", "developer-tools", "cli", "code-assistant"]
+categories = ["command-line-utilities", "development-tools::code-review"]
+exclude = ["scripts/", "ide-extensions/", ".github/", "landing-page/", "assets/"]
 
 [features]
 default = ["tui", "server"]

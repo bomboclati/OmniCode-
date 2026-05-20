@@ -1,0 +1,97 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release
+        run: cargo build --release
+
+      - name: Package
+        shell: pwsh
+        run: |
+          scripts/package.ps1 -Version "$env:VERSION"
+        env:
+          VERSION: ${{ github.ref_name }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omnicode-windows
+          path: target/OmniCode-*.zip
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build release
+        run: cargo build --release
+
+      - name: Package
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          mkdir -p stage
+          cp target/release/omnicode stage/
+          cp -r assets stage/ 2>/dev/null || true
+          cd stage
+          tar czf "../OmniCode-${VERSION}-linux-x86_64.tar.gz" omnicode assets/
+          cd ..
+          sha256sum "OmniCode-${VERSION}-linux-x86_64.tar.gz" | tee "OmniCode-${VERSION}-linux-x86_64.tar.gz.sha256"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: omnicode-linux
+          path: OmniCode-*.tar.gz*
+
+  create-release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: omnicode-*
+          merge-multiple: true
+
+      - name: Generate release notes
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cat > RELEASE_NOTES.md <<EOF
+          ## OmniCode v${VERSION}
+
+          ### Platform Downloads
+          | Platform | File |
+          |----------|------|
+          | Windows | \`OmniCode-${VERSION}-windows-x86_64.zip\` |
+          | Linux   | \`OmniCode-${VERSION}-linux-x86_64.tar.gz\` |
+
+          ### Install with winget (Windows)
+          \`\`\`powershell
+          winget install bomboclati.OmniCode
+          \`\`\`
+
+          ### Quick install (Unix)
+          \`\`\`bash
+          curl -fsSL https://omnicode.ai/install.sh | sh
+          \`\`\`
+          EOF
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            OmniCode-*.zip
+            OmniCode-*.tar.gz*
