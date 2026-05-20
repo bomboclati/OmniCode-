@@ -282,7 +282,7 @@ impl App {
                     }
                 }
             }
-            (KeyModifiers::NONE, KeyCode::Escape) => {
+            (KeyModifiers::NONE, KeyCode::Esc) => {
                 self.input_buffer.clear();
                 self.cursor_position = 0;
             }
@@ -342,7 +342,7 @@ impl App {
         use crossterm::event::KeyModifiers;
 
         match (key.modifiers, key.code) {
-            (KeyModifiers::CONTROL, KeyCode::Char('k')) | (KeyModifiers::NONE, KeyCode::Escape) => {
+            (KeyModifiers::CONTROL, KeyCode::Char('k')) | (KeyModifiers::NONE, KeyCode::Esc) => {
                 self.show_command_palette = false;
                 self.command_palette_input.clear();
             }

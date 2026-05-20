@@ -3,6 +3,7 @@ use crate::skills::Skill;
 use anyhow::Result;
 use std::collections::HashMap;
 
+#[derive(serde::Deserialize, Debug)]
 pub struct MarketplaceEntry {
     pub id: String,
     pub name: String,

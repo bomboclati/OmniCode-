@@ -43,16 +43,18 @@ pub struct StatusResponse {
 
 pub fn create_router(config: &Config) -> Router {
     let start_time = std::time::Instant::now();
+    let mode = if config.offline_mode { "offline" } else { "online" };
 
     Router::new()
         .route("/", get(serve_index))
         .route("/api/status", get(move || {
             let uptime = start_time.elapsed().as_secs();
+            let mode = mode;
             async move {
                 Json(StatusResponse {
                     status: "running".to_string(),
                     version: env!("CARGO_PKG_VERSION").to_string(),
-                    mode: if config.offline_mode { "offline" } else { "online" }.to_string(),
+                    mode: mode.to_string(),
                     uptime_secs: uptime,
                 })
             }

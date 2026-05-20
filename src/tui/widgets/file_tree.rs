@@ -82,37 +82,14 @@ impl FileTree {
     }
 
     pub fn toggle_selected(&mut self) {
-        if let Some(node) = self.get_selected_mut(&mut self.children) {
+        let target_idx = self.selected_index;
+        if let Some(node) = find_node_mut(&mut self.children, target_idx, 0) {
             if node.is_dir {
                 node.expanded = !node.expanded;
                 self.flat_list.clear();
                 Self::build_flat_list(&self.children, &mut self.flat_list);
             }
         }
-    }
-
-    fn get_selected_mut(&mut self, nodes: &mut Vec<TreeNode>) -> Option<&mut TreeNode> {
-        let mut idx = 0;
-        self._find_selected_mut(nodes, &mut idx)
-    }
-
-    fn _find_selected_mut(
-        &mut self,
-        nodes: &mut Vec<TreeNode>,
-        idx: &mut usize,
-    ) -> Option<&mut TreeNode> {
-        for node in nodes.iter_mut() {
-            if *idx == self.selected_index {
-                return Some(node);
-            }
-            *idx += 1;
-            if node.is_dir && node.expanded {
-                if let Some(found) = self._find_selected_mut(&mut node.children, idx) {
-                    return Some(found);
-                }
-            }
-        }
-        None
     }
 
     pub fn get_selected_file(&self) -> Option<PathBuf> {
@@ -138,12 +115,43 @@ impl FileTree {
     }
 }
 
+fn find_node_mut<'a>(nodes: &'a mut [TreeNode], target: usize, start_idx: usize) -> Option<&'a mut TreeNode> {
+    let mut offset = 0usize;
+    for i in 0..nodes.len() {
+        let idx = start_idx + offset;
+        if idx == target {
+            return Some(&mut nodes[i]);
+        }
+        offset += 1;
+        if nodes[i].is_dir && nodes[i].expanded {
+            let child_start = idx + 1;
+            let child_count = count_visible(&nodes[i].children);
+            if target < child_start + child_count {
+                return find_node_mut(&mut nodes[i].children, target, child_start);
+            }
+            offset += child_count;
+        }
+    }
+    None
+}
+
+fn count_visible(nodes: &[TreeNode]) -> usize {
+    let mut count = 0;
+    for node in nodes {
+        count += 1;
+        if node.is_dir && node.expanded {
+            count += count_visible(&node.children);
+        }
+    }
+    count
+}
+
 pub struct FileTreeWidget;
 
 impl FileTreeWidget {
     pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         let theme = crate::tui::themes::default_theme();
-        let items = Self::build_tree_items(&app.file_tree, 0, &app);
+        let items = Self::build_tree_items(&app.file_tree.children, 0, app);
 
         let tree_block = Block::default()
             .title(" File Tree ")
@@ -155,14 +163,14 @@ impl FileTreeWidget {
     }
 
     fn build_tree_items(
-        tree: &crate::tui::widgets::file_tree::FileTree,
+        nodes: &[TreeNode],
         depth: usize,
         app: &App,
     ) -> Vec<ListItem<'static>> {
         let mut items = Vec::new();
         let theme = crate::tui::themes::default_theme();
 
-        for node in &tree.children {
+        for node in nodes {
             let indent = "  ".repeat(depth);
             let icon = if node.is_dir {
                 if node.expanded {
@@ -194,7 +202,7 @@ impl FileTreeWidget {
             items.push(ListItem::new(Line::from(Span::styled(text, style))));
 
             if node.is_dir && node.expanded {
-                let child_items = Self::build_tree_items(node, depth + 1, app);
+                let child_items = Self::build_tree_items(&node.children, depth + 1, app);
                 items.extend(child_items);
             }
         }

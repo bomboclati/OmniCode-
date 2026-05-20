@@ -4,7 +4,7 @@ pub mod heal;
 pub mod historian;
 pub mod incident;
 pub mod llm_client;
-pub mod loop;
+pub mod r#loop;
 pub mod onboarding;
 pub mod planner;
 pub mod release;
@@ -43,10 +43,10 @@ pub async fn run_single_task(config: &Config, task: &str) -> Result<()> {
 
     let mut llm = llm_client::LlmClient::new(profile);
     let sandbox = sandbox::Sandbox::create(std::env::current_dir()?, &config.sandbox_mode).await?;
-    let cortex = cortex::Cortex::new(std::env::current_dir()?)?;
+    let cortex = crate::cortex::Cortex::new(std::env::current_dir()?)?;
     let tools = tools::get_available_tools();
 
-    let mut agent_loop = loop::AgentLoop::new(llm, sandbox, cortex, tools);
+    let mut agent_loop = r#loop::AgentLoop::new(llm, sandbox, cortex, tools);
     let result = agent_loop.run(task).await?;
 
     println!("\n=== Task Complete ===");

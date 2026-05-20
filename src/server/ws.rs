@@ -1,6 +1,8 @@
 use axum::{
-    Json,
-    extract::{State, WebSocketUpgrade},
+    extract::{
+        ws::{Message, WebSocket},
+        State, WebSocketUpgrade,
+    },
     response::IntoResponse,
 };
 use futures::{SinkExt, StreamExt};
@@ -28,7 +30,7 @@ pub async fn ws_handler(
 }
 
 async fn handle_socket(
-    socket: axum::extract::ws::WebSocket,
+    socket: WebSocket,
     state: Arc<Mutex<WsState>>,
 ) {
     let (mut sender, mut receiver) = socket.split();
@@ -42,7 +44,7 @@ async fn handle_socket(
     let send_task = tokio::spawn(async move {
         while let Some(msg) = rx.recv().await {
             if sender
-                .send(axum::extract::ws::Message::Text(msg))
+                .send(Message::Text(msg))
                 .await
                 .is_err()
             {
@@ -53,7 +55,7 @@ async fn handle_socket(
 
     let recv_task = tokio::spawn(async move {
         while let Some(Ok(msg)) = receiver.next().await {
-            if let axum::extract::ws::Message::Text(text) = msg {
+            if let Message::Text(text) = msg {
                 tracing::info!("Received WS message: {}", text);
             }
         }

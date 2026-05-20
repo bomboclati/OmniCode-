@@ -45,9 +45,8 @@ impl CommandPaletteWidget {
             .borders(Borders::ALL)
             .border_style(Style::default().fg(theme.accent_purple));
 
-        frame.render_widget(palette_block, palette_area);
-
         let inner = palette_block.inner(palette_area);
+        frame.render_widget(palette_block, palette_area);
 
         let filtered: Vec<&str> = COMMANDS
             .iter()

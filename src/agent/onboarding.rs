@@ -123,7 +123,7 @@ Return as a JSON array of objects with fields:
     state.current_step = 5;
     println!("\nStep 5/{}: Setting up interactive sandbox...", state.total_steps);
 
-    let cortex = Cortex::new(project_root.clone())?;
+    let mut cortex = Cortex::new(project_root.clone())?;
     let _ = cortex.index_project().await;
     println!("  → Project indexed for semantic search.");
 

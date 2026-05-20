@@ -68,7 +68,7 @@ impl DiffViewerWidget {
                 )
             };
 
-            if _ {
+            if !line.starts_with("@@") & !line.starts_with("---") & !line.starts_with("+++") {
                 line_num += 1;
             }
             lines.push(Line::from(vec![styled_line]));

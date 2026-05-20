@@ -11,6 +11,7 @@ pub struct GuardianState {
     pub updates_available: Vec<DependencyUpdate>,
 }
 
+#[derive(Clone)]
 pub struct DependencyInfo {
     pub package: String,
     pub current_version: String,
@@ -171,7 +172,7 @@ pub async fn check_for_updates(
             return Ok(Some(DependencyUpdate {
                 package: package.to_string(),
                 current_version: current_version.to_string(),
-                new_version: latest,
+                new_version: latest.clone(),
                 breaking_change: is_major_change(current_version, &latest),
                 security_advisory: None,
                 changelog_summary: String::new(),

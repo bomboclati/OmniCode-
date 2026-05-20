@@ -19,9 +19,14 @@ use tracing_subscriber::EnvFilter;
 
 #[cfg(target_os = "windows")]
 fn enable_ansi_support() {
-    use crossterm::ansi_support::supports_ansi;
-    if !supports_ansi() {
-        let _ = crossterm::terminal::enable_ansi_support();
+    use windows::Win32::System::Console::*;
+    unsafe {
+        if let Ok(handle) = GetStdHandle(STD_OUTPUT_HANDLE) {
+            let mut mode = CONSOLE_MODE::default();
+            if GetConsoleMode(handle, &mut mode).is_ok() {
+                let _ = SetConsoleMode(handle, CONSOLE_MODE(mode.0 | 0x0004));
+            }
+        }
     }
 }
 

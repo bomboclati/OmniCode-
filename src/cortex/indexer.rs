@@ -33,18 +33,19 @@ impl CodeIndexer {
     pub async fn index_all(&mut self) -> Result<usize> {
         let mut count = 0;
 
-        for entry in WalkDir::new(&self.project_root)
+        let entries: Vec<_> = WalkDir::new(&self.project_root)
             .into_iter()
             .filter_entry(|e| self.should_index(e))
-        {
-            let entry = entry?;
-            if entry.file_type().is_file() {
-                if let Some(path) = entry.path().to_str() {
-                    if let Err(e) = self.index_file(path).await {
-                        tracing::warn!("Failed to index {}: {}", path, e);
-                    } else {
-                        count += 1;
-                    }
+            .filter_map(|e| e.ok())
+            .filter(|e| e.file_type().is_file())
+            .collect();
+
+        for entry in &entries {
+            if let Some(path) = entry.path().to_str() {
+                if let Err(e) = self.index_file(path).await {
+                    tracing::warn!("Failed to index {}: {}", path, e);
+                } else {
+                    count += 1;
                 }
             }
         }

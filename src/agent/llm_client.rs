@@ -156,9 +156,9 @@ impl LlmClient {
             .send()
             .await?;
 
-        let mut stream = response.bytes_stream();
         use futures::StreamExt;
         let mut full_response = String::new();
+        let mut stream = response.bytes_stream();
 
         while let Some(chunk) = stream.next().await {
             let chunk = chunk?;

@@ -22,7 +22,7 @@ pub fn draw(frame: &mut Frame, app: &App) {
             Constraint::Min(3),
             Constraint::Length(1),
         ])
-        .split(frame.area());
+        .split(frame.size());
 
     let main_area = chunks[0];
     let status_area = chunks[1];
@@ -66,7 +66,7 @@ pub fn draw(frame: &mut Frame, app: &App) {
     StatusBarWidget::render(frame, app, status_area);
 
     if app.show_command_palette {
-        CommandPaletteWidget::render(frame, &app.command_palette_input, frame.area());
+        CommandPaletteWidget::render(frame, &app.command_palette_input, frame.size());
     }
 }
 

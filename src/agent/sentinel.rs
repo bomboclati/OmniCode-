@@ -49,7 +49,7 @@ impl Sentinel {
         }
     }
 
-    pub async fn watch_ci(&self, sender: Option<tokio::sync::mpsc::UnboundedSender<String>>) -> Result<()> {
+    pub async fn watch_ci<'a>(&'a self, sender: Option<tokio::sync::mpsc::UnboundedSender<String>>) -> Result<()> {
         let state = Arc::new(Mutex::new(SentinelState {
             is_running: true,
             last_check: None,
@@ -63,17 +63,25 @@ impl Sentinel {
         let state_clone = state.clone();
         let sender_clone = sender.clone();
 
+        let poll_interval = self.poll_interval;
+        let repo_owner = self.repo_owner.clone();
+        let repo_name = self.repo_name.clone();
+        let github_token = self.github_token.clone();
+
         let poll_task = tokio::spawn(async move {
             loop {
-                let s = state_clone.lock().await;
-                if !s.is_running {
-                    break;
+                let branch;
+                {
+                    let s = state_clone.lock().await;
+                    if !s.is_running {
+                        break;
+                    }
+                    branch = s.active_branch.clone();
                 }
-                drop(s);
 
-                tokio::time::sleep(self.poll_interval).await;
+                tokio::time::sleep(poll_interval).await;
 
-                match self.check_ci_status().await {
+                match check_ci_status_external(&repo_owner, &repo_name, &github_token).await {
                     Ok(status) => {
                         let mut s = state_clone.lock().await;
                         s.last_check = Some(chrono::Local::now());
@@ -88,7 +96,7 @@ impl Sentinel {
                             }
 
                             if status == "failure" {
-                                let _ = self.handle_failure(&s.active_branch, sender_clone.clone()).await;
+                                let _ = handle_failure_external(&branch, sender_clone.clone()).await;
                             }
                         }
                     }
@@ -106,6 +114,10 @@ impl Sentinel {
         poll_task.await?;
         println!("Sentinel stopped.");
         Ok(())
+    }
+
+    pub fn get_active_branch(&self) -> String {
+        get_current_branch()
     }
 
     async fn check_ci_status(&self) -> Result<String> {
@@ -227,4 +239,80 @@ async fn config_for_llm() -> Result<crate::config::Profile> {
         }
     }
     Err(anyhow::anyhow!("No config available"))
+}
+
+async fn check_ci_status_external(
+    repo_owner: &str,
+    repo_name: &str,
+    github_token: &Option<String>,
+) -> Result<String> {
+    let branch = get_current_branch();
+    let api_url = format!(
+        "https://api.github.com/repos/{}/{}/actions/runs?branch={}&per_page=1",
+        repo_owner, repo_name, branch
+    );
+
+    let client = reqwest::Client::new();
+    let mut req = client
+        .get(&api_url)
+        .header("User-Agent", "omnicode-sentinel")
+        .header("Accept", "application/vnd.github.v3+json");
+
+    if let Some(ref token) = github_token {
+        req = req.header("Authorization", format!("Bearer {}", token));
+    }
+
+    let response = req.send().await?;
+    let json: serde_json::Value = response.json().await?;
+
+    let status = json["workflow_runs"][0]["conclusion"]
+        .as_str()
+        .unwrap_or("unknown")
+        .to_string();
+
+    Ok(status)
+}
+
+async fn handle_failure_external(
+    branch: &str,
+    _sender: Option<tokio::sync::mpsc::UnboundedSender<String>>,
+) -> Result<()> {
+    println!("CI failure detected on branch '{}'. Attempting auto-fix...", branch);
+
+    let _ = std::process::Command::new("git")
+        .args(["checkout", branch])
+        .output();
+
+    if let Ok(profile) = config_for_llm().await {
+        let mut llm = LlmClient::new(profile);
+
+        let test_output = std::process::Command::new("cargo")
+            .args(["test", "2>&1"])
+            .output()
+            .ok()
+            .and_then(|o| String::from_utf8(o.stdout).ok())
+            .unwrap_or_default();
+
+        let prompt = format!(
+            "A CI build failed. Here is the test output:\n{}\nPlease analyze and fix the issue.",
+            test_output
+        );
+
+        match llm.chat(&prompt, &[]).await {
+            Ok(fix) => {
+                println!("Suggested fix: {}", fix);
+                let _ = std::process::Command::new("git")
+                    .args(["commit", "-am", "Auto-fix: CI failure resolution"])
+                    .output();
+                let _ = std::process::Command::new("git")
+                    .args(["push"])
+                    .output();
+            }
+            Err(e) => {
+                tracing::error!("Failed to get LLM fix: {}", e);
+            }
+        }
+    }
+
+    Ok(())
 }

@@ -139,7 +139,9 @@ fn create_artifacts(version: &str) -> Result<Vec<ReleaseArtifact>> {
         let checksum = format!("{:x}", Sha256::digest(&data));
         let size = data.len() as u64;
 
-        let archive_name = format!("omnicode-{}-{}.tar.gz", version, std::env::consts::TARGET);
+        let arch = std::env::consts::ARCH;
+        let os = std::env::consts::OS;
+        let archive_name = format!("omnicode-{}-{}-{}.tar.gz", version, os, arch);
         let archive_path = dist_dir.join(&archive_name);
 
         #[cfg(unix)]

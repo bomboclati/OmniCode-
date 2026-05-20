@@ -19,7 +19,8 @@ impl SearchEngine {
         let query_terms: Vec<&str> = query_lower.split_whitespace().collect();
 
         for (path, content) in &self.index {
-            let content_lower = content.to_lowercase();
+            let content_str = content.join(" ");
+            let content_lower = content_str.to_lowercase();
             let mut score = 0;
 
             for term in &query_terms {
@@ -38,7 +39,7 @@ impl SearchEngine {
     }
 
     pub fn add_document(&mut self, path: String, content: String) {
-        self.index.insert(path, content);
+        self.index.insert(path, vec![content]);
     }
 
     pub fn remove_document(&mut self, path: &str) {

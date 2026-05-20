@@ -61,23 +61,26 @@ pub fn derive_machine_key() -> Result<[u8; 32], CryptoError> {
 
     #[cfg(target_os = "windows")]
     {
-        use std::os::windows::ffi::OsStringExt;
-        use windows::Win32::System::Com::CoCreateGuid;
-        use windows::Win32::System::SystemInformation::GetComputerNameW;
+        use windows::Win32::System::SystemInformation::{GetComputerNameExW, COMPUTER_NAME_FORMAT};
 
-        let mut name_buf = [0u16; 256];
+        let mut name_buf = vec![0u16; 260];
         let mut name_len = name_buf.len() as u32;
         unsafe {
-            let _ = GetComputerNameW(name_buf.as_mut_ptr(), &mut name_len);
+            let _ = GetComputerNameExW(
+                COMPUTER_NAME_FORMAT(0),
+                windows::core::PWSTR(name_buf.as_mut_ptr()),
+                &mut name_len,
+            );
         }
         let hostname = String::from_utf16_lossy(&name_buf[..name_len as usize]);
         hasher.update(hostname.as_bytes());
 
-        let mut guid = [0u8; 16];
-        unsafe {
-            let _ = CoCreateGuid(&mut guid);
+        if let Ok(guid) = unsafe { windows::Win32::System::Com::CoCreateGuid() } {
+            hasher.update(&guid.data1.to_le_bytes());
+            hasher.update(&guid.data2.to_le_bytes());
+            hasher.update(&guid.data3.to_le_bytes());
+            hasher.update(&guid.data4);
         }
-        hasher.update(&guid);
     }
 
     #[cfg(not(target_os = "windows"))]
