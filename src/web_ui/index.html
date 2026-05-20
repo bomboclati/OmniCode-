@@ -3,166 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0A0E17">
-    <meta name="description" content="OmniCode - Autonomous AI Coding Agent Web UI">
+    <meta name="theme-color" content="#09090B">
+    <meta name="description" content="OmniCode Web UI">
     <title>OmniCode</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="../../assets/icon/favicon.svg">
 </head>
 <body>
     <div id="app">
         <header id="app-header">
             <div class="logo">
-                <svg width="22" height="22" viewBox="0 0 32 32">
-                    <circle cx="16" cy="16" r="14" stroke="#00FFA3" stroke-width="2" fill="none"/>
-                    <path d="M8 16 L24 16" stroke="#8957FF" stroke-width="2"/>
-                    <circle cx="16" cy="16" r="3" fill="#00FFA3"/>
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="4" fill="#18181B"/>
+                    <circle cx="16" cy="16" r="8" fill="none" stroke="#52525B" stroke-width="1"/>
+                    <path d="M10 12 L7 16 L10 20" fill="none" stroke="#A1A1AA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 12 L25 16 L22 20" fill="none" stroke="#A1A1AA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="16" cy="16" r="1" fill="#D4D4D8"/>
                 </svg>
                 <span class="logo-text">OmniCode</span>
             </div>
             <div class="header-info">
                 <span id="session-name" class="badge">local</span>
                 <span id="model-indicator" class="badge">gpt-4</span>
-                <div id="peer-avatars" class="peer-avatars" style="display:flex;gap:2px"></div>
-                <button id="voice-toggle" class="icon-btn" title="Voice Input" aria-label="Voice Input">🎤</button>
-                <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">🌙</button>
-                <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙️</button>
+                <div id="peer-avatars" style="display:flex;gap:2px"></div>
+                <button id="voice-toggle" class="icon-btn" title="Voice Input">[V]</button>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">[T]</button>
+                <button id="settings-btn" class="icon-btn" title="Settings">[S]</button>
             </div>
         </header>
 
         <nav id="sidebar" aria-label="Navigation">
             <div class="sidebar-tab active" data-screen="chat" data-title="Chat">
-                <span class="tab-icon">💬</span>
+                <span class="tab-icon">[C]</span>
             </div>
             <div class="sidebar-tab" data-screen="files" data-title="Files">
-                <span class="tab-icon">📁</span>
+                <span class="tab-icon">[F]</span>
             </div>
             <div class="sidebar-tab" data-screen="swarm" data-title="Swarm">
-                <span class="tab-icon">🧠</span>
+                <span class="tab-icon">[W]</span>
             </div>
             <div class="sidebar-tab" data-screen="reviews" data-title="Reviews">
-                <span class="tab-icon">✅</span>
+                <span class="tab-icon">[R]</span>
             </div>
             <div class="sidebar-tab" data-screen="incidents" data-title="Incidents">
-                <span class="tab-icon">🔴</span>
+                <span class="tab-icon">[I]</span>
             </div>
             <div class="sidebar-tab" data-screen="docs" data-title="Docs">
-                <span class="tab-icon">📄</span>
+                <span class="tab-icon">[D]</span>
             </div>
             <div class="sidebar-tab" data-screen="deps" data-title="Deps">
-                <span class="tab-icon">📦</span>
+                <span class="tab-icon">[P]</span>
             </div>
             <div class="sidebar-tab" data-screen="decisions" data-title="Decisions">
-                <span class="tab-icon">📋</span>
+                <span class="tab-icon">[K]</span>
             </div>
             <div class="sidebar-tab" data-screen="skills" data-title="Skills">
-                <span class="tab-icon">🔧</span>
+                <span class="tab-icon">[L]</span>
             </div>
             <div class="sidebar-tab" data-screen="compliance" data-title="Compliance">
-                <span class="tab-icon">🔒</span>
+                <span class="tab-icon">[M]</span>
             </div>
             <div class="sidebar-tab" data-screen="onboarding" data-title="Onboard">
-                <span class="tab-icon">🚀</span>
+                <span class="tab-icon">[O]</span>
             </div>
             <div class="sidebar-tab" data-screen="deploy" data-title="Deploy">
-                <span class="tab-icon">📤</span>
+                <span class="tab-icon">[E]</span>
             </div>
         </nav>
 
         <main id="main-content">
             <section id="editor-pane" class="pane">
                 <div class="editor-tabs" id="editor-tabs">
-                    <div class="editor-tab active">untitled <span class="tab-close">✕</span></div>
+                    <div class="editor-tab active">untitled <span class="tab-close">x</span></div>
                 </div>
                 <div id="monaco-editor" class="editor-container"></div>
             </section>
 
-            <div class="resize-handle" id="editor-chat-handle" aria-label="Resize"></div>
+            <div class="resize-handle" id="editor-chat-handle"></div>
 
             <section id="chat-pane" class="pane">
                 <div class="chat-header">
-                    <span class="chat-title">💬 Chat</span>
-                    <span id="chat-model" style="font-size:10px;opacity:.6">gpt-4</span>
+                    <span>Chat</span>
+                    <span id="chat-model" style="font-size:10px;opacity:.5">gpt-4</span>
                 </div>
                 <div id="message-list" class="message-list">
                     <div class="empty-state" id="chat-welcome">
-                        <div class="empty-icon">🤖</div>
-                        <h3>Welcome to OmniCode</h3>
+                        <div class="empty-icon">{ }</div>
+                        <h3>OmniCode</h3>
                         <p>Ask me to build, refactor, fix, or explore your code.</p>
                     </div>
                 </div>
                 <div class="input-area">
-                    <textarea id="chat-input" placeholder="Ask OmniCode to do anything..." rows="2" aria-label="Chat input"></textarea>
-                    <button id="send-btn" class="btn primary" aria-label="Send">Send</button>
+                    <textarea id="chat-input" placeholder="Type a command..." rows="2"></textarea>
+                    <button id="send-btn" class="btn primary">Send</button>
                 </div>
             </section>
 
-            <div class="resize-handle" id="chat-diff-handle" aria-label="Resize"></div>
+            <div class="resize-handle" id="chat-diff-handle"></div>
 
             <section id="diff-pane" class="pane" style="display:none;">
                 <div class="diff-header">
-                    <span>📄 Diff View</span>
-                    <button id="close-diff" class="icon-btn" aria-label="Close diff" style="font-size:12px">✕</button>
+                    <span>Diff</span>
+                    <button id="close-diff" class="icon-btn" style="font-size:10px">x</button>
                 </div>
                 <div id="diff-viewer" class="diff-viewer">
                     <div class="empty-state">
-                        <div class="empty-icon">📄</div>
-                        <h3>No Changes Yet</h3>
-                        <p>Diffs will appear here when files are modified.</p>
+                        <div class="empty-icon">+/-</div>
+                        <h3>No changes</h3>
+                        <p>Diffs appear when files are modified.</p>
                     </div>
                 </div>
             </section>
 
             <section id="terminal-pane" class="pane" style="display:none;">
                 <div class="terminal-emulator" id="terminal-emulator">
-                    <div style="color:var(--text2);font-size:12px">Terminal ready. Commands run here.</div>
+                    <div style="color:var(--text-dim);font-size:11px">Terminal ready.</div>
                 </div>
             </section>
         </main>
 
         <footer id="status-bar">
             <div class="status-left">
-                <span id="git-branch" class="status-item">🌿 main</span>
-                <span id="sandbox-mode" class="status-item">🔒 local</span>
-                <span id="model-name" class="status-item">🤖 gpt-4</span>
+                <span id="git-branch" class="status-item">main</span>
+                <span id="sandbox-mode" class="status-item">local</span>
+                <span id="model-name" class="status-item">gpt-4</span>
             </div>
             <div class="status-center">
-                <span id="agent-status" class="status-item status-idle">
+                <span id="agent-status" class="status-item">
                     <span class="status-dot"></span> idle
                 </span>
             </div>
             <div class="status-right">
-                <span id="peer-count" class="status-item">👤 0 peers</span>
-                <span id="compliance-badge" class="status-item" style="display:none;">🔒 compliant</span>
-                <span id="voice-indicator" class="status-item" style="display:none;">🎤 active</span>
-                <span id="conn-status" class="status-item" title="Connection">
-                    <span class="status-dot" style="width:6px;height:6px;background:var(--green)"></span>
-                </span>
+                <span id="peer-count" class="status-item">0 peers</span>
+                <span id="compliance-badge" class="status-item" style="display:none;">compliant</span>
+                <span id="voice-indicator" class="status-item" style="display:none;">voice</span>
                 <span id="current-time" class="status-item"></span>
             </div>
         </footer>
 
-        <nav class="panel-tabs" id="panel-tabs" aria-label="Panel tabs">
-            <span class="panel-tab active" data-panel="editor">📝 Editor</span>
-            <span class="panel-tab" data-panel="chat">💬 Chat</span>
-            <span class="panel-tab" data-panel="diff">📄 Diff</span>
-            <span class="panel-tab" data-panel="terminal">💻 Terminal</span>
+        <nav class="panel-tabs" id="panel-tabs">
+            <span class="panel-tab active" data-panel="editor">Editor</span>
+            <span class="panel-tab" data-panel="chat">Chat</span>
+            <span class="panel-tab" data-panel="diff">Diff</span>
+            <span class="panel-tab" data-panel="terminal">Terminal</span>
         </nav>
     </div>
 
-    <div id="command-palette" class="modal" style="display:none;" role="dialog" aria-label="Command Palette">
+    <div id="command-palette" class="modal" style="display:none;">
         <div class="modal-content">
-            <input type="text" id="palette-search" placeholder="Type a command..." autofocus aria-label="Command search">
+            <input type="text" id="palette-search" placeholder="Search commands..." autofocus>
             <div id="palette-results" class="palette-results"></div>
         </div>
     </div>
 
-    <div id="settings-modal" class="modal" style="display:none;" role="dialog" aria-label="Settings">
+    <div id="settings-modal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="settings-group">
-                <h3>Theme</h3>
+                <h3>Appearance</h3>
                 <div class="setting-row">
-                    <span>Appearance</span>
+                    <span>Theme</span>
                     <select id="settings-theme">
                         <option value="dark">Dark</option>
                         <option value="light">Light</option>
@@ -172,38 +172,29 @@
             <div class="settings-group">
                 <h3>Editor</h3>
                 <div class="setting-row">
-                    <span>Font Size</span>
+                    <span>Font size</span>
                     <select id="settings-font-size">
-                        <option value="12">12px</option>
-                        <option value="13" selected>13px</option>
-                        <option value="14">14px</option>
-                        <option value="16">16px</option>
+                        <option value="12">12</option>
+                        <option value="13" selected>13</option>
+                        <option value="14">14</option>
                     </select>
                 </div>
                 <div class="setting-row">
-                    <span>Tab Size</span>
+                    <span>Tab size</span>
                     <select id="settings-tab-size">
                         <option value="2">2</option>
                         <option value="4" selected>4</option>
-                        <option value="8">8</option>
-                    </select>
-                </div>
-                <div class="setting-row">
-                    <span>Word Wrap</span>
-                    <select id="settings-word-wrap">
-                        <option value="off">Off</option>
-                        <option value="on" selected>On</option>
                     </select>
                 </div>
             </div>
             <div class="settings-group">
                 <h3>Connection</h3>
                 <div class="setting-row">
-                    <span>Server URL</span>
+                    <span>Server</span>
                     <input type="text" id="settings-server-url" value="ws://localhost:9421">
                 </div>
             </div>
-            <div class="settings-group" style="text-align:right;padding:12px 16px">
+            <div class="settings-group" style="text-align:right;padding:8px 12px">
                 <button id="settings-close" class="btn secondary">Close</button>
             </div>
         </div>

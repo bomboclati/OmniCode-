@@ -1,5 +1,5 @@
 {
-  "buildCommand": "mkdir -p dist/app && cp -r landing-page/* dist/ && cp -r src/web_ui/* dist/app/",
+  "buildCommand": "mkdir -p dist/app dist/assets && cp -r landing-page/* dist/ && cp -r src/web_ui/* dist/app/ && cp -r assets/* dist/assets/",
   "outputDirectory": "dist",
   "framework": null
 }
