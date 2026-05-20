@@ -1,0 +1,128 @@
+class IncidentDashboard {
+    constructor() {
+        this.incidents = [];
+    }
+
+    init() {
+        this.setupWebSocket();
+        this.render();
+    }
+
+    setupWebSocket() {
+        if (window.sync) {
+            window.sync.on('incident_alert', (data) => {
+                this.addIncident(data);
+            });
+        }
+
+        // Poll for incidents
+        setInterval(() => this.loadIncidents(), 30000);
+    }
+
+    async loadIncidents() {
+        try {
+            const resp = await fetch('/api/incidents');
+            this.incidents = await resp.json();
+            this.render();
+        } catch (e) {
+            console.warn('Failed to load incidents:', e);
+        }
+    }
+
+    addIncident(data) {
+        this.incidents.unshift({
+            id: Date.now().toString(),
+            timestamp: new Date().toISOString(),
+            severity: data.severity || 'warning',
+            source: data.source || 'unknown',
+            message: data.message || 'Unknown incident',
+            ...data
+        });
+
+        this.render();
+        this.showNotification(data);
+    }
+
+    showNotification(data) {
+        const severityIcons = { critical: '🔴', error: '🟠', warning: '🟡' };
+        const icon = severityIcons[data.severity] || '🟡';
+
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(`${icon} ${data.severity}`, { body: data.message });
+        }
+    }
+
+    render() {
+        const container = document.querySelector('.incidents-list');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        if (this.incidents.length === 0) {
+            container.innerHTML = '<div class="empty-state">No active incidents ✅</div>';
+            return;
+        }
+
+        this.incidents.forEach(incident => {
+            const severityIcons = { critical: '🔴', error: '🟠', warning: '🟡' };
+            const icon = severityIcons[incident.severity] || '🟡';
+
+            const item = document.createElement('div');
+            item.className = `incident-item severity-${incident.severity}`;
+            item.innerHTML = `
+                <div class="incident-header">
+                    <span class="incident-severity">${icon}</span>
+                    <span class="incident-time">${incident.timestamp ? new Date(incident.timestamp).toLocaleTimeString() : ''}</span>
+                    <span class="incident-source">${incident.source || ''}</span>
+                    <span class="incident-status badge">${incident.fix_status || 'detected'}</span>
+                </div>
+                <div class="incident-message">${incident.message || ''}</div>
+                <div class="incident-actions">
+                    <button class="btn primary small" onclick="incidentsDashboard.approveFix('${incident.id}')">✅ Approve Fix</button>
+                    <button class="btn outline small" onclick="incidentsDashboard.dismiss('${incident.id}')">Dismiss</button>
+                    <button class="btn secondary small" onclick="incidentsDashboard.showDetails('${incident.id}')">Details</button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    approveFix(id) {
+        const incident = this.incidents.find(i => i.id === id);
+        if (incident) {
+            incident.fix_status = 'approved';
+            this.render();
+        }
+    }
+
+    dismiss(id) {
+        this.incidents = this.incidents.filter(i => i.id !== id);
+        this.render();
+    }
+
+    showDetails(id) {
+        const incident = this.incidents.find(i => i.id === id);
+        if (!incident) return;
+
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content" style="width:600px;">
+                <h3>Incident Details</h3>
+                <div class="incident-detail">
+                    <p><strong>Time:</strong> ${incident.timestamp || ''}</p>
+                    <p><strong>Severity:</strong> ${incident.severity}</p>
+                    <p><strong>Source:</strong> ${incident.source}</p>
+                    <p><strong>Message:</strong> ${incident.message}</p>
+                    ${incident.stack_trace ? `<pre>${incident.stack_trace}</pre>` : ''}
+                    ${incident.correlated_commit ? `<p><strong>Correlated Commit:</strong> ${incident.correlated_commit}</p>` : ''}
+                </div>
+                <button class="btn outline" onclick="this.closest('.modal').remove()">Close</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+}
+
+const incidentsDashboard = new IncidentDashboard();
+export default incidentsDashboard;

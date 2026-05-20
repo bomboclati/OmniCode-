@@ -1,0 +1,44 @@
+{
+    "name": "omnicode",
+    "displayName": "OmniCode Agent",
+    "description": "Autonomous AI coding agent - terminal, web, and your key",
+    "version": "0.1.0",
+    "publisher": "omnicode",
+    "license": "MIT",
+    "engines": { "vscode": "^1.80.0" },
+    "categories": ["Programming Languages", "Machine Learning", "Other"],
+    "activationEvents": ["onStartupFinished"],
+    "main": "./out/extension.js",
+    "contributes": {
+        "views": {
+            "explorer": [
+                { "id": "omniCodeChat", "name": "OmniCode Chat" },
+                { "id": "omniCodeDiff", "name": "OmniCode Diff" },
+                { "id": "omniCodeStatus", "name": "OmniCode Status" }
+            ]
+        },
+        "commands": [
+            { "command": "omnicode.chat", "title": "OmniCode: Chat with Agent" },
+            { "command": "omnicode.swarm", "title": "OmniCode: Run Swarm" },
+            { "command": "omnicode.review", "title": "OmniCode: Review Code" },
+            { "command": "omnicode.deploy", "title": "OmniCode: Deploy" },
+            { "command": "omnicode.find", "title": "OmniCode: Semantic Search" },
+            { "command": "omnicode.heal", "title": "OmniCode: Self-Heal Tests" },
+            { "command": "omnicode.docs", "title": "OmniCode: Generate Docs" },
+            { "command": "omnicode.openPalette", "title": "OmniCode: Command Palette" }
+        ],
+        "keybindings": [
+            { "key": "ctrl+shift+k", "command": "omnicode.openPalette" },
+            { "key": "ctrl+shift+o", "command": "omnicode.chat" }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.80.0",
+        "typescript": "^5.3.0"
+    }
+}

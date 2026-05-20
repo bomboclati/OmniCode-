@@ -1,0 +1,11 @@
+pub mod chat_panel;
+pub mod command_palette;
+pub mod decisions_panel;
+pub mod deps_panel;
+pub mod diff_viewer;
+pub mod file_tree;
+pub mod incident_panel;
+pub mod migration_dashboard;
+pub mod onboarding_wizard;
+pub mod status_bar;
+pub mod swarm_panel;

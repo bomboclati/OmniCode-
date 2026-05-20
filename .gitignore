@@ -1,0 +1,24 @@
+# Rust
+/target/
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config (local overrides)
+*.local.toml
+
+# Duplicate backup
+omnicode/
+
+# IDE packages
+node_modules/
+dist/
