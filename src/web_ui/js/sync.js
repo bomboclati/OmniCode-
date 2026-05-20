@@ -1,6 +1,6 @@
 class SyncManager {
-    constructor(url = 'ws://localhost:9420/ws') {
-        this.url = url;
+    constructor(url) {
+        this.url = url || (window.app ? window.app.state.serverUrl : 'ws://localhost:9421');
         this.ws = null;
         this.reconnectAttempts = 0;
         this.maxReconnectAttempts = 10;

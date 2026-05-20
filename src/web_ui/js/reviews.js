@@ -52,13 +52,17 @@ class ReviewDashboard {
     }
 
     approve(id) {
-        console.log(`Approving review: ${id}`);
         this.updateStatus(id, 'approved');
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Approved: ' + id);
+        }
     }
 
     requestChanges(id) {
-        console.log(`Requesting changes on: ${id}`);
         this.updateStatus(id, 'changes-requested');
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Changes requested: ' + id);
+        }
     }
 
     viewDiff(id) {

@@ -49,11 +49,35 @@ class EditorManager {
             }
         });
 
+        monaco.editor.defineTheme('omnicode-light', {
+            base: 'vs',
+            inherit: true,
+            rules: [
+                { token: 'comment', foreground: '6A737D', fontStyle: 'italic' },
+                { token: 'keyword', foreground: '6F42C1' },
+                { token: 'string', foreground: '032F62' },
+                { token: 'number', foreground: '005CC5' },
+                { token: 'type', foreground: '0550AE' },
+                { token: 'function', foreground: '6F42C1' },
+            ],
+            colors: {
+                'editor.background': '#FFFFFF',
+                'editor.foreground': '#24292E',
+                'editor.lineHighlightBackground': '#F6F8FA',
+                'editor.selectionBackground': '#0366D625',
+                'editorCursor.foreground': '#24292E',
+                'editorLineNumber.foreground': '#6A737D',
+            }
+        });
+
+        const theme = window.app && window.app.state.theme === 'light' ? 'omnicode-light' : 'omnicode-dark';
+
         this.editor = monaco.editor.create(document.getElementById(this.containerId), {
             value: '// Welcome to OmniCode\n// Open a file from the sidebar or type code here\n',
             language: 'javascript',
-            theme: 'omnicode-dark',
-            fontSize: 13,
+            theme: theme,
+            fontSize: window.app ? window.app.state.fontSize : 13,
+            tabSize: window.app ? window.app.state.tabSize : 4,
             fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
             minimap: { enabled: false },
             automaticLayout: true,
@@ -64,6 +88,17 @@ class EditorManager {
             padding: { top: 12 },
             bracketPairColorization: { enabled: true },
         });
+
+        window.editor = this.editor;
+
+        if (window.app) {
+            window.app.on('stateChange', (state) => {
+                if (state.theme) {
+                    const theme = state.theme === 'light' ? 'omnicode-light' : 'omnicode-dark';
+                    this.editor.updateOptions({ theme });
+                }
+            });
+        }
 
         this.editor.onDidChangeModelContent(() => {
             clearTimeout(this.debounceTimer);
@@ -184,12 +219,20 @@ class EditorManager {
     }
 
     showDiffViewer(diffContent) {
-        document.getElementById('diff-pane').style.display = 'block';
+        const diffPane = document.getElementById('diff-pane');
+        if (diffPane) diffPane.style.display = 'block';
+        if (window.app) {
+            window.app.state.diffVisible = true;
+        }
         this.updateDiff(diffContent);
     }
 
     hideDiffViewer() {
-        document.getElementById('diff-pane').style.display = 'none';
+        const diffPane = document.getElementById('diff-pane');
+        if (diffPane) diffPane.style.display = 'none';
+        if (window.app) {
+            window.app.state.diffVisible = false;
+        }
     }
 }
 

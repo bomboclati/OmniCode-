@@ -51,10 +51,6 @@ class VoiceManager {
                 this.recognition.start();
             }
         };
-
-        document.getElementById('voice-toggle')?.addEventListener('click', () => {
-            this.toggle();
-        });
     }
 
     toggle() {
@@ -97,11 +93,27 @@ class VoiceManager {
         if (indicator) indicator.style.display = 'none';
     }
 
-    onStart() {}
-    onStop() {}
-    onTranscript(text) {}
+    onStart() {
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Voice input started');
+        }
+    }
+    onStop() {
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Voice input stopped');
+        }
+    }
+    onTranscript(text) {
+        const input = document.getElementById('chat-input');
+        if (input) {
+            input.value = text;
+            input.focus();
+        }
+    }
     onUnsupported() {
-        console.warn('Voice input is not supported in this browser');
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Voice not supported in this browser');
+        }
     }
 }
 

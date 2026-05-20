@@ -51,10 +51,21 @@ class SkillManager {
             </div>
             <div class="skill-description">${skill.description || ''}</div>
             <div class="skill-actions">
-                <button class="btn secondary small">Configure</button>
-                <button class="btn outline small">Uninstall</button>
+                <button class="btn secondary small configure-btn">Configure</button>
+                <button class="btn outline small uninstall-btn">Uninstall</button>
             </div>
         `;
+
+        card.querySelector('.configure-btn').addEventListener('click', () => {
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Configure: ' + (skill.name || 'Unknown'));
+            }
+        });
+
+        card.querySelector('.uninstall-btn').addEventListener('click', () => {
+            this.uninstallSkill(skill.name);
+        });
+
         return card;
     }
 
@@ -95,9 +106,15 @@ class SkillManager {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name }),
             });
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Installed: ' + name);
+            }
             this.loadInstalled();
         } catch (e) {
             console.error('Failed to install skill:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Install failed: ' + name);
+            }
         }
     }
 
@@ -108,9 +125,15 @@ class SkillManager {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name }),
             });
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Uninstalled: ' + name);
+            }
             this.loadInstalled();
         } catch (e) {
             console.error('Failed to uninstall skill:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Uninstall failed: ' + name);
+            }
         }
     }
 
@@ -149,8 +172,14 @@ class SkillManager {
             await fetch('/api/skills/publish', { method: 'POST', body: formData });
             this.closeModals();
             this.loadMarketplace();
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Published: ' + name);
+            }
         } catch (e) {
             console.error('Failed to publish skill:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Publish failed: ' + name);
+            }
         }
     }
 

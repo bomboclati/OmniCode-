@@ -92,12 +92,18 @@ class IncidentDashboard {
         if (incident) {
             incident.fix_status = 'approved';
             this.render();
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Fix approved: ' + id);
+            }
         }
     }
 
     dismiss(id) {
         this.incidents = this.incidents.filter(i => i.id !== id);
         this.render();
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Incident dismissed');
+        }
     }
 
     showDetails(id) {

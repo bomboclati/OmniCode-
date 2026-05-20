@@ -97,13 +97,22 @@ class DocsPanel {
     }
 
     async regenerate() {
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Regenerating docs...');
+        }
         try {
             const resp = await fetch('/api/docs/regenerate', { method: 'POST' });
             if (resp.ok) {
                 this.loadDocs();
+                if (window.app && window.app.showToast) {
+                    window.app.showToast('Docs regenerated');
+                }
             }
         } catch (e) {
             console.error('Failed to regenerate docs:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Regenerate failed');
+            }
         }
     }
 

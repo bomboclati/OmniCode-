@@ -1,4 +1,4 @@
-param(
+﻿param(
     [Parameter(Mandatory = $false)]
     [string]$Version = "0.1.0",
 
@@ -18,9 +18,9 @@ function Write-Step($msg) { Write-Host ">> $msg" -ForegroundColor Cyan }
 function Write-Ok($msg)  { Write-Host "   $msg" -ForegroundColor Green }
 function Write-Err($msg) { Write-Host "   $msg" -ForegroundColor Red }
 
-# ── Prerequisites ─────────────────────────────────────────────────────────────
+# -- Prerequisites
 if (-not (Get-Command "gh" -ErrorAction SilentlyContinue)) {
-    Write-Err "GitHub CLI (gh) is required — install from https://cli.github.com/"
+    Write-Err "GitHub CLI (gh) is required - install from https://cli.github.com/"
     exit 1
 }
 
@@ -32,7 +32,7 @@ if (-not $token) {
 
 Write-Step "Checked prerequisites: gh CLI + GITHUB_TOKEN"
 
-# ── 1. Verify git tag exists ─────────────────────────────────────────────────
+# -- 1. Verify git tag exists
 Push-Location $RepoRoot
 try {
     $tag = "v$Version"
@@ -45,14 +45,14 @@ try {
 } finally { Pop-Location }
 
 if (-not $SkipRelease) {
-    # ── 2. Run packaging script ───────────────────────────────────────────────
+    # -- 2. Run packaging script
     Write-Step "Building release package..."
     & "$PSScriptRoot/package.ps1" -Version $Version -RepoRoot $RepoRoot
     if (-not $?) { Write-Err "Packaging failed"; exit 1 }
 
     $releaseMeta = Get-Content "$RepoRoot/target/release-output.json" -Raw | ConvertFrom-Json
 
-    # ── 3. Create GitHub Release ──────────────────────────────────────────────
+    # -- 3. Create GitHub Release
     Write-Step "Creating GitHub Release for $tag ..."
     $ghRelease = gh release create "$tag" `
         "$($releaseMeta.path)" `
@@ -67,24 +67,37 @@ if (-not $SkipRelease) {
     Write-Ok "Release created: $ghRelease"
 } else {
     Write-Step "Skipping GitHub Release (--SkipRelease), using cached metadata..."
-    $releaseMeta = Get-Content "$RepoRoot/target/release-output.json" -Raw | ConvertFrom-Json
+    # Download the release asset and compute SHA256
+    $tag = "v$Version"
+    $zipUrl = "https://github.com/bomboclati/OmniCode-/releases/download/$tag/OmniCode-$tag-windows-x86_64.zip"
+    $zipPath = "$WorkDir\OmniCode-$Version-windows-x86_64.zip"
+    $null = New-Item -ItemType Directory -Path $WorkDir -Force
+
+    Write-Step "Downloading $zipUrl ..."
+    Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -Headers @{ Authorization = "token $token" }
+    Write-Ok "Downloaded: $zipPath"
+
+    Write-Step "Computing SHA256..."
+    $hash = Get-FileHash $zipPath -Algorithm SHA256
+    $sha256 = $hash.Hash.ToLower()
+    $releaseMeta = [PSCustomObject]@{ sha256 = $sha256; path = $zipPath }
 }
 
 $sha256 = $releaseMeta.sha256
 Write-Ok "Using SHA256: $sha256"
 
-# ── 4. Prepare winget manifest ───────────────────────────────────────────────
+# -- 4. Prepare winget manifest
 Write-Step "Preparing winget manifest..."
 $manifestPath = "$WorkDir/manifests/b/bomboclati/OmniCode/$Version/bomboclati.OmniCode.yaml"
 $null = New-Item -ItemType Directory -Path (Split-Path $manifestPath -Parent) -Force
 
 $manifest = Get-Content "$RepoRoot/scripts/winget/OmniCode.yaml" -Raw
 $manifest = $manifest -replace "PLACEHOLDER_REPLACE_WITH_ACTUAL_SHA256", $sha256
-$manifest = $manifest -replace 'InstallerUrl: .*', "InstallerUrl: https://github.com/bomboclati/OmniCode-/releases/download/$tag/OmniCode-$Version-windows-x86_64.zip"
+$manifest = $manifest -replace 'InstallerUrl: .*', "InstallerUrl: https://github.com/bomboclati/OmniCode-/releases/download/$tag/OmniCode-$tag-windows-x86_64.zip"
 $manifest | Set-Content $manifestPath -NoNewline
 Write-Ok "Wrote manifest: $manifestPath"
 
-# ── 5. Clone winget-pkgs and stage ──────────────────────────────────────────
+# -- 5. Clone winget-pkgs and stage
 Write-Step "Cloning microsoft/winget-pkgs (shallow)..."
 $wingetRepo = "$WorkDir/winget-pkgs"
 if (Test-Path $wingetRepo) {
@@ -100,18 +113,19 @@ $null = New-Item -ItemType Directory -Path $wingetDest -Force
 Copy-Item $manifestPath $wingetDest -Force
 Write-Ok "Staged manifest in winget-pkgs"
 
-# ── 6. Instructions for PR ───────────────────────────────────────────────────
+# -- 6. Instructions for PR
 Write-Host ""
-Write-Host "╔══════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-Write-Host "║  Ready to submit to winget-pkgs                                 ║" -ForegroundColor Green
-Write-Host "╠══════════════════════════════════════════════════════════════════╣" -ForegroundColor Green
-Write-Host "║  Manifest: $wingetDest" -ForegroundColor Green
-Write-Host "║  SHA256:   $sha256" -ForegroundColor Green
-Write-Host "║                                                                    ║" -ForegroundColor Green
-Write-Host "║  To submit:                                                       ║" -ForegroundColor Green
-Write-Host "║    1. cd $wingetRepo" -ForegroundColor Green
-Write-Host "║    2. git checkout -b bomboclati/OmniCode/v$Version" -ForegroundColor Green
-Write-Host "║    3. git add manifests/b/bomboclati/OmniCode/" -ForegroundColor Green
-Write-Host "║    4. git commit -m 'New version: bomboclati.OmniCode v$Version'" -ForegroundColor Green
-Write-Host "║    5. gh pr create --repo microsoft/winget-pkgs --title 'New version: bomboclati.OmniCode v$Version' --body 'Adding version $Version of bomboclati.OmniCode'" -ForegroundColor Green
-Write-Host "╚══════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+Write-Host "============================================================" -ForegroundColor Green
+Write-Host " Ready to submit to winget-pkgs" -ForegroundColor Green
+Write-Host "============================================================" -ForegroundColor Green
+Write-Host " Manifest: $wingetDest" -ForegroundColor Green
+Write-Host " SHA256:   $sha256" -ForegroundColor Green
+Write-Host ""
+Write-Host " To submit:" -ForegroundColor Green
+Write-Host "   1. cd $wingetRepo" -ForegroundColor Green
+Write-Host "   2. git checkout -b bomboclati/OmniCode/v$Version" -ForegroundColor Green
+Write-Host "   3. git add manifests/b/bomboclati/OmniCode/" -ForegroundColor Green
+$commitMsg = "New version: bomboclati.OmniCode v$Version"
+Write-Host "   4. git commit -m '$commitMsg'" -ForegroundColor Green
+Write-Host "   5. gh pr create --repo microsoft/winget-pkgs --title '$commitMsg' --body 'Adding version $Version of bomboclati.OmniCode'" -ForegroundColor Green
+Write-Host "============================================================" -ForegroundColor Green

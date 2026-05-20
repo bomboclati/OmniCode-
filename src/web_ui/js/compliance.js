@@ -48,9 +48,15 @@ class ComplianceViewer {
         try {
             const resp = await fetch('/api/compliance/verify');
             const result = await resp.json();
+            if (window.app && window.app.showToast) {
+                window.app.showToast(result.valid ? 'Chain verified ✅' : 'Chain verification failed ❌');
+            }
             return result.valid;
         } catch (e) {
             console.error('Chain verification failed:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Verification failed');
+            }
             return false;
         }
     }
@@ -65,8 +71,14 @@ class ComplianceViewer {
             a.download = `compliance-report.${format}`;
             a.click();
             URL.revokeObjectURL(url);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Report exported: ' + a.download);
+            }
         } catch (e) {
             console.error('Export failed:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Export failed');
+            }
         }
     }
 

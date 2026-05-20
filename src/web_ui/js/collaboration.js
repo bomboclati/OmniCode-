@@ -26,7 +26,9 @@ class CollaborationUI {
         this.sessionCode = code;
         this.isHost = true;
 
-        console.log(`Collaboration session created: ${code}`);
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Session created: ' + code);
+        }
 
         const modal = this.createModal(`
             <h3>Collaboration Session</h3>
@@ -61,7 +63,9 @@ class CollaborationUI {
         this.sessionCode = code;
         this.isHost = false;
 
-        console.log(`Joining session: ${code}`);
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Joining session: ' + code);
+        }
 
         this.closeModals();
         if (window.sync) {
@@ -95,9 +99,9 @@ class CollaborationUI {
             container.appendChild(avatar);
         });
 
-        const countEl = document.querySelector('.status-right .status-item:first-child');
+        const countEl = document.getElementById('peer-count');
         if (countEl) {
-            countEl.textContent = `👤 ${this.peers.length} peers`;
+            countEl.textContent = `${this.peers.length} peers`;
         }
     }
 

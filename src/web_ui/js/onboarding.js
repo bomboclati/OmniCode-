@@ -146,11 +146,14 @@ class OnboardingWizard {
     }
 
     complete() {
+        if (window.app && window.app.showToast) {
+            window.app.showToast('Onboarding complete! 🚀');
+        }
         const container = document.querySelector('.onboarding-wizard');
         if (container) {
             container.innerHTML = `
                 <div class="onboarding-complete">
-                    <h2>🚀 You're Ready!</h2>
+                    <h2>You're Ready!</h2>
                     <p>Your OmniCode experience is personalized.</p>
                     <p>Role: ${this.responses.role || 'Full Stack'}</p>
                     <p>Level: ${this.responses.level || 'Intermediate'}</p>

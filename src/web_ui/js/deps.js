@@ -109,8 +109,14 @@ class DependencyPanel {
             });
             this.closeModals();
             this.loadDeps();
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Updated: ' + name);
+            }
         } catch (e) {
             console.error('Update failed:', e);
+            if (window.app && window.app.showToast) {
+                window.app.showToast('Update failed: ' + name);
+            }
         }
     }
 
