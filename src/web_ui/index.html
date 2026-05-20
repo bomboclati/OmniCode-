@@ -6,21 +6,19 @@
     <meta name="theme-color" content="#09090B">
     <meta name="description" content="OmniCode Web UI">
     <title>OmniCode</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="../../assets/icon/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="manifest" href="/assets/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/assets/icon/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/logo/png/logo-mobile-180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/logo/png/logo-mobile-152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/logo/png/logo-mobile-120.png">
 </head>
 <body>
     <div id="app">
         <header id="app-header">
             <div class="logo">
-                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="32" height="32" rx="4" fill="#18181B"/>
-                    <circle cx="16" cy="16" r="8" fill="none" stroke="#52525B" stroke-width="1"/>
-                    <path d="M10 12 L7 16 L10 20" fill="none" stroke="#A1A1AA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M22 12 L25 16 L22 20" fill="none" stroke="#A1A1AA" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="16" cy="16" r="1" fill="#D4D4D8"/>
-                </svg>
+                <img src="/assets/logo/omnicode-logo-mobile.svg" alt="OmniCode" class="logo-icon">
                 <span class="logo-text">OmniCode</span>
             </div>
             <div class="header-info">
@@ -69,6 +67,9 @@
             </div>
             <div class="sidebar-tab" data-screen="deploy" data-title="Deploy">
                 <span class="tab-icon">[E]</span>
+            </div>
+            <div class="sidebar-tab" data-screen="download" data-title="Download">
+                <span class="tab-icon">[Dn]</span>
             </div>
         </nav>
 
@@ -202,19 +203,19 @@
 
     <div id="toast-container"></div>
 
-    <script type="module" src="js/app.js"></script>
-    <script type="module" src="js/sync.js"></script>
-    <script type="module" src="js/editor.js"></script>
-    <script type="module" src="js/terminal.js"></script>
-    <script type="module" src="js/voice.js"></script>
-    <script type="module" src="js/collaboration.js"></script>
-    <script type="module" src="js/skills.js"></script>
-    <script type="module" src="js/reviews.js"></script>
-    <script type="module" src="js/docs.js"></script>
-    <script type="module" src="js/compliance.js"></script>
-    <script type="module" src="js/incidents.js"></script>
-    <script type="module" src="js/onboarding.js"></script>
-    <script type="module" src="js/deps.js"></script>
-    <script type="module" src="js/decisions.js"></script>
+    <script type="module" src="/assets/js/app.js"></script>
+    <script type="module" src="/assets/js/sync.js"></script>
+    <script type="module" src="/assets/js/editor.js"></script>
+    <script type="module" src="/assets/js/terminal.js"></script>
+    <script type="module" src="/assets/js/voice.js"></script>
+    <script type="module" src="/assets/js/collaboration.js"></script>
+    <script type="module" src="/assets/js/skills.js"></script>
+    <script type="module" src="/assets/js/reviews.js"></script>
+    <script type="module" src="/assets/js/docs.js"></script>
+    <script type="module" src="/assets/js/compliance.js"></script>
+    <script type="module" src="/assets/js/incidents.js"></script>
+    <script type="module" src="/assets/js/onboarding.js"></script>
+    <script type="module" src="/assets/js/deps.js"></script>
+    <script type="module" src="/assets/js/decisions.js"></script>
 </body>
 </html>

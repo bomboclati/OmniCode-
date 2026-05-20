@@ -74,6 +74,7 @@ body {
 }
 
 .logo svg { height: 18px; width: auto; }
+.logo-icon { height: 18px; width: auto; }
 
 .logo-text {
   font-family: var(--font-sans);
@@ -765,4 +766,95 @@ body {
 @media (display-mode: standalone) {
   #app-header { padding-top: env(safe-area-inset-top); }
   #status-bar { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* --- Download Screen --- */
+.download-section {
+  margin-bottom: 16px;
+}
+.download-section h3 {
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+.download-item {
+  padding: 8px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 6px;
+  transition: border-color var(--transition);
+}
+.download-item:hover {
+  border-color: var(--border-hover);
+}
+.download-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.download-item-name {
+  font-size: 12px;
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+.download-item-size {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.download-item-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-family: var(--font-sans);
+}
+.download-item .btn {
+  font-size: 10px;
+  padding: 3px 8px;
+  margin-top: 8px;
+  width: 100%;
+}
+.download-logo {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.download-logo img {
+  max-width: 280px;
+  height: auto;
+  margin-bottom: 8px;
+}
+.download-logo .version {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.download-footer {
+  text-align: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+.download-footer .label {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.download-footer a {
+  font-size: 12px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+.download-footer a:hover {
+  color: var(--text-muted);
+}
+.cmd-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
 }
