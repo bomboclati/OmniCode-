@@ -1,0 +1,5 @@
+{
+  "buildCommand": "mkdir -p dist/app && cp -r landing-page/* dist/ && cp -r src/web_ui/* dist/app/",
+  "outputDirectory": "dist",
+  "framework": null
+}
