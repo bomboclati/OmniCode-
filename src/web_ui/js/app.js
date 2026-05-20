@@ -552,7 +552,7 @@ class App {
         content.innerHTML = `
             <div style="font-family:var(--font-sans)">
                 <div class="download-logo">
-                    <img src="/assets/logo/omnicode-logo-horizontal.svg" alt="OmniCode" style="max-width:280px;height:auto;margin-bottom:8px">
+                    <img src="./assets/logo/omnicode-logo-horizontal.svg" alt="OmniCode" style="max-width:280px;height:auto;margin-bottom:8px">
                     <div class="version">v0.1.0</div>
                 </div>
 
@@ -568,21 +568,21 @@ class App {
                             <span class="download-item-name">Windows (x86_64)</span>
                             <span class="download-item-size">4.1 MB</span>
                         </div>
-                        <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-windows-x86_64.zip')">Download ZIP</button>
+                        <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','OmniCode-v0.1.0-windows-x86_64.zip')">Download ZIP</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Linux (x86_64)</span>
                             <span class="download-item-size">4.5 MB</span>
                         </div>
-                        <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-linux-x86_64.tar.gz')">Download tar.gz</button>
+                        <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','OmniCode-v0.1.0-linux-x86_64.tar.gz')">Download tar.gz</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">macOS (Apple Silicon)</span>
                             <span class="download-item-size">4.3 MB</span>
                         </div>
-                        <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','OmniCode-v0.1.0-macos-aarch64.tar.gz')">Download tar.gz</button>
+                        <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','OmniCode-v0.1.0-macos-aarch64.tar.gz')">Download tar.gz</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-name">Package managers</div>
@@ -615,7 +615,7 @@ class App {
                                 <span class="download-item-size">12.3 MB</span>
                             </div>
                             <div class="download-item-desc">Your device: Android</div>
-                            <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
                         </div>
                     ` : isIOS ? `
                         <div class="download-item">
@@ -632,7 +632,7 @@ class App {
                                 <span class="download-item-name">Android APK</span>
                                 <span class="download-item-size">12.3 MB</span>
                             </div>
-                            <button class="btn primary" onclick="app.downloadFile('/assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
                         </div>
                     `}
                     <div class="download-item">
@@ -657,56 +657,56 @@ class App {
                             <span class="download-item-name">Logo (SVG)</span>
                             <span class="download-item-size">Vector</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/omnicode-logo-horizontal.svg','omnicode-logo.svg')">Download SVG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/omnicode-logo-horizontal.svg','omnicode-logo.svg')">Download SVG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Logo (PNG 512px)</span>
                             <span class="download-item-size">91 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-512.png','omnicode-logo-512.png')">Download PNG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/png/logo-512.png','omnicode-logo-512.png')">Download PNG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Logo (PNG 256px)</span>
                             <span class="download-item-size">99 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-256.png','omnicode-logo-256.png')">Download PNG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','omnicode-logo-256.png')">Download PNG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Logo (PNG 128px)</span>
                             <span class="download-item-size">38 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-128.png','omnicode-logo-128.png')">Download PNG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/png/logo-128.png','omnicode-logo-128.png')">Download PNG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Logo (PNG 64px)</span>
                             <span class="download-item-size">14 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-64.png','omnicode-logo-64.png')">Download PNG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/png/logo-64.png','omnicode-logo-64.png')">Download PNG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Logo (PNG 32px)</span>
                             <span class="download-item-size">5.6 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-32.png','omnicode-logo-32.png')">Download PNG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/png/logo-32.png','omnicode-logo-32.png')">Download PNG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Favicon (ICO)</span>
                             <span class="download-item-size">15 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/icon/favicon.ico','omnicode-favicon.ico')">Download ICO</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/icon/favicon.ico','omnicode-favicon.ico')">Download ICO</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Mobile Icon (PNG 192px)</span>
                             <span class="download-item-size">97 KB</span>
                         </div>
-                        <button class="btn secondary" onclick="app.downloadFile('/assets/logo/png/logo-mobile-192.png','omnicode-mobile-192.png')">Download PNG</button>
+                        <button class="btn secondary" onclick="app.downloadFile('./assets/logo/png/logo-mobile-192.png','omnicode-mobile-192.png')">Download PNG</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
@@ -781,25 +781,25 @@ class App {
     // --- Download all logos ---
     async downloadAllLogos() {
         const logoFiles = [
-            { url: '/assets/logo/omnicode-logo-horizontal.svg', name: 'omnicode-logo.svg' },
-            { url: '/assets/logo/omnicode-logo-full.svg', name: 'omnicode-logo-full.svg' },
-            { url: '/assets/logo/omnicode-logo-mobile.svg', name: 'omnicode-logo-mobile.svg' },
-            { url: '/assets/logo/png/logo-512.png', name: 'omnicode-logo-512.png' },
-            { url: '/assets/logo/png/logo-256.png', name: 'omnicode-logo-256.png' },
-            { url: '/assets/logo/png/logo-128.png', name: 'omnicode-logo-128.png' },
-            { url: '/assets/logo/png/logo-64.png', name: 'omnicode-logo-64.png' },
-            { url: '/assets/logo/png/logo-48.png', name: 'omnicode-logo-48.png' },
-            { url: '/assets/logo/png/logo-32.png', name: 'omnicode-logo-32.png' },
-            { url: '/assets/logo/png/logo-16.png', name: 'omnicode-logo-16.png' },
-            { url: '/assets/logo/png/logo-horizontal-800.png', name: 'omnicode-logo-horizontal-800.png' },
-            { url: '/assets/logo/png/logo-horizontal-400.png', name: 'omnicode-logo-horizontal-400.png' },
-            { url: '/assets/logo/png/logo-horizontal-200.png', name: 'omnicode-logo-horizontal-200.png' },
-            { url: '/assets/logo/png/logo-mobile-512.png', name: 'omnicode-mobile-512.png' },
-            { url: '/assets/logo/png/logo-mobile-192.png', name: 'omnicode-mobile-192.png' },
-            { url: '/assets/logo/png/logo-mobile-180.png', name: 'omnicode-mobile-180.png' },
-            { url: '/assets/logo/png/logo-mobile-152.png', name: 'omnicode-mobile-152.png' },
-            { url: '/assets/logo/png/logo-mobile-120.png', name: 'omnicode-mobile-120.png' },
-            { url: '/assets/icon/favicon.ico', name: 'omnicode-favicon.ico' },
+            { url: './assets/logo/omnicode-logo-horizontal.svg', name: 'omnicode-logo.svg' },
+            { url: './assets/logo/omnicode-logo-full.svg', name: 'omnicode-logo-full.svg' },
+            { url: './assets/logo/omnicode-logo-mobile.svg', name: 'omnicode-logo-mobile.svg' },
+            { url: './assets/logo/png/logo-512.png', name: 'omnicode-logo-512.png' },
+            { url: './assets/logo/png/logo-256.png', name: 'omnicode-logo-256.png' },
+            { url: './assets/logo/png/logo-128.png', name: 'omnicode-logo-128.png' },
+            { url: './assets/logo/png/logo-64.png', name: 'omnicode-logo-64.png' },
+            { url: './assets/logo/png/logo-48.png', name: 'omnicode-logo-48.png' },
+            { url: './assets/logo/png/logo-32.png', name: 'omnicode-logo-32.png' },
+            { url: './assets/logo/png/logo-16.png', name: 'omnicode-logo-16.png' },
+            { url: './assets/logo/png/logo-horizontal-800.png', name: 'omnicode-logo-horizontal-800.png' },
+            { url: './assets/logo/png/logo-horizontal-400.png', name: 'omnicode-logo-horizontal-400.png' },
+            { url: './assets/logo/png/logo-horizontal-200.png', name: 'omnicode-logo-horizontal-200.png' },
+            { url: './assets/logo/png/logo-mobile-512.png', name: 'omnicode-mobile-512.png' },
+            { url: './assets/logo/png/logo-mobile-192.png', name: 'omnicode-mobile-192.png' },
+            { url: './assets/logo/png/logo-mobile-180.png', name: 'omnicode-mobile-180.png' },
+            { url: './assets/logo/png/logo-mobile-152.png', name: 'omnicode-mobile-152.png' },
+            { url: './assets/logo/png/logo-mobile-120.png', name: 'omnicode-mobile-120.png' },
+            { url: './assets/icon/favicon.ico', name: 'omnicode-favicon.ico' },
         ];
 
         this.showToast('Downloading ' + logoFiles.length + ' logo files...');
@@ -1243,7 +1243,7 @@ class App {
 
     registerServiceWorker() {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(() => {});
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
         }
     }
 

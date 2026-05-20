@@ -9,52 +9,52 @@
   "theme_color": "#09090B",
   "categories": ["developer tools", "productivity", "utilities"],
   "lang": "en",
-  "scope": "/",
+  "scope": "/app/",
   "icons": [
     {
-      "src": "/assets/logo/png/logo-mobile-192.png",
+      "src": "/app/assets/logo/png/logo-mobile-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/logo/png/logo-mobile-512.png",
+      "src": "/app/assets/logo/png/logo-mobile-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/logo/png/logo-mobile-180.png",
+      "src": "/app/assets/logo/png/logo-mobile-180.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/logo/png/logo-128.png",
+      "src": "/app/assets/logo/png/logo-128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/logo/png/logo-64.png",
+      "src": "/app/assets/logo/png/logo-64.png",
       "sizes": "64x64",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/logo/png/logo-48.png",
+      "src": "/app/assets/logo/png/logo-48.png",
       "sizes": "48x48",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/logo/png/logo-32.png",
+      "src": "/app/assets/logo/png/logo-32.png",
       "sizes": "32x32",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/logo/omnicode-logo-mobile.svg",
+      "src": "/app/assets/logo/omnicode-logo-mobile.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
@@ -62,7 +62,7 @@
   ],
   "screenshots": [
     {
-      "src": "/assets/logo/png/logo-horizontal-800.png",
+      "src": "/app/assets/logo/png/logo-horizontal-800.png",
       "sizes": "800x160",
       "type": "image/png",
       "form_factor": "wide",

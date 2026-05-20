@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <title>OmniCode — Autonomous AI Coding Agent</title>
-<link rel="icon" type="image/svg+xml" href="assets/icon/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/app/assets/icon/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -572,6 +572,69 @@ footer {
   .download-grid { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* --- Install Modal --- */
+.install-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.install-modal.open { display: flex; }
+.install-modal-content {
+  background: #18181B;
+  border: 1px solid #27272A;
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+.install-modal-content h3 { font-size: 1.25rem; margin-bottom: 1rem; color: #FAFAFA; }
+.install-modal-content p { font-size: 14px; color: #A1A1AA; margin-bottom: 1.5rem; line-height: 1.6; }
+.install-steps { text-align: left; margin-bottom: 1.5rem; }
+.install-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #D4D4D8;
+}
+.install-step-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #27272A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #FAFAFA;
+}
+.install-modal-close {
+  padding: 10px 24px;
+  background: #FAFAFA;
+  color: #09090B;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.install-modal-close:hover { background: #E4E4E7; }
+.install-modal-backdrop {
+  position: absolute;
+  inset: 0;
+}
 </style>
 </head>
 <body>
@@ -660,7 +723,7 @@ footer {
 <p>OmniCode is a self-hosted AI agent that plans, writes, tests, and deploys code. Bring your own API key. No subscriptions. No telemetry. No accounts.</p>
 <div class="hero-actions">
 <a href="/app" class="btn btn-primary">Launch App</a>
-<a href="#download" class="btn btn-primary">Download</a>
+<a href="#download" class="btn btn-primary" id="hero-download-btn">Download</a>
 <a href="#features" class="btn btn-secondary">Read the docs</a>
 </div>
 </div>
@@ -851,10 +914,10 @@ footer {
 <div class="download-card">
 <h3>Mobile App</h3>
 <p style="font-size:14px;color:#52525B;margin-bottom:1rem">Install OmniCode on your phone. Full PWA with offline support, chat, and code editing.</p>
-<div class="download-method"><code>Open in browser → Add to Home Screen</code><button class="copy-btn" data-cmd="/app">Open</button></div>
-<a href="/app" class="download-btn" style="text-decoration:none">
-<span class="dl-icon">📱</span> Open Mobile App
-</a>
+<button class="download-btn" id="install-pwa-btn" style="text-decoration:none;cursor:pointer">
+<span class="dl-icon">📱</span> Install Mobile App
+</button>
+<div id="install-pwa-status" style="margin-top:8px;font-size:12px;color:#52525B;display:none"></div>
 </div>
 <div class="download-card">
 <h3>Windows</h3>
@@ -1115,6 +1178,99 @@ footer {
       document.getElementById('download').scrollIntoView({ behavior: 'smooth' });
     });
   }
+})();
+</script>
+
+<div id="install-modal" class="install-modal">
+<div class="install-modal-backdrop" id="install-modal-backdrop"></div>
+<div class="install-modal-content">
+<h3 id="install-modal-title">Install OmniCode</h3>
+<div id="install-modal-body"></div>
+<button class="install-modal-close" id="install-modal-close">Got it</button>
+</div>
+</div>
+
+<script>
+(function(){
+  // PWA Install on landing page
+  var deferredInstallPrompt = null;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var isAndroid = /Android/.test(navigator.userAgent);
+  var isMobile = isIOS || isAndroid || /webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+  });
+
+  function showInstallModal() {
+    var modal = document.getElementById('install-modal');
+    var title = document.getElementById('install-modal-title');
+    var body = document.getElementById('install-modal-body');
+
+    if (isIOS) {
+      title.textContent = 'Install on iPhone/iPad';
+      body.innerHTML = '<div class="install-steps">' +
+        '<div class="install-step"><span class="install-step-num">1</span><span>Tap the <strong>Share</strong> button in Safari</span></div>' +
+        '<div class="install-step"><span class="install-step-num">2</span><span>Scroll down and tap <strong>Add to Home Screen</strong></span></div>' +
+        '<div class="install-step"><span class="install-step-num">3</span><span>Tap <strong>Add</strong> to confirm</span></div>' +
+        '</div><p style="font-size:12px;color:#52525B;margin:0">OmniCode will appear on your home screen like a native app.</p>';
+    } else if (isAndroid && deferredInstallPrompt) {
+      title.textContent = 'Install OmniCode';
+      body.innerHTML = '<p>Tap "Install" below to add OmniCode to your home screen.</p>' +
+        '<button class="install-modal-close" id="do-install-btn" style="margin-top:1rem">Install Now</button>';
+      setTimeout(function() {
+        var installBtn = document.getElementById('do-install-btn');
+        if (installBtn) {
+          installBtn.addEventListener('click', function() {
+            deferredInstallPrompt.prompt();
+            deferredInstallPrompt.userChoice.then(function(result) {
+              if (result.outcome === 'accepted') {
+                title.textContent = 'Installed!';
+                body.innerHTML = '<p>OmniCode has been added to your home screen.</p>';
+              } else {
+                closeModal();
+              }
+              deferredInstallPrompt = null;
+            });
+          });
+        }
+      }, 50);
+    } else if (isMobile) {
+      title.textContent = 'Install on Your Device';
+      body.innerHTML = '<div class="install-steps">' +
+        '<div class="install-step"><span class="install-step-num">1</span><span>Open this page in your browser</span></div>' +
+        '<div class="install-step"><span class="install-step-num">2</span><span>Tap the menu (⋮) or Share button</span></div>' +
+        '<div class="install-step"><span class="install-step-num">3</span><span>Tap <strong>Install app</strong> or <strong>Add to Home Screen</strong></span></div>' +
+        '</div><p style="font-size:12px;color:#52525B;margin:0">OmniCode works offline once installed.</p>';
+    } else {
+      title.textContent = 'Install on Mobile';
+      body.innerHTML = '<p>Open this page on your phone or tablet, then follow the install instructions.</p>' +
+        '<a href="/app" class="install-modal-close" style="display:inline-block;margin-top:1rem;text-decoration:none">Open App →</a>';
+    }
+
+    modal.classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('install-modal').classList.remove('open');
+  }
+
+  document.getElementById('install-modal-close').addEventListener('click', closeModal);
+  document.getElementById('install-modal-backdrop').addEventListener('click', closeModal);
+
+  var installBtn = document.getElementById('install-pwa-btn');
+  if (installBtn) {
+    installBtn.addEventListener('click', showInstallModal);
+  }
+
+  var statusEl = document.getElementById('install-pwa-status');
+  window.addEventListener('appinstalled', function() {
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.textContent = 'OmniCode is installed!';
+    }
+  });
 })();
 </script>
 </body>
