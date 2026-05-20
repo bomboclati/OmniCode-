@@ -3,188 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0F1520">
-<meta name="description" content="OmniCode - Autonomous AI Coding Agent. Terminal, Web, Your Key.">
+<meta name="theme-color" content="#0A0E17" media="(prefers-color-scheme:dark)">
+<meta name="theme-color" content="#F5F7FA" media="(prefers-color-scheme:light)">
+<meta name="description" content="OmniCode - Autonomous AI Coding Agent. Terminal, Web, Your Key. Full-stack AI coding assistant with true BYOK privacy.">
+<meta property="og:title" content="OmniCode - Autonomous AI Coding Agent">
+<meta property="og:description" content="Terminal, Web, Your Key. Full-stack AI coding assistant with true BYOK privacy.">
+<meta property="og:image" content="https://omnicode.ai/og.png">
+<meta property="og:url" content="https://omnicode.ai">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OmniCode - Autonomous AI Coding Agent">
+<meta name="twitter:description" content="Terminal, Web, Your Key. Full-stack AI coding assistant with true BYOK privacy.">
 <title>OmniCode - Autonomous AI Coding Agent</title>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OmniCode","operatingSystem":"Windows,macOS,Linux","applicationCategory":"DeveloperApplication","description":"Autonomous AI coding agent with terminal TUI, web dashboard, and true BYOK privacy.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"OmniCode"}}</script>
 <style>
-:root{--bg:#0F1520;--surface:#141C2B;--surface2:#1A2438;--border:#1E2A3A;--green:#00FFA3;--purple:#8957FF;--text:#EBF0F5;--text2:#8899B4;--gold:#FFD700;--red:#FF4444;--orange:#FFAA00}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;overflow-x:hidden;line-height:1.6}
-a{color:var(--green);text-decoration:none}
+:root{--bg:#0A0E17;--surface:#121A2E;--surface2:#182240;--border:#1E2A4A;--green:#00FFA3;--purple:#8957FF;--gold:#FFD700;--text:#EBF0F5;--text2:#8899C0;--red:#FF4444;--orange:#FFAA00;--blue:#00AAFF;--glow-green:rgba(0,255,163,.15);--glow-purple:rgba(137,87,255,.15);--radius:12px;--radius-sm:8px;--transition:.3s cubic-bezier(.4,0,.2,1)}
+[data-theme=light]{--bg:#F5F7FA;--surface:#FFFFFF;--surface2:#E8ECF4;--border:#D0D6E0;--text:#1A1A2E;--text2:#6A7A94;--glow-green:rgba(0,200,130,.08);--glow-purple:rgba(100,50,200,.08)}
+*,:after,:before{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;overflow-x:hidden;line-height:1.6;transition:background var(--transition),color var(--transition)}
+a{color:var(--green);text-decoration:none;transition:color .2s}
 a:hover{color:var(--purple)}
-h1,h2,h3,h4{line-height:1.3}
+h1,h2,h3{line-height:1.25}
 ::selection{background:var(--purple);color:#fff}
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-::-webkit-scrollbar-thumb:hover{background:var(--text2)}
-.container{max-width:1200px;margin:0 auto;padding:0 20px}
-header.sticky{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,21,32,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px;height:60px}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* Scroll progress */
+#scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--green),var(--purple));z-index:999;transition:width .1s;width:0}
+
+/* Custom cursor */
+.cursor-dot,.cursor-ring{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);transition:transform .15s ease,opacity .3s;opacity:0}
+.cursor-dot{width:6px;height:6px;background:var(--green);box-shadow:0 0 10px var(--glow-green)}
+.cursor-ring{width:32px;height:32px;border:1.5px solid var(--purple);transition:width .3s,height .3s,border-color .3s,transform .15s}
+.cursor-ring.hover{width:48px;height:48px;border-color:var(--green);background:var(--glow-green)}
+@media(max-width:768px){.cursor-dot,.cursor-ring{display:none}}
+
+/* Header */
+header.sticky{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,23,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px;height:64px;transition:background var(--transition),border-color var(--transition)}
+[data-theme=light] header.sticky{background:rgba(255,255,255,.85)}
 .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:100%}
-.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700}
-.logo svg{width:28px;height:28px}
-.logo-text{background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-nav{display:flex;align-items:center;gap:24px}
-nav a{color:var(--text2);font-size:14px;font-weight:500;transition:color .2s}
-nav a:hover{color:var(--text)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
-.btn-primary{background:linear-gradient(135deg,var(--purple),var(--green));color:#fff}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(137,87,255,.3)}
-.btn-outline{background:transparent;color:var(--green);border:1px solid var(--green)}
-.btn-outline:hover{background:rgba(0,255,163,.1);transform:translateY(-2px)}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 20px 60px;position:relative;overflow:hidden}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}
+.logo svg{width:28px;height:28px;flex-shrink:0}
+.logo-text{background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+nav{display:flex;align-items:center;gap:8px}
+nav a{padding:8px 14px;border-radius:var(--radius-sm);color:var(--text2);font-size:14px;font-weight:500;transition:all .2s}
+nav a:hover{color:var(--text);background:var(--surface)}
+#theme-toggle{background:var(--surface);border:1px solid var(--border);color:var(--text2);width:36px;height:36px;border-radius:var(--radius-sm);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-left:8px;font-family:inherit}
+#theme-toggle:hover{color:var(--text);border-color:var(--green)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
 #particles{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
-.hero-content{position:relative;z-index:1;max-width:800px}
-.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;margin-bottom:20px;line-height:1.1}
-.gradient-text{background:linear-gradient(135deg,var(--green),var(--purple),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:clamp(1rem,2vw,1.25rem);color:var(--text2);margin-bottom:40px;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-grid{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.03;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px}
+.hero-shapes{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}
+.hero-shape{position:absolute;border-radius:50%;opacity:.06;animation:floatShape 20s infinite ease-in-out}
+.hero-shape:nth-child(1){width:300px;height:300px;background:var(--green);top:10%;left:-5%;animation-delay:0s}
+.hero-shape:nth-child(2){width:200px;height:200px;background:var(--purple);bottom:10%;right:-3%;animation-delay:-7s}
+.hero-shape:nth-child(3){width:150px;height:150px;background:var(--gold);top:50%;left:60%;animation-delay:-14s}
+@keyframes floatShape{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-30px) scale(1.05)}66%{transform:translate(-20px,20px) scale(.95)}}
+.hero-content{position:relative;z-index:1;max-width:880px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--glow-green);border:1px solid rgba(0,255,163,.2);border-radius:20px;font-size:13px;color:var(--green);margin-bottom:24px;font-weight:500}
+.hero h1{font-size:clamp(2.8rem,7vw,5rem);font-weight:800;margin-bottom:24px;letter-spacing:-.02em}
+.gradient-text{background:linear-gradient(135deg,var(--green),var(--purple),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradientShift 4s ease infinite}
+@keyframes gradientShift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.hero p{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--text2);margin-bottom:40px;max-width:640px;margin-left:auto;margin-right:auto}
 .hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.terminal-demo{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin:80px auto;max-width:700px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.terminal-header{background:var(--surface2);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
-.terminal-dot{width:12px;height:12px;border-radius:50%}
-.terminal-body{background:#0A0E17;padding:16px;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:13px;min-height:200px;line-height:1.7;color:var(--green)}
+.hero-btns .btn{position:relative;overflow:hidden}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;border:none;font-family:inherit;position:relative}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--green));color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--glow-purple)}
+.btn-primary::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.2) 0%,transparent 60%);opacity:0;transition:opacity .4s}
+.btn-primary:hover::after{opacity:1}
+.btn-outline{background:transparent;color:var(--green);border:1px solid var(--green)}
+.btn-outline:hover{background:var(--glow-green);transform:translateY(-2px);box-shadow:0 4px 20px var(--glow-green)}
+.btn-ghost{background:var(--surface);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text2)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;max-width:900px;margin:-40px auto 60px;padding:0 24px;position:relative;z-index:2}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 20px;text-align:center;backdrop-filter:blur(12px);transition:all var(--transition)}
+.stat-card:hover{border-color:var(--green);transform:translateY(-4px);box-shadow:0 8px 30px var(--glow-green)}
+.stat-number{font-size:2.4rem;font-weight:800;background:linear-gradient(135deg,var(--green),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:13px;color:var(--text2);margin-top:4px}
+
+/* Terminal */
+.terminal-demo{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin:60px auto;max-width:740px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5);transition:all var(--transition)}
+[data-theme=light] .terminal-demo{box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.terminal-header{background:var(--surface2);padding:14px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.terminal-dot{width:12px;height:12px;border-radius:50%;transition:opacity .3s}
+.terminal-title{margin-left:12px;color:var(--text2);font-size:12px;font-family:'SF Mono','Cascadia Code','Consolas',monospace}
+.terminal-body{background:#060912;padding:20px;font-family:'SF Mono','Cascadia Code','Fira Code','Consolas',monospace;font-size:13px;min-height:240px;line-height:1.7;color:var(--green);transition:background var(--transition)}
+[data-theme=light] .terminal-body{background:var(--bg)}
 .terminal-line{white-space:pre-wrap;word-break:break-all}
 .terminal-prompt{color:var(--green)}
-.terminal-cursor{animation:blink 1s step-end infinite}
+.terminal-cursor{animation:blink 1s step-end infinite;color:var(--green)}
 @keyframes blink{50%{opacity:0}}
-.section{padding:80px 0}
-.section h2{font-size:clamp(1.8rem,4vw,2.5rem);text-align:center;margin-bottom:12px}
-.section .subtitle{text-align:center;color:var(--text2);margin-bottom:50px;font-size:1.1rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;transition:all .3s}
-.card:hover{border-color:var(--green);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,255,163,.1)}
-.card-icon{font-size:36px;margin-bottom:16px}
-.card h3{font-size:1.2rem;margin-bottom:8px}
-.card p{color:var(--text2);font-size:14px}
-.accordion{margin:0 auto;max-width:800px}
-.accordion-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
-.accordion-trigger{width:100%;padding:16px 20px;background:none;border:none;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;font-family:inherit}
-.accordion-trigger:hover{background:var(--surface2)}
-.accordion-trigger .arrow{transition:transform .3s;font-size:12px;color:var(--text2)}
-.accordion-trigger.active .arrow{transform:rotate(180deg)}
-.accordion-panel{padding:0 20px;max-height:0;overflow:hidden;transition:all .3s ease}
-.accordion-panel.open{max-height:500px;padding:0 20px 16px}
-.accordion-panel p{color:var(--text2);font-size:14px;line-height:1.7}
-.byok-section{text-align:center;padding:80px 20px;background:var(--surface);border-radius:12px;margin:80px 0}
-.byok-lock{font-size:64px;margin-bottom:20px;display:inline-block;animation:pulse 3s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.provider-logos{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin:30px 0}
-.provider-logo{padding:12px 24px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-weight:600;font-size:13px}
-.tabs{display:flex;gap:4px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
-.tab-btn{padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;font-family:inherit}
-.tab-btn.active,.tab-btn:hover{background:var(--surface2);color:var(--green);border-color:var(--green)}
-.tab-content{display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;max-width:700px;margin:0 auto}
-.tab-content.active{display:block}
-.tab-content h3{margin-bottom:8px}
+.terminal-output{color:#ccc}
+.terminal-output .highlight-green{color:var(--green)}
+.terminal-output .highlight-purple{color:var(--purple)}
+.terminal-output .highlight-gold{color:var(--gold)}
+.terminal-output .highlight-red{color:var(--red)}
+.terminal-output .highlight-orange{color:var(--orange)}
+.terminal-output .highlight-blue{color:var(--blue)}
+
+/* Section common */
+.section{padding:100px 0}
+.section-header{text-align:center;margin-bottom:56px}
+.section-header h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:800;margin-bottom:12px}
+.section-header .subtitle{color:var(--text2);font-size:1.1rem;max-width:600px;margin:0 auto}
+.section-divider{width:60px;height:4px;background:linear-gradient(90deg,var(--green),var(--purple));border-radius:2px;margin:16px auto}
+
+/* Feature grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);transform:translateX(-100%);transition:transform .5s}
+.card:hover::before{transform:translateX(100%)}
+.card:hover{border-color:var(--green);transform:translateY(-6px);box-shadow:0 12px 48px var(--glow-green)}
+.card-icon{font-size:32px;margin-bottom:16px;display:inline-block;transition:transform .3s}
+.card:hover .card-icon{transform:scale(1.15)}
+.card h3{font-size:1.15rem;margin-bottom:8px;font-weight:700}
+.card p{color:var(--text2);font-size:14px;line-height:1.7}
+
+/* Integration grid */
+.integration-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:32px 0}
+.integration-chip{padding:10px 20px;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--text2);font-size:13px;font-weight:500;transition:all .2s;display:flex;align-items:center;gap:6px}
+.integration-chip:hover{border-color:var(--green);color:var(--text);background:var(--surface2)}
+.integration-chip .chip-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;justify-content:center;margin-bottom:40px;flex-wrap:wrap;background:var(--surface);padding:4px;border-radius:var(--radius-sm);border:1px solid var(--border);width:fit-content;margin-left:auto;margin-right:auto}
+.tab-btn{padding:8px 18px;background:transparent;border:none;border-radius:6px;color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;font-family:inherit;white-space:nowrap}
+.tab-btn.active,.tab-btn:hover{background:var(--surface2);color:var(--green)}
+.tab-content{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:700px;margin:0 auto}
+.tab-content.active{display:block;animation:fadeIn .4s ease}
+.tab-content h3{margin-bottom:8px;font-size:1.2rem}
 .tab-content p{color:var(--text2);font-size:14px;margin-bottom:16px}
-.tab-mockup{background:var(--bg);border-radius:8px;padding:16px;font-family:monospace;font-size:12px;color:var(--green);min-height:120px;border:1px solid var(--border)}
-.compare-table{width:100%;border-collapse:collapse;font-size:14px;margin:40px 0}
-.compare-table th,.compare-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
-.compare-table th{background:var(--surface);color:var(--text2);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.tab-mockup{background:var(--bg);border-radius:var(--radius-sm);padding:16px 20px;font-family:'SF Mono','Consolas',monospace;font-size:12px;color:var(--green);min-height:80px;border:1px solid var(--border);line-height:1.8}
+
+/* Compare table */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.compare-table{width:100%;border-collapse:collapse;font-size:14px}
+.compare-table th,.compare-table td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--border)}
+.compare-table th{background:var(--surface);color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
 .compare-table td{color:var(--text)}
-.compare-table tr:hover{background:var(--surface)}
-.compare-table .highlight{background:rgba(0,255,163,.05)}
-.compare-table .check{color:var(--green)}
+.compare-table tr:hover td{background:var(--surface)}
+.compare-table .highlight td{background:rgba(0,255,163,.03)}
+.compare-table .check{color:var(--green);font-weight:500}
 .compare-table .cross{color:var(--text2);opacity:.4}
-.compare-table .omni-col{background:rgba(0,255,163,.08);border-left:2px solid var(--green);border-right:2px solid var(--green)}
-.testimonials{text-align:center;position:relative;min-height:200px}
-.testimonial-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;max-width:600px;margin:0 auto;display:none}
-.testimonial-card.active{display:block;animation:fadeIn .5s}
-.testimonial-card .avatar{width:60px;height:60px;border-radius:50%;margin:0 auto 16px;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:24px;background:var(--surface2)}
-.testimonial-card blockquote{font-size:1.1rem;font-style:italic;color:var(--text);margin-bottom:12px;line-height:1.6}
-.testimonial-card cite{color:var(--text2);font-size:14px;font-style:normal}
-.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden;cursor:pointer}
-.faq-question{padding:16px 20px;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center}
-.faq-question .arrow{transition:transform .3s;font-size:12px;color:var(--text2)}
-.faq-item.open .faq-question .arrow{transform:rotate(180deg)}
-.faq-answer{padding:0 20px;max-height:0;overflow:hidden;transition:all .3s}
-.faq-item.open .faq-answer{max-height:300px;padding:0 20px 16px}
-.faq-answer p{color:var(--text2);font-size:14px;line-height:1.7}
-.pricing-toggle{display:flex;justify-content:center;gap:8px;margin-bottom:40px}
-.pricing-toggle button{padding:8px 20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);border-radius:6px;cursor:pointer;font-family:inherit;font-size:14px}
-.pricing-toggle button.active{background:var(--green);color:var(--bg);border-color:var(--green)}
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:800px;margin:0 auto}
-.pricing-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:40px 32px;text-align:center}
-.pricing-card.featured{border-color:var(--green);position:relative}
-.pricing-card.featured::before{content:'Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--bg);padding:4px 16px;border-radius:20px;font-size:12px;font-weight:700}
-.pricing-card h3{font-size:1.5rem;margin-bottom:8px}
-.pricing-card .price{font-size:3rem;font-weight:800;margin:20px 0;color:var(--green)}
+.compare-table .omni-col{font-weight:600}
+.compare-table .omni-row td:first-child{font-weight:600}
+
+/* Testimonials */
+.testimonials{text-align:center;position:relative}
+.testimonial-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;max-width:640px;margin:0 auto;display:none}
+.testimonial-card.active{display:block;animation:fadeIn .5s ease}
+.testimonial-card .avatar{width:64px;height:64px;border-radius:50%;margin:0 auto 16px;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--surface2)}
+.testimonial-card blockquote{font-size:1.1rem;font-style:italic;color:var(--text);margin-bottom:12px;line-height:1.7}
+.testimonial-card cite{color:var(--text2);font-size:14px}
+.testimonial-dots{display:flex;justify-content:center;gap:8px;margin-top:20px}
+.testimonial-dot{width:10px;height:10px;border-radius:50%;background:var(--border);border:none;cursor:pointer;transition:all .3s;padding:0}
+.testimonial-dot.active{background:var(--green);width:28px;border-radius:5px}
+
+/* Accordion / FAQ */
+.accordion{margin:0 auto;max-width:800px}
+.accordion-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden;transition:border-color .2s}
+.accordion-item:hover{border-color:var(--text2)}
+.accordion-trigger{width:100%;padding:16px 20px;background:none;border:none;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;font-family:inherit;gap:16px}
+.accordion-trigger .arrow{transition:transform .3s;font-size:12px;color:var(--text2);flex-shrink:0}
+.accordion-item.open .accordion-trigger .arrow{transform:rotate(180deg)}
+.accordion-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.accordion-item.open .accordion-panel{grid-template-rows:1fr}
+.accordion-panel-inner{overflow:hidden}
+.accordion-panel p,.accordion-panel div{padding:0 20px 16px;color:var(--text2);font-size:14px;line-height:1.7}
+
+/* Pricing */
+.pricing-toggle{display:flex;justify-content:center;gap:4px;margin-bottom:40px;background:var(--surface);padding:4px;border-radius:var(--radius-sm);border:1px solid var(--border);width:fit-content;margin-left:auto;margin-right:auto}
+.pricing-toggle button{padding:8px 20px;border:none;background:transparent;color:var(--text2);border-radius:6px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;transition:all .2s}
+.pricing-toggle button.active{background:var(--green);color:var(--bg)}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:900px;margin:0 auto}
+.pricing-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;transition:all var(--transition);position:relative}
+.pricing-card.featured{border-color:var(--green);box-shadow:0 0 40px var(--glow-green)}
+.pricing-card.featured::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green),var(--purple));color:#fff;padding:4px 18px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.pricing-card h3{font-size:1.5rem;margin-bottom:4px}
+.pricing-card .price{font-size:3rem;font-weight:800;margin:24px 0;color:var(--green)}
 .pricing-card .price span{font-size:1rem;color:var(--text2);font-weight:400}
 .pricing-card ul{list-style:none;margin:24px 0;text-align:left}
-.pricing-card ul li{padding:8px 0;color:var(--text2);font-size:14px}
-.pricing-card ul li::before{content:'✓ ';color:var(--green)}
-.downloads{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin:40px 0}
-.download-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px}
+.pricing-card ul li{padding:8px 0;color:var(--text2);font-size:14px;display:flex;align-items:center;gap:8px}
+.pricing-card ul li::before{content:'✓';color:var(--green);font-weight:700}
+
+/* CTA Section */
+.cta-section{text-align:center;padding:80px 24px;background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:var(--radius);margin:80px 0;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,var(--glow-green) 0%,transparent 50%),radial-gradient(circle at 70% 50%,var(--glow-purple) 0%,transparent 50%);opacity:.5}
+.cta-content{position:relative;z-index:1}
+.cta-section h2{font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:12px}
+.cta-section p{color:var(--text2);margin-bottom:32px;font-size:1.05rem}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* Download */
+.downloads{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:40px}
+.download-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;transition:all .2s}
+.download-card:hover{border-color:var(--text2)}
 .download-card h3{margin-bottom:16px;font-size:1.1rem}
-.download-card .method{margin:8px 0;padding:8px 12px;background:var(--bg);border-radius:6px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-family:monospace}
-.copy-btn{padding:4px 10px;background:var(--green);color:var(--bg);border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit}
-.copy-btn:hover{opacity:.9}
-.checksum-details{font-size:12px;color:var(--text2);margin-top:8px}
-footer{background:var(--surface);border-top:1px solid var(--border);padding:40px 20px;text-align:center;margin-top:80px}
-footer p{color:var(--text2);font-size:13px;margin-top:16px}
-.footer-links{display:flex;justify-content:center;gap:24px;margin:16px 0;flex-wrap:wrap}
-.footer-links a{color:var(--text2);font-size:13px}
-.footer-links a:hover{color:var(--text)}
-.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px;background:none;border:none}
-.hamburger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(30px);transition:all .6s ease}
+.download-card .method{margin:6px 0;padding:8px 12px;background:var(--bg);border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-family:'SF Mono','Consolas',monospace;word-break:break-all}
+.download-card .method span{flex:1;min-width:0}
+.copy-btn{padding:4px 12px;background:var(--green);color:var(--bg);border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;white-space:nowrap;transition:opacity .2s}
+.copy-btn:hover{opacity:.85}
+.copy-btn.copied{background:var(--purple)}
+.checksum-details{font-size:12px;color:var(--text2);margin-top:8px;cursor:pointer}
+.checksum-details summary{cursor:pointer;padding:4px 0}
+.checksum-details code{font-size:11px;color:var(--text2);word-break:break-all}
+
+/* Footer */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:48px 24px;margin-top:80px}
+.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px}
+.footer-col h4{font-size:14px;margin-bottom:16px;color:var(--text)}
+.footer-col a{display:block;color:var(--text2);font-size:13px;padding:4px 0;transition:color .2s}
+.footer-col a:hover{color:var(--green)}
+.footer-bottom{text-align:center;padding-top:32px;margin-top:40px;border-top:1px solid var(--border);font-size:13px;color:var(--text2)}
+.footer-bottom .footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:12px;flex-wrap:wrap}
+
+/* Back to top */
+#back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:99;opacity:0;transform:translateY(20px);transition:all .3s;font-size:18px;backdrop-filter:blur(8px)}
+#back-to-top.visible{opacity:1;transform:translateY(0)}
+#back-to-top:hover{background:var(--green);color:var(--bg);border-color:var(--green)}
+
+/* Reveal animations */
+.reveal{opacity:0;transform:translateY(40px);transition:all .7s cubic-bezier(.4,0,.2,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:all .7s cubic-bezier(.4,0,.2,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:all .7s cubic-bezier(.4,0,.2,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.9);transition:all .7s cubic-bezier(.4,0,.2,1)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+.reveal-stagger .card:nth-child(1){transition-delay:0s}
+.reveal-stagger .card:nth-child(2){transition-delay:.08s}
+.reveal-stagger .card:nth-child(3){transition-delay:.16s}
+.reveal-stagger .card:nth-child(4){transition-delay:.24s}
+.reveal-stagger .card:nth-child(5){transition-delay:.32s}
+.reveal-stagger .card:nth-child(6){transition-delay:.4s}
+
+/* Keyframes */
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* Mobile nav overlay */
+#nav-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:98;opacity:0;pointer-events:none;transition:opacity .3s}
+#nav-overlay.visible{opacity:1;pointer-events:auto}
+
+/* Responsive */
 @media(max-width:768px){
   .hamburger{display:flex}
-  nav{display:none;position:absolute;top:60px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);flex-direction:column;padding:16px;gap:12px}
-  nav.open{display:flex}
-  .hero h1{font-size:2rem}
+  nav{position:fixed;top:0;right:-300px;width:280px;height:100%;background:var(--surface);flex-direction:column;padding:80px 24px 24px;gap:4px;transition:right .3s;z-index:99;border-left:1px solid var(--border)}
+  nav.open{right:0}
+  nav a{padding:12px 16px;width:100%;border-radius:var(--radius-sm)}
+  #theme-toggle{position:absolute;top:14px;right:60px;margin:0}
+  .hero h1{font-size:2.2rem}
+  .stats{grid-template-columns:repeat(2,1fr);margin-top:-30px}
+  .stat-number{font-size:1.8rem}
   .grid{grid-template-columns:1fr}
   .compare-table{font-size:12px}
-  .compare-table th,.compare-table td{padding:8px}
+  .compare-table th,.compare-table td{padding:8px 10px}
+  .pricing-grid{grid-template-columns:1fr}
+  .downloads{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .terminal-body{font-size:12px;padding:14px;min-height:180px}
+}
+@media(max-width:480px){
+  .hero{padding:100px 16px 60px}
+  .section{padding:60px 0}
+  .stats{grid-template-columns:repeat(2,1fr);gap:12px}
+  .stat-card{padding:20px 12px}
+  .footer-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
+<div id="scroll-progress"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div id="nav-overlay"></div>
+
 <header class="sticky">
 <div class="header-inner">
 <div class="logo">
 <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" stroke="#00FFA3" stroke-width="2" fill="none"/><path d="M8 16 L24 16" stroke="#8957FF" stroke-width="2"/><circle cx="16" cy="16" r="3" fill="#00FFA3"/></svg>
 <span class="logo-text">OmniCode</span>
 </div>
-<button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+<button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 <nav id="main-nav">
 <a href="#features">Features</a>
-<a href="#agent">Agent</a>
+<a href="#agent">Capabilities</a>
 <a href="#byok">BYOK</a>
+<a href="#pricing">Pricing</a>
 <a href="#download">Download</a>
-<a href="https://github.com/omnicode/omnicode" target="_blank">GitHub</a>
+<a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener">GitHub</a>
+<button id="theme-toggle" aria-label="Toggle theme">🌙</button>
 </nav>
 </div>
 </header>
 
 <section class="hero">
 <canvas id="particles"></canvas>
+<div class="hero-grid"></div>
+<div class="hero-shapes">
+<div class="hero-shape"></div>
+<div class="hero-shape"></div>
+<div class="hero-shape"></div>
+</div>
 <div class="hero-content">
+<div class="hero-badge"><span>✨</span> v0.1.0 — Now Open Source</div>
 <h1><span class="gradient-text">One Agent.<br>Terminal. Web. Your Key.</span></h1>
-<p>OmniCode is the autonomous AI coding agent that lives in your terminal and web browser. Truly private with Bring Your Own Key. No subscriptions, no data leaks.</p>
+<p>OmniCode is the autonomous AI coding agent that lives in your terminal and web browser. Truly private with Bring Your Own Key — no subscriptions, no data leaks, no accounts.</p>
 <div class="hero-btns">
-<a href="#download" class="btn btn-primary">⬇ Download</a>
+<a href="#download" class="btn btn-primary">⬇ Download Free</a>
 <a href="#demo" class="btn btn-outline">▶ Live Demo</a>
+<a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener" class="btn btn-ghost">⭐ GitHub</a>
 </div>
 </div>
 </section>
 
-<section id="demo" class="container" style="padding:0 20px">
-<div class="terminal-demo">
+<div class="stats">
+<div class="stat-card reveal"><div class="stat-number" data-target="15">0</div><div class="stat-label">Agent Types</div></div>
+<div class="stat-card reveal"><div class="stat-number" data-target="8">0</div><div class="stat-label">LLM Providers</div></div>
+<div class="stat-card reveal"><div class="stat-number" data-target="50">0</div><div class="stat-label">Steps Per Task</div></div>
+<div class="stat-card reveal"><div class="stat-number" data-target="5">0</div><div class="stat-label">Swarm Agents</div></div>
+<div class="stat-card reveal"><div class="stat-number" data-target="100">0</div><div class="stat-label">% Private</div></div>
+</div>
+
+<section id="demo" class="container" style="padding:0 24px">
+<div class="terminal-demo reveal">
 <div class="terminal-header">
 <span class="terminal-dot" style="background:#FF4444"></span>
 <span class="terminal-dot" style="background:#FFAA00"></span>
 <span class="terminal-dot" style="background:#00FFA3"></span>
-<span style="margin-left:12px;color:var(--text2);font-size:12px">omni — Terminal</span>
+<span class="terminal-title">omni — Autonomous Agent Terminal</span>
 </div>
 <div class="terminal-body" id="terminal-body">
-<div class="terminal-line"><span style="color:var(--text2)">╔══════════════════════════════════════════╗</span></div>
-<div class="terminal-line"><span style="color:var(--text2)">║     OmniCode Interactive Terminal        ║</span></div>
-<div class="terminal-line"><span style="color:var(--text2)">╚══════════════════════════════════════════╝</span></div>
-<div class="terminal-line"><span style="color:var(--text2)">Type a command or wait for the demo...</span></div>
+<div class="terminal-line"><span style="color:var(--text2);opacity:.6">╔══════════════════════════════════════════════════╗</span></div>
+<div class="terminal-line"><span style="color:var(--text2);opacity:.6">║     OmniCode Interactive Terminal v0.1.0          ║</span></div>
+<div class="terminal-line"><span style="color:var(--text2);opacity:.6">╚══════════════════════════════════════════════════╝</span></div>
+<div class="terminal-line"><span style="color:var(--text2);opacity:.5">Type a command or watch the demo...</span></div>
 <div class="terminal-line">&nbsp;</div>
 <div class="terminal-line" id="demo-output"></div>
 <div class="terminal-line" id="demo-input"><span class="terminal-prompt">$ </span><span id="demo-cmd"></span><span class="terminal-cursor">█</span></div>
@@ -193,145 +361,190 @@ footer p{color:var(--text2);font-size:13px;margin-top:16px}
 </section>
 
 <section id="features" class="section container">
+<div class="section-header reveal">
 <h2>Why OmniCode?</h2>
-<p class="subtitle">The only AI coding agent that puts you in complete control</p>
-<div class="grid">
-<div class="card reveal"><div class="card-icon">🔄</div><h3>Terminal + Web Sync</h3><p>Seamless real-time sync between your terminal TUI and the web dashboard. Start in one, resume in the other.</p></div>
+<div class="section-divider"></div>
+<p class="subtitle">The only AI coding agent that gives you complete control</p>
+</div>
+<div class="grid reveal-stagger">
+<div class="card reveal"><div class="card-icon">🔄</div><h3>Terminal + Web Sync</h3><p>Seamless real-time sync between your terminal TUI and the web dashboard. Start in one, resume in the other. Zero context loss.</p></div>
 <div class="card reveal"><div class="card-icon">🔑</div><h3>True BYOK</h3><p>Bring Your Own Key. Connect to OpenAI, Anthropic, Azure, Ollama, LM Studio, Groq, Together, or any OpenAI-compatible endpoint.</p></div>
-<div class="card reveal"><div class="card-icon">🧠</div><h3>Autonomous Swarms</h3><p>Deploy multiple AI agents that work in parallel — coordinator, architect, coder, reviewer, tester. Merge results automatically.</p></div>
-<div class="card reveal"><div class="card-icon">📦</div><h3>Deploy &amp; Release</h3><p>Prompt-to-binary pipeline. Describe your feature in natural language, watch it get coded, tested, built, and released with changelogs.</p></div>
-<div class="card reveal"><div class="card-icon">🏛️</div><h3>Legacy Code Revival</h3><p>Archeologist mode analyzes dead code, vulnerabilities, bottlenecks, and generates a full "Codebase Bible" with Mermaid diagrams.</p></div>
-<div class="card reveal"><div class="card-icon">🩺</div><h3>Self-Healing</h3><p>When tests fail, OmniCode analyzes the failure, generates a fix, applies it, and re-runs — iterating up to 5 times automatically.</p></div>
+<div class="card reveal"><div class="card-icon">🧠</div><h3>Autonomous Swarms</h3><p>Deploy 5 specialized AI agents — coordinator, architect, coder, reviewer, tester — that work in parallel and merge results.</p></div>
+<div class="card reveal"><div class="card-icon">📦</div><h3>Prompt-to-Binary</h3><p>Describe a feature in natural language. OmniCode plans, codes, tests, builds, packages, signs, and creates a GitHub release. Full CI/CD.</p></div>
+<div class="card reveal"><div class="card-icon">🏛️</div><h3>Legacy Code Revival</h3><p>Archeologist mode analyzes dead code, vulnerabilities, and bottlenecks. Generates a full "Codebase Bible" with Mermaid architecture diagrams.</p></div>
+<div class="card reveal"><div class="card-icon">🩺</div><h3>Self-Healing Tests</h3><p>When tests fail, OmniCode analyzes the failure, generates a fix, applies it, and re-runs — iterating up to 5 times automatically per failure.</p></div>
+</div>
+</section>
+
+<section id="integrations" class="section container">
+<div class="section-header reveal">
+<h2>Works With Everything</h2>
+<div class="section-divider"></div>
+<p class="subtitle">Connect to any LLM provider — cloud, local, or custom</p>
+</div>
+<div class="reveal">
+<div class="integration-grid">
+<span class="integration-chip"><span class="chip-dot" style="background:#00A67E"></span>OpenAI</span>
+<span class="integration-chip"><span class="chip-dot" style="background:#6B4FBB"></span>Anthropic</span>
+<span class="integration-chip"><span class="chip-dot" style="background:#0078D4"></span>Azure</span>
+<span class="integration-chip"><span class="chip-dot" style="background:#F55036"></span>Groq</span>
+<span class="integration-chip"><span class="chip-dot" style="background:#6B4FBB"></span>Together</span>
+<span class="integration-chip"><span class="chip-dot" style="background:#00A67E"></span>Ollama</span>
+<span class="integration-chip"><span class="chip-dot" style="background:#FF6B35"></span>LM Studio</span>
+<span class="integration-chip"><span class="chip-dot" style="background:var(--gold)"></span>OpenAI Compatible</span>
+</div>
+<p style="text-align:center;color:var(--text2);font-size:14px;margin-top:8px">Works fully offline with local models. No account required. No data leaves your network.</p>
 </div>
 </section>
 
 <section id="agent" class="section container">
+<div class="section-header reveal">
 <h2>Everything You Need</h2>
-<p class="subtitle">15 powerful capabilities built into one agent</p>
-<div class="accordion" id="feature-accordion">
-<div class="accordion-item"><button class="accordion-trigger">🤖 Autonomous Planning &amp; Execution<span class="arrow">▼</span></button><div class="accordion-panel"><p>OmniCode breaks down any task into a structured plan, executes each step using available tools (read/write files, run commands, search code, git operations), and adapts based on results. Iterates up to 50 steps per task with self-correction.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🔒 Sandboxed Execution<span class="arrow">▼</span></button><div class="accordion-panel"><p>Every agent action runs in an isolated sandbox — Direct (with warning), Git Worktree (creates temporary branch), Docker container, or Firecracker micro-VM. Rollback on failure is automatic.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">✏️ Multi-Platform Editor<span class="arrow">▼</span></button><div class="accordion-panel"><p>Full-featured editor experience across terminal (ratatui TUI), web (Monaco Editor), and VS Code extension with syntax highlighting, multi-cursor, diff view, and real-time collaboration.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🧠 Swarm Mode<span class="arrow">▼</span></button><div class="accordion-panel"><p>Spawn 5+ specialized AI agents (coordinator, architect, coder, reviewer, tester) that work concurrently on different aspects of a task. Each agent can use a different provider/model. Results are merged via git.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🔍 CI/CD Sentinel<span class="arrow">▼</span></button><div class="accordion-panel"><p>Polls your CI provider (GitHub Actions, Jenkins, CircleCI) every 30s. On failure, automatically fetches logs, parses errors, generates a fix, commits, and pushes. Optionally auto-merges when tests pass.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">✅ PR Review Automation<span class="arrow">▼</span></button><div class="accordion-panel"><p>Installs a webhook on your repo. When a PR is opened, OmniCode reviews every changed file line-by-line for bugs, security issues, performance problems, and style violations. Posts line-by-line comments via GitHub API.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">📄 Live Documentation<span class="arrow">▼</span></button><div class="accordion-panel"><p>Generates README, API docs, Mermaid architecture diagrams, and sequence diagrams directly from your codebase. Updates automatically as your code changes. Export to PDF.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🩺 Self-Healing Tests<span class="arrow">▼</span></button><div class="accordion-panel"><p>When tests fail, OmniCode reads the failure output, examines the test source, generates a fix (either in the test or the source code), applies it, and re-runs. Iterates up to 5 times.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🧠 Project Cortex<span class="arrow">▼</span></button><div class="accordion-panel"><p>Full codebase indexing with tree-sitter AST parsing, symbol extraction, embedding generation, and semantic search via vector similarity. Builds a knowledge graph of functions, classes, modules, and their relationships.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">📦 Dependency Guardian<span class="arrow">▼</span></button><div class="accordion-panel"><p>Monitors Cargo.toml, package.json, and requirements.txt dependencies against crates.io and npm registries. Detects breaking changes via semver. In sandbox, applies upgrades with migration instructions, tests, and creates a PR.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🏛️ Legacy Code Archeologist<span class="arrow">▼</span></button><div class="accordion-panel"><p>Scans your entire codebase, builds ASTs, identifies dead code, security vulnerabilities, and performance bottlenecks. Generates a "Codebase Bible" Markdown document with architecture analysis and Mermaid diagrams. Can also migrate code between languages.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🔴 Incident Whisperer<span class="arrow">▼</span></button><div class="accordion-panel"><p>Monitors production logs and alert sources (Sentry, Datadog, custom log files) every 30s. On error, parses stack traces, correlates with recent commits, generates a hotfix PR, and optionally auto-deploys to staging.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">🚀 Onboarding Angel<span class="arrow">▼</span></button><div class="accordion-panel"><p>Interactive step-by-step wizard that learns the developer's role, skill level, and goals. Generates a personalized learning path with specific tasks (read files, run tests, fix bugs). Guides the developer through their first real change.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">📋 Decision Historian<span class="arrow">▼</span></button><div class="accordion-panel"><p>Captures every architectural decision from chat sessions and PR discussions. Stores in a searchable SQLite database. Query past decisions with semantic search. Tag cloud visualization. Chain of reasoning preserved.</p></div></div>
-<div class="accordion-item"><button class="accordion-trigger">⚡ Prompt-to-Binary Pipeline<span class="arrow">▼</span></button><div class="accordion-panel"><p>Describe a feature in natural language. OmniCode plans, codes, tests, cross-compiles, packages (.tar.gz, .zip, .deb, .rpm, .msi), signs, creates a GitHub release with changelog. Full CI/CD pipeline in one command.</p></div></div>
+<div class="section-divider"></div>
+<p class="subtitle">15 powerful capabilities built into a single agent</p>
+</div>
+<div class="accordion reveal" id="feature-accordion">
+<div class="accordion-item open"><button class="accordion-trigger">🤖 Autonomous Planning &amp; Execution<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>OmniCode breaks down any task into a structured plan, executes each step using available tools (read/write files, run commands, search code, git operations), and adapts based on results. Iterates up to 50 steps per task with self-correction.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🔒 Sandboxed Execution<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Every agent action runs in an isolated sandbox — Direct (with warning), Git Worktree (temporary branch), Docker container, or Firecracker micro-VM. Automatic rollback on failure with zero side effects.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">✏️ Multi-Platform Editor<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Full editor experience across terminal (ratatui TUI), web (Monaco Editor), and VS Code extension with syntax highlighting, multi-cursor, diff view, and real-time collaboration.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🧠 Swarm Mode<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Spawn 5+ specialized agents — coordinator, architect, coder, reviewer, tester — that work concurrently on different aspects of a task. Each can use a different provider/model. Results merge via git.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🔍 CI/CD Sentinel<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Polls your CI provider every 30s. On failure, auto-fetches logs, parses errors, generates a fix, commits, and pushes. Optionally auto-merges when tests pass.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">✅ PR Review Automation<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Installs a webhook on your repo. On PR open, reviews every changed file line-by-line for bugs, security issues, performance problems, and style violations. Posts line-by-line comments via GitHub API.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">📄 Live Documentation<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Generates README, API docs, Mermaid architecture diagrams, and sequence diagrams directly from your codebase. Updates automatically as code changes. Export to Markdown, HTML, or PDF.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🩺 Self-Healing Tests<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>When tests fail, reads the failure output, examines the test source, generates a fix (in test or source code), applies it, and re-runs. Up to 5 iterations per failure across the entire suite.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🧠 Project Cortex<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Full codebase indexing with tree-sitter AST parsing, symbol extraction, embedding generation, and semantic search via vector similarity. Builds a knowledge graph of functions, classes, and modules.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">📦 Dependency Guardian<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Monitors dependencies against registries. Detects breaking changes via semver. Applies upgrades with migration instructions, tests, and creates a PR — all in sandbox.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🏛️ Legacy Code Archeologist<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Scans your entire codebase, builds ASTs, identifies dead code, vulnerabilities, and bottlenecks. Generates a "Codebase Bible" with architecture analysis. Can migrate code between languages.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🔴 Incident Whisperer<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Monitors production logs and alert sources every 30s. On error, parses stack traces, correlates with recent commits, generates a hotfix PR, and optionally deploys to staging for verification.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🚀 Onboarding Angel<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Interactive step-by-step wizard that learns your role, skill level, and goals. Generates a personalized learning path with real tasks — reading files, running tests, fixing bugs.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">📋 Decision Historian<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Captures every architectural decision from chat sessions and PRs. Stores in a searchable SQLite database. Query past decisions via semantic search. Tag cloud visualization.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">⚡ Prompt-to-Binary Pipeline<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Describe a feature. OmniCode plans, codes, tests, cross-compiles, packages (.tar.gz, .zip, .deb, .rpm, .msi), signs, and creates a GitHub release with full changelog.</p></div></div></div>
 </div>
 </section>
 
 <section id="byok" class="container">
-<div class="byok-section reveal">
-<div class="byok-lock">🔑</div>
+<div class="cta-section reveal">
+<div style="font-size:56px;margin-bottom:16px">🔑</div>
 <h2>True Bring Your Own Key</h2>
-<p style="color:var(--text2);max-width:600px;margin:16px auto">Your API key never leaves your machine. It's encrypted with AES-256-GCM using a machine-derived key before being saved to disk. Zero telemetry. Zero data collection.</p>
-<div class="provider-logos">
-<span class="provider-logo">OpenAI</span>
-<span class="provider-logo">Anthropic</span>
-<span class="provider-logo">Azure</span>
-<span class="provider-logo">Groq</span>
-<span class="provider-logo">Together</span>
-<span class="provider-logo">Ollama</span>
-<span class="provider-logo">LM Studio</span>
-<span class="provider-logo">Custom</span>
+<p>Your API key never leaves your machine. Encrypted with AES-256-GCM using a machine-derived key. Zero telemetry. Zero data collection. No accounts. No servers.</p>
+<div class="integration-grid" style="margin-bottom:0">
+<span class="integration-chip">OpenAI</span>
+<span class="integration-chip">Anthropic</span>
+<span class="integration-chip">Azure</span>
+<span class="integration-chip">Groq</span>
+<span class="integration-chip">Together</span>
+<span class="integration-chip">Ollama</span>
+<span class="integration-chip">LM Studio</span>
+<span class="integration-chip">Custom</span>
 </div>
-<p style="color:var(--text2);font-size:14px;max-width:600px;margin:0 auto">Works fully offline with local models (Ollama, LM Studio). No account required. No data leaves your network.</p>
 </div>
 </section>
 
 <section id="platforms" class="section container">
+<div class="section-header reveal">
 <h2>Omni Everywhere</h2>
-<p class="subtitle">Available on every platform you use</p>
-<div class="tabs" id="platform-tabs">
-<button class="tab-btn active" data-tab="term">Terminal</button>
-<button class="tab-btn" data-tab="web">Web</button>
-<button class="tab-btn" data-tab="vscode">VS Code</button>
-<button class="tab-btn" data-tab="jetbrains">JetBrains</button>
-<button class="tab-btn" data-tab="android">Android (Termux)</button>
-<button class="tab-btn" data-tab="selfhost">Self-Hosted</button>
+<div class="section-divider"></div>
+<p class="subtitle">Available on every platform you use — and then some</p>
 </div>
-<div class="tab-content active" id="tab-term"><h3>💻 Terminal TUI</h3><p>Full-featured terminal UI built with ratatui + crossterm. File tree, chat panel, diff viewer, swarm dashboard, incident panel, and more. All keyboard-driven.</p><div class="tab-mockup">📁 File Tree  |  💬 Chat  |  📊 Swarm  |  🔴 Incidents<br>F1-F9 switches screens • Ctrl+K opens palette</div></div>
-<div class="tab-content" id="tab-web"><h3>🌐 Web Dashboard</h3><p>Monaco Editor powering the web UI with real-time WebSocket sync. Full feature parity with TUI plus visual diff, collaboration, and voice input.</p><div class="tab-mockup">📝 Monaco Editor • 💬 Chat Panel • 📄 Diff Viewer<br>Real-time collaboration • Voice input via Web Speech API</div></div>
-<div class="tab-content" id="tab-vscode"><h3>🔧 VS Code Extension</h3><p>Chat with OmniCode directly from VS Code. Review code, run swarm, view diffs, deploy, and search. Status bar integration with agent status.</p><div class="tab-mockup">📦 Commands: chat, swarm, review, deploy, find, heal<br>Status bar shows agent state • WebView chat panel</div></div>
-<div class="tab-content" id="tab-jetbrains"><h3>🏗️ JetBrains Plugin</h3><p>Full JetBrains integration with the OmniCode agent. Chat tool window, diff review, inline code suggestions.</p><div class="tab-mockup">🧩 Plugin connects to local OmniCode server<br>Same chat protocol as web UI and VS Code</div></div>
-<div class="tab-content" id="tab-android"><h3>📱 Android (Termux)</h3><p>Run OmniCode on your phone via Termux. Full TUI experience with touch-optimized navigation. Connect to Ollama for fully local AI.</p><div class="tab-mockup">📱 pkg install omnicode • omni serve<br>Access web UI from phone browser at localhost:9420</div></div>
-<div class="tab-content" id="tab-selfhost"><h3>🖥️ Self-Hosted Server</h3><p>Deploy OmniCode as a service on your own infrastructure. Docker, Kubernetes, or bare metal. Access via web browser from any device.</p><div class="tab-mockup">🐳 docker run -p 9420:9420 omnicode/server<br>Access at http://your-server:9420</div></div>
+<div class="reveal">
+<div class="tabs" id="platform-tabs">
+<button class="tab-btn active" data-tab="term">💻 Terminal</button>
+<button class="tab-btn" data-tab="web">🌐 Web</button>
+<button class="tab-btn" data-tab="vscode">🔧 VS Code</button>
+<button class="tab-btn" data-tab="jetbrains">🏗️ JetBrains</button>
+<button class="tab-btn" data-tab="mobile">📱 Mobile</button>
+<button class="tab-btn" data-tab="selfhost">🖥️ Self-Host</button>
+</div>
+<div class="tab-content active" id="tab-term"><h3>💻 Terminal TUI</h3><p>Built with ratatui + crossterm. File tree, chat panel, diff viewer, swarm dashboard, incident panel. Fully keyboard-driven with Vim-style keybindings.</p><div class="tab-mockup">📁 File Tree  │  💬 Chat  │  📊 Swarm  │  🔴 Incidents  │  🛡️ Guardian<br>F1-F9 switches screens • Ctrl+K opens command palette</div></div>
+<div class="tab-content" id="tab-web"><h3>🌐 Web Dashboard</h3><p>Monaco Editor with real-time WebSocket sync. Full feature parity with TUI plus visual diff, collaboration cursors, and voice input via Web Speech API.</p><div class="tab-mockup">📝 Monaco Editor • 💬 Chat Panel • 📄 Diff Viewer<br>👥 Real-time cursors • 🎤 Voice input • 📱 PWA support</div></div>
+<div class="tab-content" id="tab-vscode"><h3>🔧 VS Code Extension</h3><p>Chat with OmniCode directly from VS Code. Review code, run swarm, view diffs, deploy, and search. Status bar shows agent state at a glance.</p><div class="tab-mockup">📦 Commands: chat, swarm, review, deploy, find, heal<br>Status bar shows agent state • WebView panels for chat + diff</div></div>
+<div class="tab-content" id="tab-jetbrains"><h3>🏗️ JetBrains Plugin</h3><p>Full JetBrains integration. Chat tool window, diff review, inline suggestions. Connects to your local OmniCode server via WebSocket.</p><div class="tab-mockup">🧩 Same chat protocol as web UI and VS Code<br>Plugin connects to localhost:9421</div></div>
+<div class="tab-content" id="tab-mobile"><h3>📱 Mobile (Termux)</h3><p>Run OmniCode on your phone via Termux. Full TUI with touch-optimized navigation. Connect to Ollama for fully local AI on the go.</p><div class="tab-mockup">📱 pkg install omnicode • omni serve<br>Access web UI from mobile browser at localhost:9420</div></div>
+<div class="tab-content" id="tab-selfhost"><h3>🖥️ Self-Hosted</h3><p>Deploy as a service on your infrastructure. Docker, Kubernetes, or bare metal. Access the web UI from any device on your network.</p><div class="tab-mockup">🐳 docker run -p 9420:9420 omnicode/server<br>🌐 Access at http://your-server:9420</div></div>
+</div>
 </section>
 
-<section class="section container">
+<section id="comparison" class="section container">
+<div class="section-header reveal">
 <h2>OmniCode vs The Rest</h2>
-<p class="subtitle">Compare features across AI coding tools</p>
-<div style="overflow-x:auto">
+<div class="section-divider"></div>
+<p class="subtitle">Every feature. Every tool. No compromises.</p>
+</div>
+<div class="reveal table-wrap">
 <table class="compare-table">
-<thead><tr><th>Feature</th><th>OmniCode</th><th>Copilot</th><th>Cursor</th><th>Aider</th><th>Kilo Code</th></tr></thead>
+<thead><tr><th>Feature</th><th class="omni-col">OmniCode</th><th>Copilot</th><th>Cursor</th><th>Aider</th><th>Continue</th></tr></thead>
 <tbody>
-<tr><td>BYOK / Privacy</td><td class="check omni-col">✅ True BYOK</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ BYOK</td><td class="check">✅ BYOK</td></tr>
+<tr class="highlight"><td>BYOK / Privacy</td><td class="check omni-col">✅ True BYOK</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ BYOK</td><td class="check">✅ BYOK</td></tr>
 <tr><td>Terminal TUI</td><td class="check omni-col">✅ Full TUI</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
 <tr><td>Web UI</td><td class="check omni-col">✅ Monaco Editor</td><td class="cross">❌</td><td class="check">✅ Built-in</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Multi-Provider</td><td class="check omni-col">✅ 8+ providers</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Multiple</td><td class="check">✅ Multiple</td></tr>
+<tr class="highlight"><td>Multi-Provider</td><td class="check omni-col">✅ 8+ providers</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Multiple</td><td class="check">✅ Multiple</td></tr>
 <tr><td>Autonomous Swarms</td><td class="check omni-col">✅ 5-agent swarms</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Sandboxed Execution</td><td class="check omni-col">✅ Git/Docker/Firecracker</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Git</td><td class="check">✅ Git</td></tr>
-<tr><td>CI/CD Sentinel</td><td class="check omni-col">✅ Auto-fix CI</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>PR Review</td><td class="check omni-col">✅ Line-by-line</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Basic</td></tr>
-<tr><td>Self-Healing Tests</td><td class="check omni-col">✅ Auto-fix</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Codebase Cortex</td><td class="check omni-col">✅ AST + KG</td><td class="cross">❌</td><td class="check">✅ Indexing</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Legacy Migration</td><td class="check omni-col">✅ Cross-lang</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr><td>Sandboxed Execution</td><td class="check omni-col">✅ Git/Docker/Firecracker</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Git</td><td class="cross">❌</td></tr>
+<tr class="highlight"><td>CI/CD Sentinel</td><td class="check omni-col">✅ Auto-fix CI failures</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr><td>PR Review</td><td class="check omni-col">✅ Line-by-line</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr><td>Self-Healing Tests</td><td class="check omni-col">✅ Auto-fix + re-run</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr class="highlight"><td>Codebase Cortex</td><td class="check omni-col">✅ AST + KG + Embeddings</td><td class="cross">❌</td><td class="check">✅ Indexing</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr><td>Legacy Migration</td><td class="check omni-col">✅ Cross-language</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
 <tr><td>Dependency Guardian</td><td class="check omni-col">✅ Auto-upgrade PRs</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Incident Whisperer</td><td class="check omni-col">✅ Production alerts</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr class="highlight"><td>Incident Whisperer</td><td class="check omni-col">✅ Production alerts</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
 <tr><td>Decision Historian</td><td class="check omni-col">✅ Searchable log</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Compliance Ledger</td><td class="check omni-col">✅ Signed chain</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Collaboration</td><td class="check omni-col">✅ Real-time sync</td><td class="cross">❌</td><td class="check">✅ Share</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr><td>Compliance Ledger</td><td class="check omni-col">✅ Signed hash chain</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+<tr class="highlight"><td>Real-Time Collaboration</td><td class="check omni-col">✅ CRDT sync</td><td class="cross">❌</td><td class="check">✅ Share</td><td class="cross">❌</td><td class="cross">❌</td></tr>
 <tr><td>Prompt-to-Binary</td><td class="check omni-col">✅ Full pipeline</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
-<tr><td>Offline Mode</td><td class="check omni-col">✅ Ollama/LM Studio</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Local models</td><td class="check">✅ Local models</td></tr>
-<tr><td>Zero Telemetry</td><td class="check omni-col">✅ Yes</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Yes</td><td class="check">✅ Yes</td></tr>
-<tr><td>Free &amp; Open Source</td><td class="check omni-col">✅ MIT</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Apache</td><td class="check">✅ Apache</td></tr>
+<tr><td>Offline Mode</td><td class="check omni-col">✅ Ollama/LM Studio</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Local</td><td class="check">✅ Local</td></tr>
+<tr class="highlight"><td>Zero Telemetry</td><td class="check omni-col">✅ Always</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅</td><td class="check">✅</td></tr>
+<tr><td>Free &amp; Open Source</td><td class="check omni-col">✅ MIT License</td><td class="cross">❌</td><td class="cross">❌</td><td class="check">✅ Apache</td><td class="check">✅ Apache</td></tr>
 </tbody>
 </table>
 </div>
 </section>
 
 <section id="testimonials" class="section container">
+<div class="section-header reveal">
 <h2>What Developers Say</h2>
+<div class="section-divider"></div>
 <p class="subtitle">Trusted by developers who value privacy and power</p>
-<div class="testimonials">
-<div class="testimonial-card active"><div class="avatar">👩‍💻</div><blockquote>"OmniCode's swarm mode is a game changer. I describe a feature and watch 5 agents build it in parallel."</blockquote><cite>— Sarah Chen, Backend Lead</cite></div>
-<div class="testimonial-card"><div class="avatar">👨‍💻</div><blockquote>"True BYOK means I can use my Anthropic key with full control. No subscription lock-in."</blockquote><cite>— Marcus Johnson, Indie Dev</cite></div>
-<div class="testimonial-card"><div class="avatar">🧑‍🔬</div><blockquote>"The archeologist mode found dead code we'd been carrying for 3 years. Worth it for that alone."</blockquote><cite>— Elena Rodriguez, Engineering Manager</cite></div>
+</div>
+<div class="testimonials reveal">
+<div class="testimonial-card active"><div class="avatar">👩‍💻</div><blockquote>"OmniCode's swarm mode is insane. I describe a feature and watch 5 AI agents build it in parallel. It's like having a whole team."</blockquote><cite>— Sarah Chen, Backend Lead</cite></div>
+<div class="testimonial-card"><div class="avatar">👨‍💻</div><blockquote>"True BYOK means I use my Anthropic key directly. No subscription. No data leaving my machine. Finally, an AI tool that respects privacy."</blockquote><cite>— Marcus Johnson, Indie Developer</cite></div>
+<div class="testimonial-card"><div class="avatar">🧑‍🔬</div><blockquote>"The archeologist mode found 3-year-old dead code we'd been scared to touch. Generated the migration script in 2 minutes. Worth it for that alone."</blockquote><cite>— Elena Rodriguez, Engineering Manager</cite></div>
+<div class="testimonial-card"><div class="avatar">👨‍🏫</div><blockquote>"I onboarded a new junior dev using OmniCode's Onboarding Angel. They made their first real PR in under an hour. Game changer for team growth."</blockquote><cite>— David Kim, Tech Lead</cite></div>
+</div>
+<div class="testimonial-dots" id="testimonial-dots">
+<button class="testimonial-dot active" data-index="0" aria-label="Testimonial 1"></button>
+<button class="testimonial-dot" data-index="1" aria-label="Testimonial 2"></button>
+<button class="testimonial-dot" data-index="2" aria-label="Testimonial 3"></button>
+<button class="testimonial-dot" data-index="3" aria-label="Testimonial 4"></button>
 </div>
 </section>
 
-<section class="section container">
+<section id="faq" class="section container">
+<div class="section-header reveal">
 <h2>Frequently Asked Questions</h2>
-<p class="subtitle">Everything you need to know</p>
-<div class="faq-list" id="faq-list">
-<div class="faq-item"><div class="faq-question">🔐 Is my API key safe?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. Your key is encrypted with AES-256-GCM using a key derived from your machine's hardware ID + hostname. It's never sent anywhere. Not even to our servers (there aren't any).</p></div></div>
-<div class="faq-item"><div class="faq-question">📡 Does OmniCode phone home?<span class="arrow">▼</span></div><div class="faq-answer"><p>Never. Zero telemetry. Zero data collection. OmniCode has no servers, no accounts, no analytics. The only network calls are to your configured LLM provider and optionally to GitHub for PR/code review features.</p></div></div>
-<div class="faq-item"><div class="faq-question">🌐 Can I use it offline?<span class="arrow">▼</span></div><div class="faq-answer"><p>Absolutely. Connect to Ollama or LM Studio running locally. No internet required. All features work offline except marketplace and remote provider access.</p></div></div>
-<div class="faq-item"><div class="faq-question">🦀 Which languages are supported?<span class="arrow">▼</span></div><div class="faq-answer"><p>All languages the LLM supports. The codebase indexer has first-class support for Rust, TypeScript, JavaScript, Python, Go, Java, C/C++, Ruby, and more via tree-sitter. The Cortex engine auto-detects language by file extension.</p></div></div>
-<div class="faq-item"><div class="faq-question">📦 Can I migrate a legacy codebase?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. The Archeologist mode analyzes your entire codebase for dead code, vulnerabilities, and bottlenecks. It can also migrate code between languages (e.g., Python → Rust, JavaScript → TypeScript) in a sandboxed environment with equivalence testing.</p></div></div>
-<div class="faq-item"><div class="faq-question">🚨 What happens when production breaks?<span class="arrow">▼</span></div><div class="faq-answer"><p>Incident Whisperer monitors your logs and alert sources. It parses stack traces, correlates with recent commits, generates a hotfix, creates a PR, and optionally deploys to staging. You approve before production deployment.</p></div></div>
-<div class="faq-item"><div class="faq-question">🧪 Can it fix my failing tests?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. The self-healing mode runs your tests, parses failures, analyzes the source, generates fixes, and re-runs. It iterates up to 5 times per failure and can fix both test code and source code.</p></div></div>
-<div class="faq-item"><div class="faq-question">🤝 How does collaboration work?<span class="arrow">▼</span></div><div class="faq-answer"><p>Create a session (generates an 8-char code), share it with your team. They join via `omni join <code>`. Real-time file sync, multi-cursor, chat. Under the hood it uses WebSocket + CRDT-like conflict resolution.</p></div></div>
-<div class="faq-item"><div class="faq-question">🔧 Can I create custom skills?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. Skills are self-contained packages with a manifest.json, hooks, and prompts. Publish to the marketplace or keep them private. Install with `omni skill install <name>`.</p></div></div>
-<div class="faq-item"><div class="faq-question">🔒 Is there an audit trail?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. Compliance mode enables a signed, hash-chained ledger of every action taken by OmniCode. Each entry is cryptographically signed and linked to the previous entry. Export as JSON or CSV for audit.</p></div></div>
-<div class="faq-item"><div class="faq-question">🐳 Can I run it in Docker?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. Deploy as a container, access the web UI from any device. OmniCode also uses Docker for sandboxed agent execution (isolates file system and network). Supports Firecracker micro-VMs for maximum isolation.</p></div></div>
-<div class="faq-item"><div class="faq-question">🆓 Is it really free?<span class="arrow">▼</span></div><div class="faq-answer"><p>Yes. The Community edition is fully free and open source (MIT license). No feature limits, no usage caps. Enterprise edition adds SSO, audit exports, priority support, and custom SLAs for teams.</p></div></div>
+<div class="section-divider"></div>
+<p class="subtitle">Everything you need to know before getting started</p>
+</div>
+<div class="accordion reveal" id="faq-accordion">
+<div class="accordion-item open"><button class="accordion-trigger">🔐 Is my API key safe?<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Absolutely. Your key is encrypted with AES-256-GCM using a key derived from your machine's hardware ID + hostname. It's never sent anywhere. Not to our servers — there aren't any.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">📡 Does OmniCode phone home?<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Never. Zero telemetry. Zero data collection. OmniCode has no servers, no accounts, no analytics. The only network calls are to your configured LLM provider and optionally to GitHub for PR/code review features. Everything is opt-in.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🌐 Can I use it completely offline?<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Yes! Connect to Ollama or LM Studio running locally. All features work without internet — the marketplace and remote provider switching are the only exceptions. Zero dependencies on cloud services.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🦀 Which languages are supported?<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Any language the LLM supports. The codebase indexer has first-class tree-sitter support for Rust, TypeScript, JavaScript, Python, Go, Java, C/C++, Ruby, Zig, and more. The Cortex engine auto-detects language by file extension.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">⚡ How is this different from Copilot or Cursor?<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>OmniCode is autonomous, not just autocomplete. It plans, executes, tests, and iterates without hand-holding. Plus: true BYOK privacy, terminal TUI, swarm mode, CI/CD sentinel, self-healing tests, legacy archeologist, compliance ledger — features none of the others have.</p></div></div></div>
+<div class="accordion-item"><button class="accordion-trigger">🆓 Is it really free?<span class="arrow">▼</span></button><div class="accordion-panel"><div class="accordion-panel-inner"><p>Yes. The Community edition is fully free and open source (MIT license). No feature limits, no usage caps, no paid tiers that unlock basic functionality. Enterprise edition adds SSO, audit exports, and priority support for teams.</p></div></div></div>
 </div>
 </section>
 
-<section class="section container">
+<section id="pricing" class="section container">
+<div class="section-header reveal">
 <h2>Simple Pricing</h2>
-<p class="subtitle">No surprises. No hidden fees. No per-seat licensing.</p>
+<div class="section-divider"></div>
+<p class="subtitle">No surprises. No hidden fees. No per-seat licensing games.</p>
+</div>
+<div class="reveal">
 <div class="pricing-toggle" id="pricing-toggle">
 <button class="active" data-period="monthly">Monthly</button>
-<button data-period="yearly">Yearly (20% off)</button>
+<button data-period="yearly">Yearly <span style="font-size:11px;opacity:.7">(save 20%)</span></button>
 </div>
 <div class="pricing-grid">
 <div class="pricing-card">
@@ -339,340 +552,496 @@ footer p{color:var(--text2);font-size:13px;margin-top:16px}
 <div class="price" data-monthly="$0" data-yearly="$0">$0<span>/forever</span></div>
 <ul>
 <li>All features included</li>
-<li>Unlimited agents</li>
-<li>Unlimited tasks</li>
+<li>Unlimited agents &amp; tasks</li>
 <li>BYOK (any provider)</li>
-<li>Terminal + Web UI</li>
-<li>All 15+ agent types</li>
+<li>Terminal + Web UI + VS Code</li>
+<li>All 15 agent types</li>
 <li>Offline mode</li>
 <li>MIT License</li>
+<li>Community support</li>
 </ul>
-<a href="#download" class="btn btn-primary">Download Free</a>
+<a href="#download" class="btn btn-primary" style="width:100%;justify-content:center">Download Free</a>
 </div>
 <div class="pricing-card featured">
 <h3>Enterprise</h3>
 <div class="price" data-monthly="$29" data-yearly="$23">$29<span>/user/month</span></div>
 <ul>
 <li>Everything in Community</li>
-<li>SSO / SAML</li>
+<li>SSO / SAML integration</li>
 <li>Audit export (PDF/CSV)</li>
-<li>Priority support</li>
-<li>Custom SLAs</li>
+<li>Priority support &amp; SLAs</li>
 <li>On-prem deployment</li>
-<li>Team management</li>
-<li>Training &amp; onboarding</li>
+<li>Team management dashboard</li>
+<li>Training &amp; onboarding sessions</li>
+<li>Custom integrations</li>
 </ul>
-<a href="mailto:enterprise@omnicode.ai" class="btn btn-outline">Contact Sales</a>
+<a href="mailto:enterprise@omnicode.ai" class="btn btn-outline" style="width:100%;justify-content:center">Contact Sales</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="cta-final" class="container">
+<div class="cta-section reveal">
+<div class="cta-content">
+<h2>Ready to Ship?</h2>
+<p>Download OmniCode for free. No account. No credit card. Just your API key and your code.</p>
+<div class="cta-btns">
+<a href="#download" class="btn btn-primary">⬇ Download Now</a>
+<a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener" class="btn btn-outline">⭐ Star on GitHub</a>
+</div>
 </div>
 </div>
 </section>
 
 <section id="download" class="section container">
+<div class="section-header reveal">
 <h2>Download OmniCode</h2>
-<p class="subtitle">Available for all major platforms. Install in seconds.</p>
+<div class="section-divider"></div>
+<p class="subtitle">Available for all major platforms. Install in seconds, zero dependencies.</p>
+</div>
 <div class="downloads">
-<div class="download-card">
+<div class="download-card reveal-left">
 <h3>🪟 Windows</h3>
-<div class="method"><span>omni.exe</span><button class="copy-btn" data-cmd="curl -sL https://github.com/omnicode/omnicode/releases/latest/download/omnicode-windows-amd64.tar.gz | tar -xz && move omni.exe %LOCALAPPDATA%\Programs\omnicode\">Copy</button></div>
+<div class="method"><span>omni.exe</span><button class="copy-btn" data-cmd="curl -sL https://github.com/bomboclati/OmniCode-/releases/latest/download/omnicode-windows-amd64.tar.gz | tar -xz && move omni.exe %LOCALAPPDATA%\Programs\omnicode\">Copy</button></div>
 <div class="method"><span>winget install omnicode</span><button class="copy-btn" data-cmd="winget install omnicode">Copy</button></div>
 <div class="method"><span>scoop install omnicode</span><button class="copy-btn" data-cmd="scoop install omnicode">Copy</button></div>
 <div class="method"><span>choco install omnicode</span><button class="copy-btn" data-cmd="choco install omnicode">Copy</button></div>
-<div class="method"><span>powershell -c "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/omnicode/omnicode/main/install.ps1'))"</span><button class="copy-btn" data-cmd='powershell -c "iex ((New-Object System.Net.WebClient).DownloadString('"'"'https://raw.githubusercontent.com/omnicode/omnicode/main/install.ps1'"'"'))"'>Copy</button></div>
-<details class="checksum-details"><summary>SHA256</summary><code>omni.exe: a1b2c3d4e5f6... (verify on release page)</code></details>
+<div class="method"><span>powershell -c "iex (...install.ps1)"</span><button class="copy-btn" data-cmd="powershell -c &quot;iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.ps1'))&quot;">Copy</button></div>
+<details class="checksum-details"><summary>SHA256 Checksums</summary><code>omni.exe: a1b2c3d4e5f6... (verify on releases page)</code></details>
 </div>
-<div class="download-card">
+<div class="download-card reveal">
 <h3>🍎 macOS</h3>
-<div class="method"><span>omnicode.pkg</span><button class="copy-btn" data-cmd="curl -LO https://github.com/omnicode/omnicode/releases/latest/download/omnicode-darwin-amd64.pkg && open omnicode-darwin-amd64.pkg">Copy</button></div>
-<div class="method"><span>brew install omnicode</span><button class="copy-btn" data-cmd="brew install omnicode">Copy</button></div>
-<div class="method"><span>curl -sL https://raw.githubusercontent.com/omnicode/omnicode/main/install.sh | bash</span><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/omnicode/omnicode/main/install.sh | bash">Copy</button></div>
-<details class="checksum-details"><summary>SHA256</summary><code>omnicode-darwin-amd64.tar.gz: b2c3d4e5f6a7...</code></details>
+<div class="method"><span>Homebrew</span><button class="copy-btn" data-cmd="brew install omnicode">Copy</button></div>
+<div class="method"><span>curl | bash installer</span><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
+<div class="method"><span>Download .pkg</span><button class="copy-btn" data-cmd="curl -LO https://github.com/bomboclati/OmniCode-/releases/latest/download/omnicode-darwin-amd64.pkg && open omnicode-darwin-amd64.pkg">Copy</button></div>
+<details class="checksum-details"><summary>SHA256 Checksums</summary><code>omnicode-darwin-amd64.tar.gz: b2c3d4e5f6a7...</code></details>
 </div>
-<div class="download-card">
+<div class="download-card reveal-right">
 <h3>🐧 Linux</h3>
-<div class="method"><span>omnicode_amd64.deb (Debian/Ubuntu)</span><button class="copy-btn" data-cmd="sudo dpkg -i omnicode_amd64.deb">Copy</button></div>
-<div class="method"><span>omnicode.x86_64.rpm (Fedora/RHEL)</span><button class="copy-btn" data-cmd="sudo rpm -i omnicode.x86_64.rpm">Copy</button></div>
-<div class="method"><span>yay -S omnicode (AUR)</span><button class="copy-btn" data-cmd="yay -S omnicode">Copy</button></div>
-<div class="method"><span>snap install omnicode</span><button class="copy-btn" data-cmd="snap install omnicode">Copy</button></div>
-<div class="method"><span>curl -sL https://raw.githubusercontent.com/omnicode/omnicode/main/install.sh | bash</span><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/omnicode/omnicode/main/install.sh | bash">Copy</button></div>
-<details class="checksum-details"><summary>SHA256</summary><code>omnicode-linux-amd64.tar.gz: c3d4e5f6a7b8...</code></details>
+<div class="method"><span>Debian/Ubuntu (.deb)</span><button class="copy-btn" data-cmd="sudo dpkg -i omnicode_amd64.deb">Copy</button></div>
+<div class="method"><span>Fedora/RHEL (.rpm)</span><button class="copy-btn" data-cmd="sudo rpm -i omnicode.x86_64.rpm">Copy</button></div>
+<div class="method"><span>AUR (Arch)</span><button class="copy-btn" data-cmd="yay -S omnicode">Copy</button></div>
+<div class="method"><span>Snap</span><button class="copy-btn" data-cmd="snap install omnicode">Copy</button></div>
+<div class="method"><span>curl | bash</span><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
+<details class="checksum-details"><summary>SHA256 Checksums</summary><code>omnicode-linux-amd64.tar.gz: c3d4e5f6a7b8...</code></details>
 </div>
 </div>
-<div style="text-align:center;margin-top:30px">
-<p style="color:var(--text2);font-size:14px">Also available: 📱 Termux (pkg install omnicode) • 🧪 Browser WASM (try.omnicode.ai)</p>
+<div style="text-align:center;margin-top:32px">
+<p style="color:var(--text2);font-size:14px">📱 Termux: <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-size:13px">pkg install omnicode</code></p>
 </div>
 </section>
 
 <footer>
-<div class="container">
-<div class="logo" style="justify-content:center;margin-bottom:16px">
-<svg width="24" height="24" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" stroke="#00FFA3" stroke-width="2" fill="none"/><path d="M8 16 L24 16" stroke="#8957FF" stroke-width="2"/><circle cx="16" cy="16" r="3" fill="#00FFA3"/></svg>
-<span class="logo-text">OmniCode</span>
+<div class="footer-grid">
+<div class="footer-col">
+<h4>OmniCode</h4>
+<a href="#features">Features</a>
+<a href="#agent">Capabilities</a>
+<a href="#byok">Privacy</a>
+<a href="#pricing">Pricing</a>
+<a href="#download">Download</a>
 </div>
+<div class="footer-col">
+<h4>Developers</h4>
+<a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener">GitHub</a>
+<a href="https://docs.omnicode.ai" target="_blank" rel="noopener">Documentation</a>
+<a href="#">
+
+API Reference</a>
+<a href="#">Roadmap</a>
+</div>
+<div class="footer-col">
+<h4>Community</h4>
+<a href="#">Discord</a>
+<a href="#">Twitter / X</a>
+<a href="#">GitHub Discussions</a>
+<a href="#">Contributing Guide</a>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="mailto:hello@omnicode.ai">Contact</a>
+<a href="#">Blog</a>
+<a href="#">Privacy Policy</a>
+<a href="#">License (MIT)</a>
+</div>
+</div>
+<div class="footer-bottom">
 <div class="footer-links">
 <a href="#features">Features</a>
-<a href="#agent">Agent</a>
-<a href="#byok">BYOK</a>
 <a href="#download">Download</a>
-<a href="https://github.com/omnicode/omnicode" target="_blank">GitHub</a>
-<a href="https://docs.omnicode.ai" target="_blank">Docs</a>
+<a href="https://github.com/bomboclati/OmniCode-" target="_blank" rel="noopener">GitHub</a>
+<a href="https://docs.omnicode.ai" target="_blank" rel="noopener">Docs</a>
 </div>
-<p>🔒 Zero telemetry. No data collection. No account required.</p>
-<p style="margin-top:8px;font-size:12px">OmniCode is free and open source · MIT License · Built with ❤️ for developers</p>
+<p>🔒 Zero telemetry · No data collection · No account required</p>
+<p style="margin-top:4px;font-size:12px">Free and open source · MIT License · Built for developers who care about privacy</p>
 </div>
 </footer>
 
+<button id="back-to-top" aria-label="Back to top">↑</button>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Hamburger menu
-  var hamburger = document.getElementById('hamburger');
+(function(){'use strict';
+
+// --- Scroll Progress ---
+(function(){
+  var bar = document.getElementById('scroll-progress');
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  });
+})();
+
+// --- Custom Cursor ---
+(function(){
+  var dot = document.getElementById('cursor-dot');
+  var ring = document.getElementById('cursor-ring');
+  if(!dot || !ring) return;
+  var mx = 0, my = 0;
+  document.addEventListener('mousemove', function(e){
+    mx = e.clientX; my = e.clientY;
+    dot.style.opacity = '1';
+    ring.style.opacity = '1';
+    dot.style.transform = 'translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
+    ring.style.transform = 'translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
+  });
+  document.addEventListener('mouseleave', function(){
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
+  });
+  document.querySelectorAll('a,button,.card').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ ring.classList.add('hover'); });
+    el.addEventListener('mouseleave', function(){ ring.classList.remove('hover'); });
+  });
+})();
+
+// --- Theme ---
+(function(){
+  var btn = document.getElementById('theme-toggle');
+  var saved = localStorage.getItem('omni-theme');
+  if(saved === 'light') document.documentElement.setAttribute('data-theme','light');
+  if(btn) btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    localStorage.setItem('omni-theme', isLight ? 'dark' : 'light');
+    btn.textContent = isLight ? '🌙' : '☀️';
+  });
+  if(btn) btn.textContent = saved === 'light' ? '☀️' : '🌙';
+})();
+
+// --- Hamburger ---
+(function(){
+  var ham = document.getElementById('hamburger');
   var nav = document.getElementById('main-nav');
-  if (hamburger) {
-    hamburger.addEventListener('click', function() { nav.classList.toggle('open'); });
+  var overlay = document.getElementById('nav-overlay');
+  if(!ham || !nav) return;
+  function toggle(){ ham.classList.toggle('active'); nav.classList.toggle('open');
+    if(overlay) overlay.classList.toggle('visible'); }
+  ham.addEventListener('click', toggle);
+  if(overlay) overlay.addEventListener('click', toggle);
+  nav.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ if(nav.classList.contains('open')) toggle(); });
+  });
+})();
+
+// --- Particles ---
+(function(){
+  var canvas = document.getElementById('particles');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var particles = [];
+  var mouse = { x:0, y:0, active:false };
+  var raf = null;
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if(particles.length === 0) init();
   }
-  document.querySelectorAll('nav a').forEach(function(a) {
-    a.addEventListener('click', function() { nav.classList.remove('open'); });
-  });
-
-  // Particle canvas
-  (function() {
-    var canvas = document.getElementById('particles');
-    if (!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var particles = [];
-    var mouse = { x: 0, y: 0 };
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    canvas.addEventListener('mousemove', function(e) {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-
-    for (var i = 0; i < 70; i++) {
+  function init(){
+    particles = [];
+    var count = Math.min(100, Math.floor(window.innerWidth/12));
+    for(var i=0;i<count;i++){
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        color: Math.random() > 0.5 ? '#00FFA3' : '#8957FF',
-        size: Math.random() * 2 + 1
+        x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+        vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+        color: Math.random()>0.5 ? '#00FFA3' : '#8957FF',
+        size: Math.random()*2.5+0.8,
+        alpha: Math.random()*0.5+0.3
       });
     }
+  }
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (var i = 0; i < particles.length; i++) {
-        var p = particles[i];
-        p.x += p.vx + (mouse.x - canvas.width / 2) * 0.0002;
-        p.y += p.vy + (mouse.y - canvas.height / 2) * 0.0002;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-
-        for (var j = i + 1; j < particles.length; j++) {
-          var p2 = particles[j];
-          var dx = p.x - p2.x;
-          var dy = p.y - p2.y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = 'rgba(137,87,255,' + (1 - dist / 150) * 0.15 + ')';
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
-  })();
-
-  // Terminal demo
-  (function() {
-    var output = document.getElementById('demo-output');
-    var cmd = document.getElementById('demo-cmd');
-    var commands = [
-      { cmd: 'omni "build a REST API with Rust"', output: '\n🧠 Planning...\n📋 Creating project structure\n⚡ Generating code...\n✅ REST API created with:\n   - src/main.rs (Actix-Web server)\n   - src/models.rs (User, Product)\n   - src/handlers.rs (CRUD endpoints)\n   - Cargo.toml with dependencies\n🔧 Running cargo check... ✓\n🧪 Running tests... ✓ all 12 passed\n📦 Build complete!' },
-      { cmd: 'omni swarm "refactor auth module to use JWT"', output: '\n🧠 Coordinator: Planning decomposition...\n👷 Architect: Designing JWT flow...\n👨‍💻 Coder: Implementing auth module...\n👀 Reviewer: Reviewing code...\n🧪 Tester: Writing & running tests...\n✅ Swarm complete! 4 agents, 847 tokens used\n📁 Files changed: src/auth/jwt.rs, src/middleware.rs\n🔄 git merge successful, 0 conflicts' },
-      { cmd: 'omni heal', output: '\n🩺 Running test suite...\n❌ 3 test failures detected\n🔍 Analyzing failure: test_user_creation\n   → Fix: Updated test assertion for new UUID format\n🔍 Analyzing failure: test_password_hashing\n   → Fix: Bumped bcrypt cost factor in test config\n✅ All fixes applied! Re-running...\n🎉 0 failures remaining' },
-      { cmd: 'omni deploy', output: '\n📦 Phase 1: Building release binary... ✓\n🧪 Phase 2: Running tests... ✓ all 47 passed\n🐳 Phase 3: Building Docker image... ✓\n☁️ Phase 4: Deploying to staging... ✓\n✅ Deployment complete!\n🌐 Available at: https://staging.omnicode.app' },
-    ];
-    var idx = 0;
-    var typing = false;
-
-    function typeCommand(command, callback) {
-      typing = true;
-      cmd.textContent = '';
-      var i = 0;
-      var interval = setInterval(function() {
-        if (i < command.length) {
-          cmd.textContent += command[i];
-          i++;
-        } else {
-          clearInterval(interval);
-          typing = false;
-          if (callback) setTimeout(callback, 800);
-        }
-      }, 40);
-    }
-
-    function runCommand(cmdData) {
-      typeCommand(cmdData.cmd, function() {
-        output.innerHTML = cmdData.output.replace(/\n/g, '<br>').replace(/✅/g, '<span style="color:var(--green)">✅</span>').replace(/❌/g, '<span style="color:var(--red)">❌</span>').replace(/⚠️/g, '<span style="color:var(--orange)">⚠️</span>');
+  canvas.addEventListener('mousemove', function(e){
+    mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
+  });
+  canvas.addEventListener('mouseleave', function(){ mouse.active = false; });
+  canvas.addEventListener('click', function(e){
+    for(var i=0;i<6;i++){
+      particles.push({
+        x: e.clientX, y: e.clientY,
+        vx: (Math.random()-0.5)*2, vy: (Math.random()-0.5)*2,
+        color: i%2===0 ? '#00FFA3' : '#8957FF',
+        size: Math.random()*3+1,
+        alpha: 1,
+        life: 1
       });
     }
-
-    function nextDemo() {
-      if (typing) return;
-      runCommand(commands[idx]);
-      idx = (idx + 1) % commands.length;
-    }
-
-    setTimeout(nextDemo, 1000);
-    setInterval(function() {
-      if (!typing) {
-        output.innerHTML = '';
-        nextDemo();
-      }
-    }, 8000);
-  })();
-
-  // Accordion
-  document.querySelectorAll('.accordion-trigger').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var panel = this.nextElementSibling;
-      var isOpen = panel.classList.contains('open');
-      document.querySelectorAll('.accordion-panel').forEach(function(p) { p.classList.remove('open'); });
-      document.querySelectorAll('.accordion-trigger').forEach(function(b) { b.classList.remove('active'); });
-      if (!isOpen) {
-        panel.classList.add('open');
-        this.classList.add('active');
-      }
-    });
   });
 
-  // Tabs
-  document.querySelectorAll('.tab-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-      document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
-      this.classList.add('active');
-      var tab = this.getAttribute('data-tab');
-      document.getElementById('tab-' + tab).classList.add('active');
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(var i=particles.length-1;i>=0;i--){
+      var p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if(p.life !== undefined){
+        p.life -= 0.02;
+        p.alpha = p.life;
+        if(p.life <= 0){ particles.splice(i,1); continue; }
+      }
+      if(p.x<0) p.x=canvas.width; if(p.x>canvas.width) p.x=0;
+      if(p.y<0) p.y=canvas.height; if(p.y>canvas.height) p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha || 1;
+      ctx.fill();
+
+      for(var j=i+1;j<particles.length;j++){
+        var p2 = particles[j];
+        var dx = p.x-p2.x, dy = p.y-p2.y;
+        var dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < 150){
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);
+          ctx.lineTo(p2.x,p2.y);
+          ctx.strokeStyle = 'rgba(137,87,255,'+((1-dist/150)*0.12)+')';
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  animate();
+})();
+
+// --- Counters ---
+(function(){
+  var counters = document.querySelectorAll('.stat-number[data-target]');
+  if(!counters.length) return;
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var el = entry.target;
+        var target = parseInt(el.getAttribute('data-target'));
+        if(target === 100){ el.textContent = '100%'; observer.unobserve(el); return; }
+        var current = 0;
+        var step = Math.max(1, Math.floor(target / 40));
+        var interval = setInterval(function(){
+          current += step;
+          if(current >= target){ el.textContent = target; clearInterval(interval); }
+          else el.textContent = current;
+        }, 30);
+        observer.unobserve(el);
+      }
     });
-  });
+  }, { threshold: 0.5 });
+  counters.forEach(function(c){ observer.observe(c); });
+})();
 
-  // Testimonials carousel
-  (function() {
-    var cards = document.querySelectorAll('.testimonial-card');
-    var current = 0;
-    function showCard(idx) {
-      cards.forEach(function(c) { c.classList.remove('active'); });
-      cards[idx].classList.add('active');
-    }
-    setInterval(function() {
-      current = (current + 1) % cards.length;
-      showCard(current);
-    }, 5000);
-    var container = document.querySelector('.testimonials');
-    if (container) {
-      container.addEventListener('mouseenter', function() { /* pause on hover - let interval keep running for simplicity */ });
-    }
-  })();
+// --- Terminal Demo ---
+(function(){
+  var output = document.getElementById('demo-output');
+  var cmdEl = document.getElementById('demo-cmd');
+  var commands = [
+    { cmd:'omni "build a REST API with Rust"',
+      output:'\n<blue>🧠 Planning...</>\n<green>📋 Creating project structure</>\n<purple>⚡ Generating code...</>\n<green>✅ REST API created:</>\n   src/main.rs — Actix-Web server\n   src/models.rs — User, Product\n   src/handlers.rs — CRUD endpoints\n   Cargo.toml — deps configured\n<green>🔧 cargo check... ✓</>\n<green>🧪 cargo test... ✓ all 12 passed</>\n<green>📦 Build complete!</>' },
+    { cmd:'omni swarm "refactor auth to JWT"',
+      output:'\n<gold>🧠 Coordinator: Planning decomposition...</>\n<purple>👷 Architect: Designing JWT flow...</>\n<blue>👨‍💻 Coder: Implementing auth...</>\n<green>👀 Reviewer: Reviewing code...</>\n<green>🧪 Tester: Writing & running tests...</>\n<green>✅ Swarm complete — 4 agents, 847 tokens</>\n   Files: src/auth/jwt.rs, src/middleware.rs\n   git merge successful, 0 conflicts' },
+    { cmd:'omni heal',
+      output:'\n<green>🩺 Running test suite...</>\n<red>❌ 3 test failures detected</>\n<gold>🔍 test_user_creation: updated UUID assertion</>\n<gold>🔍 test_password_hashing: bumped bcrypt cost</>\n<green>✅ Fixes applied. Re-running...</>\n<green>🎉 0 failures remaining' },
+    { cmd:'omni deploy --env staging',
+      output:'\n<blue>📦 Building release binary... ✓</>\n<green>🧪 Running tests... ✓ all 47 passed</>\n<purple>🐳 Building Docker image... ✓</>\n<gold>☁️ Deploying to staging... ✓</>\n<green>✅ Deployment complete!</>\n   🌐 https://staging.omnicode.app' },
+    { cmd:'omni docs --format html',
+      output:'\n<green>📄 Generating documentation...</>\n   README.md ✓\n   API reference ✓\n   Architecture diagram (Mermaid) ✓\n   Sequence diagrams ✓\n<green>✅ Docs generated in ./docs/' },
+    { cmd:'omni archeologist --migrate python-to-rust',
+      output:'\n<purple>🏛️ Scanning legacy codebase...</>\n<gold>   Found: 47 Python files, 12K LOC</>\n<blue>   Building ASTs... ✓</>\n<green>   Generating equivalent Rust code...</>\n   src/lib.rs — core logic\n   src/types.rs — type definitions\n   Cargo.toml — dependencies\n<green>✅ Migration complete! Testing equivalence...' },
+  ];
+  var idx = 0, typing = false;
 
-  // FAQ accordion
-  document.querySelectorAll('.faq-question').forEach(function(q) {
-    q.addEventListener('click', function() {
+  function typeCommand(command, callback){
+    typing = true;
+    cmdEl.textContent = '';
+    var i = 0;
+    var interval = setInterval(function(){
+      if(i < command.length){ cmdEl.textContent += command[i]; i++; }
+      else { clearInterval(interval); typing = false; if(callback) setTimeout(callback, 600); }
+    }, 35);
+  }
+
+  function renderOutput(out){
+    return out.replace(/<(\/?)blue>/g,'<$1span class="highlight-blue">')
+              .replace(/<(\/?)green>/g,'<$1span class="highlight-green">')
+              .replace(/<(\/?)purple>/g,'<$1span class="highlight-purple">')
+              .replace(/<(\/?)gold>/g,'<$1span class="highlight-gold">')
+              .replace(/<(\/?)red>/g,'<$1span class="highlight-red">')
+              .replace(/<(\/?)orange>/g,'<$1span class="highlight-orange">')
+              .replace(/\n/g,'<br>');
+  }
+
+  function runCommand(cmdData){
+    typeCommand(cmdData.cmd, function(){
+      output.innerHTML = renderOutput(cmdData.output);
+    });
+  }
+
+  function nextDemo(){
+    if(typing) return;
+    runCommand(commands[idx]);
+    idx = (idx + 1) % commands.length;
+  }
+
+  setTimeout(nextDemo, 1200);
+  setInterval(function(){
+    if(!typing){ output.innerHTML = ''; nextDemo(); }
+  }, 10000);
+})();
+
+// --- Accordion ---
+(function(){
+  document.querySelectorAll('.accordion-trigger').forEach(function(btn){
+    btn.addEventListener('click', function(){
       var item = this.parentElement;
+      var isOpen = item.classList.contains('open');
+      if(!isOpen){
+        var siblings = item.parentElement.querySelectorAll('.accordion-item');
+        siblings.forEach(function(s){ s.classList.remove('open'); });
+      }
       item.classList.toggle('open');
     });
   });
+})();
 
-  // Pricing toggle
-  (function() {
-    var monthly = true;
-    var btns = document.querySelectorAll('#pricing-toggle button');
-    btns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        btns.forEach(function(b) { b.classList.remove('active'); });
-        this.classList.add('active');
-        monthly = this.getAttribute('data-period') === 'monthly';
-        document.querySelectorAll('.price').forEach(function(el) {
-          var prices = {
-            '0': { monthly: '$0', yearly: '$0' },
-            '29': { monthly: '$29', yearly: '$23' },
-          };
-          var key = el.getAttribute('data-monthly') === '$0' ? '0' : '29';
-          el.innerHTML = (monthly ? prices[key].monthly : prices[key].yearly) + '<span>/' + (monthly ? 'month' : 'user/month') + '</span>';
-        });
-      });
-    });
-  })();
-
-  // Copy buttons
-  document.querySelectorAll('.copy-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var text = this.getAttribute('data-cmd');
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function() {
-          btn.textContent = 'Copied!';
-          setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
-        }).catch(function() { fallbackCopy(text, btn); });
-      } else {
-        fallbackCopy(text, btn);
-      }
+// --- Tabs ---
+(function(){
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+      this.classList.add('active');
+      var tab = this.getAttribute('data-tab');
+      document.getElementById('tab-'+tab).classList.add('active');
     });
   });
+})();
 
-  function fallbackCopy(text, btn) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      btn.textContent = 'Copied!';
-      setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
-    } catch(e) {}
-    document.body.removeChild(ta);
+// --- Testimonial Carousel ---
+(function(){
+  var cards = document.querySelectorAll('.testimonial-card');
+  var dots = document.querySelectorAll('.testimonial-dot');
+  var current = 0, interval;
+
+  function show(idx){
+    cards.forEach(function(c){ c.classList.remove('active'); });
+    dots.forEach(function(d){ d.classList.remove('active'); });
+    cards[idx].classList.add('active');
+    dots[idx].classList.add('active');
+    current = idx;
   }
 
-  // Smooth scroll for anchor links
-  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
-    a.addEventListener('click', function(e) {
-      var target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  function next(){ show((current+1) % cards.length); }
+
+  dots.forEach(function(dot){
+    dot.addEventListener('click', function(){ show(parseInt(this.getAttribute('data-index'))); });
+  });
+
+  interval = setInterval(next, 5000);
+  var container = document.querySelector('.testimonials');
+  if(container){
+    container.addEventListener('mouseenter', function(){ clearInterval(interval); });
+    container.addEventListener('mouseleave', function(){ interval = setInterval(next, 5000); });
+  }
+})();
+
+// --- Pricing Toggle ---
+(function(){
+  var btns = document.querySelectorAll('#pricing-toggle button');
+  btns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btns.forEach(function(b){ b.classList.remove('active'); });
+      this.classList.add('active');
+      var monthly = this.getAttribute('data-period') === 'monthly';
+      document.querySelectorAll('.price').forEach(function(el){
+        var val = monthly ? el.getAttribute('data-monthly') : el.getAttribute('data-yearly');
+        el.innerHTML = val + '<span>/' + (monthly ? 'month' : 'user/month') + '</span>';
+      });
+    });
+  });
+})();
+
+// --- Copy Buttons ---
+(function(){
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = this.getAttribute('data-cmd');
+      var self = this;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          self.textContent = 'Copied!'; self.classList.add('copied');
+          setTimeout(function(){ self.textContent = 'Copy'; self.classList.remove('copied'); }, 2000);
+        }).catch(function(){ fallbackCopy(text, self); });
+      } else { fallbackCopy(text, self); }
     });
   });
 
-  // Scroll reveal animations
-  (function() {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
-  })();
-});
+  function fallbackCopy(text, btn){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); btn.textContent='Copied!'; btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('copied'); }, 2000); } catch(e){}
+    document.body.removeChild(ta);
+  }
+})();
+
+// --- Smooth Scroll ---
+(function(){
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var target = document.querySelector(this.getAttribute('href'));
+      if(target){ e.preventDefault(); target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    });
+  });
+})();
+
+// --- Back to Top ---
+(function(){
+  var btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', function(){
+    btn.classList.toggle('visible', window.scrollY > 500);
+  });
+  btn.addEventListener('click', function(){
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+})();
+
+// --- Scroll Reveal with IntersectionObserver ---
+(function(){
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ entry.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el){
+    observer.observe(el);
+  });
+})();
+
+})();
 </script>
 </body>
 </html>

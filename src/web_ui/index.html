@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0F1520">
-    <meta name="description" content="OmniCode - Autonomous AI Coding Agent">
+    <meta name="theme-color" content="#0A0E17">
+    <meta name="description" content="OmniCode - Autonomous AI Coding Agent Web UI">
     <title>OmniCode</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
@@ -13,7 +13,7 @@
     <div id="app">
         <header id="app-header">
             <div class="logo">
-                <svg width="32" height="32" viewBox="0 0 32 32">
+                <svg width="22" height="22" viewBox="0 0 32 32">
                     <circle cx="16" cy="16" r="14" stroke="#00FFA3" stroke-width="2" fill="none"/>
                     <path d="M8 16 L24 16" stroke="#8957FF" stroke-width="2"/>
                     <circle cx="16" cy="16" r="3" fill="#00FFA3"/>
@@ -23,81 +23,100 @@
             <div class="header-info">
                 <span id="session-name" class="badge">local</span>
                 <span id="model-indicator" class="badge">gpt-4</span>
-                <div id="peer-avatars" class="peer-avatars"></div>
-                <button id="voice-toggle" class="icon-btn" title="Voice Input">🎤</button>
-                <button id="settings-btn" class="icon-btn" title="Settings">⚙️</button>
+                <div id="peer-avatars" class="peer-avatars" style="display:flex;gap:2px"></div>
+                <button id="voice-toggle" class="icon-btn" title="Voice Input" aria-label="Voice Input">🎤</button>
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">🌙</button>
+                <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙️</button>
             </div>
         </header>
 
-        <nav id="sidebar">
-            <div class="sidebar-tab active" data-screen="chat" title="Chat">
+        <nav id="sidebar" aria-label="Navigation">
+            <div class="sidebar-tab active" data-screen="chat" data-title="Chat">
                 <span class="tab-icon">💬</span>
-                <span class="tab-label">Chat</span>
             </div>
-            <div class="sidebar-tab" data-screen="files" title="Files">
+            <div class="sidebar-tab" data-screen="files" data-title="Files">
                 <span class="tab-icon">📁</span>
-                <span class="tab-label">Files</span>
             </div>
-            <div class="sidebar-tab" data-screen="swarm" title="Swarm">
+            <div class="sidebar-tab" data-screen="swarm" data-title="Swarm">
                 <span class="tab-icon">🧠</span>
-                <span class="tab-label">Swarm</span>
             </div>
-            <div class="sidebar-tab" data-screen="reviews" title="Reviews">
+            <div class="sidebar-tab" data-screen="reviews" data-title="Reviews">
                 <span class="tab-icon">✅</span>
-                <span class="tab-label">Reviews</span>
             </div>
-            <div class="sidebar-tab" data-screen="incidents" title="Incidents">
+            <div class="sidebar-tab" data-screen="incidents" data-title="Incidents">
                 <span class="tab-icon">🔴</span>
-                <span class="tab-label">Incidents</span>
             </div>
-            <div class="sidebar-tab" data-screen="docs" title="Docs">
+            <div class="sidebar-tab" data-screen="docs" data-title="Docs">
                 <span class="tab-icon">📄</span>
-                <span class="tab-label">Docs</span>
             </div>
-            <div class="sidebar-tab" data-screen="deps" title="Dependencies">
+            <div class="sidebar-tab" data-screen="deps" data-title="Deps">
                 <span class="tab-icon">📦</span>
-                <span class="tab-label">Deps</span>
             </div>
-            <div class="sidebar-tab" data-screen="decisions" title="Decisions">
+            <div class="sidebar-tab" data-screen="decisions" data-title="Decisions">
                 <span class="tab-icon">📋</span>
-                <span class="tab-label">Decisions</span>
             </div>
-            <div class="sidebar-tab" data-screen="skills" title="Skills">
+            <div class="sidebar-tab" data-screen="skills" data-title="Skills">
                 <span class="tab-icon">🔧</span>
-                <span class="tab-label">Skills</span>
             </div>
-            <div class="sidebar-tab" data-screen="compliance" title="Compliance">
+            <div class="sidebar-tab" data-screen="compliance" data-title="Compliance">
                 <span class="tab-icon">🔒</span>
-                <span class="tab-label">Compliance</span>
             </div>
-            <div class="sidebar-tab" data-screen="onboarding" title="Onboarding">
+            <div class="sidebar-tab" data-screen="onboarding" data-title="Onboard">
                 <span class="tab-icon">🚀</span>
-                <span class="tab-label">Onboard</span>
             </div>
-            <div class="sidebar-tab" data-screen="deploy" title="Deploy">
+            <div class="sidebar-tab" data-screen="deploy" data-title="Deploy">
                 <span class="tab-icon">📤</span>
-                <span class="tab-label">Deploy</span>
             </div>
         </nav>
 
         <main id="main-content">
             <section id="editor-pane" class="pane">
+                <div class="editor-tabs" id="editor-tabs">
+                    <div class="editor-tab active">untitled <span class="tab-close">✕</span></div>
+                </div>
                 <div id="monaco-editor" class="editor-container"></div>
             </section>
-            <div class="resize-handle" id="editor-chat-handle"></div>
+
+            <div class="resize-handle" id="editor-chat-handle" aria-label="Resize"></div>
+
             <section id="chat-pane" class="pane">
-                <div id="message-list" class="message-list"></div>
-                <div id="input-area" class="input-area">
-                    <textarea id="chat-input" placeholder="Ask OmniCode to do anything..." rows="3"></textarea>
-                    <button id="send-btn" class="btn primary">Send</button>
+                <div class="chat-header">
+                    <span class="chat-title">💬 Chat</span>
+                    <span id="chat-model" style="font-size:10px;opacity:.6">gpt-4</span>
+                </div>
+                <div id="message-list" class="message-list">
+                    <div class="empty-state" id="chat-welcome">
+                        <div class="empty-icon">🤖</div>
+                        <h3>Welcome to OmniCode</h3>
+                        <p>Ask me to build, refactor, fix, or explore your code.</p>
+                    </div>
+                </div>
+                <div class="input-area">
+                    <textarea id="chat-input" placeholder="Ask OmniCode to do anything..." rows="2" aria-label="Chat input"></textarea>
+                    <button id="send-btn" class="btn primary" aria-label="Send">Send</button>
                 </div>
             </section>
-            <div class="resize-handle" id="chat-diff-handle"></div>
+
+            <div class="resize-handle" id="chat-diff-handle" aria-label="Resize"></div>
+
             <section id="diff-pane" class="pane" style="display:none;">
-                <div id="diff-viewer" class="diff-viewer"></div>
+                <div class="diff-header">
+                    <span>📄 Diff View</span>
+                    <button id="close-diff" class="icon-btn" aria-label="Close diff" style="font-size:12px">✕</button>
+                </div>
+                <div id="diff-viewer" class="diff-viewer">
+                    <div class="empty-state">
+                        <div class="empty-icon">📄</div>
+                        <h3>No Changes Yet</h3>
+                        <p>Diffs will appear here when files are modified.</p>
+                    </div>
+                </div>
             </section>
+
             <section id="terminal-pane" class="pane" style="display:none;">
-                <div id="terminal-emulator" class="terminal-emulator"></div>
+                <div class="terminal-emulator" id="terminal-emulator">
+                    <div style="color:var(--text2);font-size:12px">Terminal ready. Commands run here.</div>
+                </div>
             </section>
         </main>
 
@@ -108,23 +127,89 @@
                 <span id="model-name" class="status-item">🤖 gpt-4</span>
             </div>
             <div class="status-center">
-                <span id="agent-status" class="status-item status-idle">🟢 idle</span>
+                <span id="agent-status" class="status-item status-idle">
+                    <span class="status-dot"></span> idle
+                </span>
             </div>
             <div class="status-right">
                 <span id="peer-count" class="status-item">👤 0 peers</span>
                 <span id="compliance-badge" class="status-item" style="display:none;">🔒 compliant</span>
                 <span id="voice-indicator" class="status-item" style="display:none;">🎤 active</span>
+                <span id="conn-status" class="status-item" title="Connection">
+                    <span class="status-dot" style="width:6px;height:6px;background:var(--green)"></span>
+                </span>
                 <span id="current-time" class="status-item"></span>
             </div>
         </footer>
+
+        <nav class="panel-tabs" id="panel-tabs" aria-label="Panel tabs">
+            <span class="panel-tab active" data-panel="editor">📝 Editor</span>
+            <span class="panel-tab" data-panel="chat">💬 Chat</span>
+            <span class="panel-tab" data-panel="diff">📄 Diff</span>
+            <span class="panel-tab" data-panel="terminal">💻 Terminal</span>
+        </nav>
     </div>
 
-    <div id="command-palette" class="modal" style="display:none;">
+    <div id="command-palette" class="modal" style="display:none;" role="dialog" aria-label="Command Palette">
         <div class="modal-content">
-            <input type="text" id="palette-search" placeholder="Type a command..." autofocus>
+            <input type="text" id="palette-search" placeholder="Type a command..." autofocus aria-label="Command search">
             <div id="palette-results" class="palette-results"></div>
         </div>
     </div>
+
+    <div id="settings-modal" class="modal" style="display:none;" role="dialog" aria-label="Settings">
+        <div class="modal-content">
+            <div class="settings-group">
+                <h3>Theme</h3>
+                <div class="setting-row">
+                    <span>Appearance</span>
+                    <select id="settings-theme">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-group">
+                <h3>Editor</h3>
+                <div class="setting-row">
+                    <span>Font Size</span>
+                    <select id="settings-font-size">
+                        <option value="12">12px</option>
+                        <option value="13" selected>13px</option>
+                        <option value="14">14px</option>
+                        <option value="16">16px</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <span>Tab Size</span>
+                    <select id="settings-tab-size">
+                        <option value="2">2</option>
+                        <option value="4" selected>4</option>
+                        <option value="8">8</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <span>Word Wrap</span>
+                    <select id="settings-word-wrap">
+                        <option value="off">Off</option>
+                        <option value="on" selected>On</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-group">
+                <h3>Connection</h3>
+                <div class="setting-row">
+                    <span>Server URL</span>
+                    <input type="text" id="settings-server-url" value="ws://localhost:9421">
+                </div>
+            </div>
+            <div class="settings-group" style="text-align:right;padding:12px 16px">
+                <button id="settings-close" class="btn secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
 
     <script type="module" src="js/app.js"></script>
     <script type="module" src="js/sync.js"></script>
