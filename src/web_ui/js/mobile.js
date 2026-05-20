@@ -341,3 +341,15 @@ class MobileUI {
 }
 
 window.MobileUI = MobileUI;
+
+if (window.app) {
+    window.mobileUI = new MobileUI(window.app);
+} else {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (window.app) {
+                window.mobileUI = new MobileUI(window.app);
+            }
+        }, 100);
+    });
+}

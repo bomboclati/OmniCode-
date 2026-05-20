@@ -1258,8 +1258,4 @@ class App {
 const app = new App();
 window.app = app;
 
-if (typeof MobileUI !== 'undefined') {
-    window.mobileUI = new MobileUI(app);
-}
-
 export default app;
