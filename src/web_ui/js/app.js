@@ -615,7 +615,7 @@ class App {
                                 <span class="download-item-size">504 KB</span>
                             </div>
                             <div class="download-item-desc">Your device: Android</div>
-                            <button class="btn primary" onclick="app.downloadFile('/omnicode.apk','OmniCode-Android.apk')">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadApk()">Download APK</button>
                         </div>
                     ` : isIOS ? `
                         <div class="download-item">
@@ -632,7 +632,7 @@ class App {
                                 <span class="download-item-name">Android APK</span>
                                 <span class="download-item-size">504 KB</span>
                             </div>
-                            <button class="btn primary" onclick="app.downloadFile('/omnicode.apk','OmniCode-Android.apk')">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadApk()">Download APK</button>
                         </div>
                     `}
                     <div class="download-item">
@@ -743,6 +743,18 @@ class App {
         } catch (e) {
             this.showToast('Download failed: ' + e.message);
         }
+    }
+
+    // --- APK Download (sync, gesture-safe) ---
+    downloadApk() {
+        var a = document.createElement('a');
+        a.href = '/omnicode.apk';
+        a.download = 'OmniCode-Android.apk';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        this.showToast('Downloading OmniCode-Android.apk...');
     }
 
     // --- Copy to clipboard ---
