@@ -747,14 +747,14 @@ class App {
 
     // --- APK Download (sync, gesture-safe) ---
     downloadApk() {
+        this.showToast('Downloading OmniCode-Android.apk...');
         var a = document.createElement('a');
         a.href = '/omnicode.apk';
         a.download = 'OmniCode-Android.apk';
-        a.target = '_blank';
+        a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        this.showToast('Downloading OmniCode-Android.apk...');
     }
 
     // --- Copy to clipboard ---
