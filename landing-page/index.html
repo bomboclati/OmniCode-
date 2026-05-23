@@ -587,6 +587,8 @@ footer {
 }
 .install-modal.open { display: flex; }
 .install-modal-content {
+  position: relative;
+  z-index: 1;
   background: #18181B;
   border: 1px solid #27272A;
   border-radius: 8px;
@@ -1237,23 +1239,6 @@ footer {
       body.innerHTML = '<p style="margin-bottom:1rem">Download the APK file and install it on your Android device.</p>' +
         '<p style="font-size:12px;color:#52525B;margin-bottom:1rem;line-height:1.5">You may need to enable "Install from unknown sources" in Settings.</p>' +
         '<button id="apk-download-btn" style="display:inline-block;cursor:pointer;border:none;background:#FAFAFA;color:#09090B;padding:12px 32px;border-radius:4px;font-weight:600;font-size:15px;margin-top:4px;font-family:inherit">⬇ Download APK (504 KB)</button>';
-      setTimeout(function() {
-        var btn = document.getElementById('apk-download-btn');
-        if (btn) {
-          btn.addEventListener('click', function() {
-            btn.textContent = '⏳ Downloading...';
-            btn.disabled = true;
-            var a = document.createElement('a');
-            a.href = '/omnicode.apk';
-            a.download = 'OmniCode-Android.apk';
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(closeModal, 3000);
-          });
-        }
-      }, 50);
     } else if (isMobile) {
       title.textContent = 'Install on Your Device';
       body.innerHTML = '<div class="install-steps">' +
@@ -1288,6 +1273,16 @@ footer {
       statusEl.style.display = 'block';
       statusEl.textContent = 'OmniCode is installed!';
     }
+  });
+
+  // Delegated click handler for APK download button (added dynamically)
+  document.getElementById('install-modal-body').addEventListener('click', function(e) {
+    var btn = e.target.closest('#apk-download-btn');
+    if (!btn) return;
+    btn.textContent = '⏳ Downloading...';
+    btn.disabled = true;
+    window.location.href = '/omnicode.apk';
+    setTimeout(closeModal, 3000);
   });
 })();
 </script>
