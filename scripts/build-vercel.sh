@@ -12,3 +12,4 @@ cp assets/logo/png/* dist/app/assets/logo/png/
 cp assets/icon/* dist/app/assets/icon/
 cp assets/icon/* dist/assets/icon/
 cp assets/omnicode.apk dist/omnicode.apk 2>/dev/null || true
+mkdir -p dist/.well-known && cp assets/.well-known/assetlinks.json dist/.well-known/assetlinks.json 2>/dev/null || true

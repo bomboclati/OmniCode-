@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.omnicode.app",
+      "sha256_cert_fingerprints": ["12:B0:0E:84:E6:07:D2:5B:DC:EC:8C:7A:0B:3A:69:22:AF:21:37:50:D8:47:8A:CC:1B:B8:3A:59:10:0B:D3:76"]
+    }
+  }
+]
