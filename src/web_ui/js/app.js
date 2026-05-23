@@ -566,23 +566,23 @@ class App {
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Windows (x86_64)</span>
-                            <span class="download-item-size">4.1 MB</span>
+                            <span class="download-item-size">Coming soon</span>
                         </div>
-                        <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','OmniCode-v0.1.0-windows-x86_64.zip')">Download ZIP</button>
+                        <button class="btn secondary" onclick="app.showToast('Desktop app coming soon')">Coming Soon</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Linux (x86_64)</span>
-                            <span class="download-item-size">4.5 MB</span>
+                            <span class="download-item-size">Coming soon</span>
                         </div>
-                        <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','OmniCode-v0.1.0-linux-x86_64.tar.gz')">Download tar.gz</button>
+                        <button class="btn secondary" onclick="app.showToast('Desktop app coming soon')">Coming Soon</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">macOS (Apple Silicon)</span>
-                            <span class="download-item-size">4.3 MB</span>
+                            <span class="download-item-size">Coming soon</span>
                         </div>
-                        <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-256.png','OmniCode-v0.1.0-macos-aarch64.tar.gz')">Download tar.gz</button>
+                        <button class="btn secondary" onclick="app.showToast('Desktop app coming soon')">Coming Soon</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-name">Package managers</div>
@@ -612,10 +612,10 @@ class App {
                         <div class="download-item">
                             <div class="download-item-header">
                                 <span class="download-item-name">Android APK</span>
-                                <span class="download-item-size">12.3 MB</span>
+                                <span class="download-item-size">504 KB</span>
                             </div>
                             <div class="download-item-desc">Your device: Android</div>
-                            <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadFile('/omnicode.apk','OmniCode-Android.apk')">Download APK</button>
                         </div>
                     ` : isIOS ? `
                         <div class="download-item">
@@ -630,9 +630,9 @@ class App {
                         <div class="download-item">
                             <div class="download-item-header">
                                 <span class="download-item-name">Android APK</span>
-                                <span class="download-item-size">12.3 MB</span>
+                                <span class="download-item-size">504 KB</span>
                             </div>
-                            <button class="btn primary" onclick="app.downloadFile('./assets/logo/png/logo-mobile-512.png','omnicode-android.apk')">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadFile('/omnicode.apk','OmniCode-Android.apk')">Download APK</button>
                         </div>
                     `}
                     <div class="download-item">

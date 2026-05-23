@@ -11,3 +11,4 @@ cp assets/logo/* dist/app/assets/logo/
 cp assets/logo/png/* dist/app/assets/logo/png/
 cp assets/icon/* dist/app/assets/icon/
 cp assets/icon/* dist/assets/icon/
+cp assets/omnicode.apk dist/omnicode.apk 2>/dev/null || true
