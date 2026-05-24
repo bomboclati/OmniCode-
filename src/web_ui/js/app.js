@@ -553,7 +553,7 @@ class App {
             <div style="font-family:var(--font-sans)">
                 <div class="download-logo">
                     <img src="./assets/logo/omnicode-logo-horizontal.svg" alt="OmniCode" style="max-width:280px;height:auto;margin-bottom:8px">
-                    <div class="version">v0.1.1</div>
+                    <div class="version">v0.2.0</div>
                 </div>
 
                 ${installBanner}
@@ -568,21 +568,21 @@ class App {
                             <span class="download-item-name">Windows (x86_64)</span>
                             <span class="download-item-size">ZIP</span>
                         </div>
-                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.1/omni-0.1.1-windows-x86_64.zip')">Download</button>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.2.0/omni-0.1.1-windows-x86_64.zip')">Download</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">macOS (Apple Silicon)</span>
                             <span class="download-item-size">tar.gz</span>
                         </div>
-                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.1/omni-0.1.1-macos-aarch64.tar.gz')">Download</button>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.2.0/omni-0.1.1-macos-aarch64.tar.gz')">Download</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Linux (x86_64)</span>
                             <span class="download-item-size">tar.gz</span>
                         </div>
-                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.1/omni-0.1.1-linux-x86_64.tar.gz')">Download</button>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.2.0/omni-0.1.1-linux-x86_64.tar.gz')">Download</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-name">Install via script</div>

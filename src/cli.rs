@@ -9,11 +9,17 @@ pub struct Cli {
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
-    #[command(about = "Launch the TUI (default)")]
+    #[command(about = "Launch the TUI")]
     Omni,
 
     #[command(about = "Start the web server")]
     Serve {
+        #[arg(short, long, default_value = "9420")]
+        port: u16,
+    },
+
+    #[command(about = "Launch native desktop app")]
+    Desktop {
         #[arg(short, long, default_value = "9420")]
         port: u16,
     },

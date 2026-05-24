@@ -8,6 +8,7 @@ mod crypto;
 mod deploy;
 mod docs_gen;
 mod personalization;
+mod desktop;
 mod server;
 mod skills;
 mod tui;
@@ -46,11 +47,17 @@ async fn main() -> anyhow::Result<()> {
     let config = Config::load().unwrap_or_default();
 
     match cli.command {
-        None | Some(Commands::Omni) => {
+        None => {
+            desktop::run(std::sync::Arc::new(config), 9420).await?;
+        }
+        Some(Commands::Omni) => {
             tui::run(config).await?;
         }
         Some(Commands::Serve { port }) => {
             server::start(config, port).await?;
+        }
+        Some(Commands::Desktop { port }) => {
+            desktop::run(std::sync::Arc::new(config), port).await?;
         }
         Some(Commands::Task { description }) => {
             agent::run_single_task(&config, &description).await?;

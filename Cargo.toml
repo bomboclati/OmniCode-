@@ -1,6 +1,6 @@
 [package]
 name = "omnicode"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Autonomous AI coding agent with real-time sync"
 license = "MIT"
@@ -16,6 +16,7 @@ exclude = ["scripts/", "ide-extensions/", ".github/", "landing-page/", "assets/"
 default = ["tui", "server"]
 tui = []
 server = []
+desktop = []
 
 [dependencies]
 ratatui = "0.24"
@@ -63,6 +64,8 @@ walkdir = "2.4"
 notify = "6.1"
 openssl = { version = "0.10", features = ["vendored"], optional = true }
 rust-embed = "8.0"
+wry = "0.55.1"
+tao = "0.35.3"
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.52", features = ["Win32_Foundation", "Win32_System_Com", "Win32_System_Console", "Win32_System_SystemInformation"] }

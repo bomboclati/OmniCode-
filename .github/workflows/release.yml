@@ -22,6 +22,19 @@ jobs:
       - name: Build release
         run: cargo build --release
 
+      - name: Download WebView2Loader.dll
+        shell: pwsh
+        run: |
+          $nugetUrl = "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/1.0.2592.51"
+          $tmpDir = "$env:TEMP\webview2-nuget"
+          $nupkg = "$tmpDir\webview2.nupkg"
+          New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
+          Invoke-WebRequest -Uri $nugetUrl -OutFile $nupkg -UseBasicParsing
+          Rename-Item $nupkg "$tmpDir\webview2.zip" -Force
+          Expand-Archive -Path "$tmpDir\webview2.zip" -DestinationPath "$tmpDir\extracted" -Force
+          Copy-Item "$tmpDir\extracted\build\native\x64\WebView2Loader.dll" -Destination "target\release\WebView2Loader.dll" -Force
+          Write-Host "WebView2Loader.dll bundled"
+
       - name: Rename binary
         run: |
           move target\release\omnicode.exe target\release\${{ env.BINARY_NAME }}.exe
@@ -31,7 +44,7 @@ jobs:
         run: |
           $version = "$env:GITHUB_REF_NAME" -replace "^v", ""
           $archive = "omni-${version}-windows-x86_64.zip"
-          Compress-Archive -Path "target\release\${{ env.BINARY_NAME }}.exe" -DestinationPath "target\$archive"
+          Compress-Archive -Path "target\release\${{ env.BINARY_NAME }}.exe", "target\release\WebView2Loader.dll" -DestinationPath "target\$archive"
           $hash = (Get-FileHash "target\$archive" -Algorithm SHA256).Hash.ToLower()
           Set-Content -Path "target\${archive}.sha256" -Value $hash
           Write-Host "Created: $archive"
@@ -49,7 +62,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libcairo2-dev libgdk-pixbuf2.0-dev libatk1.0-dev libpango1.0-dev || true
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libcairo2-dev libgdk-pixbuf2.0-dev libatk1.0-dev libpango1.0-dev libwebkit2gtk-4.1-dev libxdo-dev || true
 
       - name: Build release
         run: cargo build --release
