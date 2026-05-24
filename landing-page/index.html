@@ -914,20 +914,11 @@ footer {
 </div>
 <div class="download-grid reveal">
 <div class="download-card">
-<h3>Mobile App</h3>
-<p style="font-size:14px;color:#52525B;margin-bottom:1rem">Install OmniCode on your phone. Full PWA with offline support, chat, and code editing.</p>
-<button class="install-pwa-btn" id="install-pwa-btn" style="text-decoration:none;cursor:pointer">
-<span class="dl-icon">📱</span> Install Mobile App
-</button>
-<div id="install-pwa-status" style="margin-top:8px;font-size:12px;color:#52525B;display:none"></div>
-</div>
-<div class="download-card">
 <h3>Windows</h3>
-<div class="download-method"><code>winget install omnicode</code><button class="copy-btn" data-cmd="winget install omnicode">Copy</button></div>
-<div class="download-method"><code>scoop install omnicode</code><button class="copy-btn" data-cmd="scoop install omnicode">Copy</button></div>
-<div class="download-method"><code>choco install omnicode</code><button class="copy-btn" data-cmd="choco install omnicode">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omnicode-x86_64-pc-windows-msvc.zip" data-filename="omnicode-v0.1.0-windows-x86_64.zip" data-progress="dl-win-progress">
-                    <span class="dl-icon">⬇</span> Download ZIP
+<div class="download-method"><code>winget install bomboclati.OmniCode</code><button class="copy-btn" data-cmd="winget install bomboclati.OmniCode">Copy</button></div>
+<div class="download-method"><code>iwr .../install.ps1 | iex</code><button class="copy-btn" data-cmd="iwr https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.ps1 | iex">Copy</button></div>
+                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-windows-x86_64.zip" data-filename="omni-0.1.0-windows-x86_64.zip" data-progress="dl-win-progress">
+                    <span class="dl-icon">⬇</span> Download EXE (ZIP)
                 </button>
                 <div class="download-progress" id="dl-win-progress">
                     <span class="dl-status">Starting...</span>
@@ -935,37 +926,39 @@ footer {
                 </div>
 </div>
 <div class="download-card">
-<h3>macOS</h3>
-<div class="download-method"><code>brew install omnicode</code><button class="copy-btn" data-cmd="brew install omnicode">Copy</button></div>
+<h3>macOS (Intel)</h3>
 <div class="download-method"><code>curl -sL .../install.sh | bash</code><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omnicode-darwin-aarch64.tar.gz" data-filename="omnicode-v0.1.0-macos-aarch64.tar.gz" data-progress="dl-mac-progress">
-                    <span class="dl-icon">⬇</span> Download tar.gz
+                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-macos-x86_64.tar.gz" data-filename="omni-0.1.0-macos-x86_64.tar.gz" data-progress="dl-mac-intel-progress">
+                    <span class="dl-icon">⬇</span> Download (Intel)
                 </button>
-                <div class="download-progress" id="dl-mac-progress">
+                <div class="download-progress" id="dl-mac-intel-progress">
                     <span class="dl-status">Starting...</span>
                     <div class="bar"><div class="bar-fill"></div></div>
                 </div>
+</div>
+<div class="download-card">
+<h3>macOS (Apple Silicon)</h3>
+<div class="download-method"><code>curl -sL .../install.sh | bash</code><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
+                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-macos-aarch64.tar.gz" data-filename="omni-0.1.0-macos-aarch64.tar.gz" data-progress="dl-mac-arm-progress">
+                    <span class="dl-icon">⬇</span> Download (Apple Silicon)
+                </button>
+                <div class="download-progress" id="dl-mac-arm-progress">
+                    <span class="dl-status">Starting...</span>
+                    <div class="bar"><div class="bar-fill"></div></div>
                 </div>
-                <div class="download-card">
-                    <h3>Serve Locally</h3>
-                    <p style="font-size:14px;color:#52525B;margin-bottom:1rem">Run the OmniCode website on your desktop. No internet required after initial load.</p>
-                    <div class="download-method"><code>cd omnicode-website</code><button class="copy-btn" data-cmd="cd omnicode-website">Copy</button></div>
-                    <div class="download-method"><code>python -m http.server 8080</code><button class="copy-btn" data-cmd="python -m http.server 8080">Copy</button></div>
-                    <p style="font-size:12px;color:#3F3F46;margin-top:10px">Then open <a href="http://localhost:8080" style="color:#A1A1AA;text-decoration:underline">http://localhost:8080</a> in your browser.</p>
-                </div>
-                <div class="download-card">
-                    <h3>Linux</h3>
-<div class="download-method"><code>sudo dpkg -i omnicode_amd64.deb</code><button class="copy-btn" data-cmd="sudo dpkg -i omnicode_amd64.deb">Copy</button></div>
-<div class="download-method"><code>yay -S omnicode</code><button class="copy-btn" data-cmd="yay -S omnicode">Copy</button></div>
-<div class="download-method"><code>snap install omnicode</code><button class="copy-btn" data-cmd="snap install omnicode">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omnicode-linux-amd64.tar.gz" data-filename="omnicode-v0.1.0-linux-x86_64.tar.gz" data-progress="dl-linux-progress">
+</div>
+<div class="download-card">
+<h3>Linux</h3>
+<div class="download-method"><code>curl -sL .../install.sh | bash</code><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
+<div class="download-method"><code>cargo install omnicode</code><button class="copy-btn" data-cmd="cargo install omnicode">Copy</button></div>
+                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-linux-x86_64.tar.gz" data-filename="omni-0.1.0-linux-x86_64.tar.gz" data-progress="dl-linux-progress">
                     <span class="dl-icon">⬇</span> Download tar.gz
                 </button>
                 <div class="download-progress" id="dl-linux-progress">
                     <span class="dl-status">Starting...</span>
                     <div class="bar"><div class="bar-fill"></div></div>
                 </div>
-                </div>
+</div>
 </div>
 </section>
 

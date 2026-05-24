@@ -11,6 +11,7 @@ mod personalization;
 mod server;
 mod skills;
 mod tui;
+mod web_assets;
 
 use clap::Parser;
 use cli::{Cli, Commands, SentinelCommands, SkillCommands};

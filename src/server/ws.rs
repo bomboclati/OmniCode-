@@ -1,6 +1,6 @@
 use axum::{
     extract::{
-        ws::{Message, WebSocket},
+        ws::{Message, WebSocket, Utf8Bytes},
         State, WebSocketUpgrade,
     },
     response::IntoResponse,
@@ -44,7 +44,7 @@ async fn handle_socket(
     let send_task = tokio::spawn(async move {
         while let Some(msg) = rx.recv().await {
             if sender
-                .send(Message::Text(msg))
+                .send(Message::Text(Utf8Bytes::from(msg)))
                 .await
                 .is_err()
             {

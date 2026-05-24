@@ -566,34 +566,41 @@ class App {
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Windows (x86_64)</span>
-                            <span class="download-item-size">Coming soon</span>
+                            <span class="download-item-size">ZIP</span>
                         </div>
-                        <button class="btn secondary" onclick="app.showToast('Desktop app coming soon')">Coming Soon</button>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-windows-x86_64.zip')">Download</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">Linux (x86_64)</span>
-                            <span class="download-item-size">Coming soon</span>
+                            <span class="download-item-size">tar.gz</span>
                         </div>
-                        <button class="btn secondary" onclick="app.showToast('Desktop app coming soon')">Coming Soon</button>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-linux-x86_64.tar.gz')">Download</button>
+                    </div>
+                    <div class="download-item">
+                        <div class="download-item-header">
+                            <span class="download-item-name">macOS (Intel)</span>
+                            <span class="download-item-size">tar.gz</span>
+                        </div>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-macos-x86_64.tar.gz')">Download</button>
                     </div>
                     <div class="download-item">
                         <div class="download-item-header">
                             <span class="download-item-name">macOS (Apple Silicon)</span>
-                            <span class="download-item-size">Coming soon</span>
+                            <span class="download-item-size">tar.gz</span>
                         </div>
-                        <button class="btn secondary" onclick="app.showToast('Desktop app coming soon')">Coming Soon</button>
+                        <button class="btn primary" onclick="window.open('https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-macos-aarch64.tar.gz')">Download</button>
                     </div>
                     <div class="download-item">
-                        <div class="download-item-name">Package managers</div>
+                        <div class="download-item-name">Install via script</div>
                         <div style="font-size:11px;color:var(--text-dim);margin-top:4px;font-family:var(--font-mono);line-height:1.6">
                             <div class="cmd-row">
-                                <span>winget install omnicode</span>
-                                <button class="btn secondary" onclick="app.copyToClipboard('winget install omnicode')">Copy</button>
+                                <span>curl -sL .../install.sh | bash</span>
+                                <button class="btn secondary" onclick="app.copyToClipboard('curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash')">Copy</button>
                             </div>
                             <div class="cmd-row">
-                                <span>brew install omnicode</span>
-                                <button class="btn secondary" onclick="app.copyToClipboard('brew install omnicode')">Copy</button>
+                                <span>iwr .../install.ps1 | iex</span>
+                                <button class="btn secondary" onclick="app.copyToClipboard('iwr https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.ps1 | iex')">Copy</button>
                             </div>
                             <div class="cmd-row">
                                 <span>cargo install omnicode</span>
@@ -612,10 +619,10 @@ class App {
                         <div class="download-item">
                             <div class="download-item-header">
                                 <span class="download-item-name">Android APK</span>
-                                <span class="download-item-size">504 KB</span>
+                                <span class="download-item-size">GitHub</span>
                             </div>
                             <div class="download-item-desc">Your device: Android</div>
-                            <button class="btn primary" onclick="app.downloadApk()">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadApk()">View Releases</button>
                         </div>
                     ` : isIOS ? `
                         <div class="download-item">
@@ -630,9 +637,9 @@ class App {
                         <div class="download-item">
                             <div class="download-item-header">
                                 <span class="download-item-name">Android APK</span>
-                                <span class="download-item-size">504 KB</span>
+                                <span class="download-item-size">GitHub</span>
                             </div>
-                            <button class="btn primary" onclick="app.downloadApk()">Download APK</button>
+                            <button class="btn primary" onclick="app.downloadApk()">View Releases</button>
                         </div>
                     `}
                     <div class="download-item">
@@ -747,8 +754,8 @@ class App {
 
     // --- APK Download ---
     downloadApk() {
-        this.showToast('Downloading OmniCode-Android.apk...');
-        window.location.href = '/omnicode.apk';
+        this.showToast('Downloading OmniCode for Android...');
+        window.open('https://github.com/bomboclati/OmniCode-/releases');
     }
 
     // --- Copy to clipboard ---

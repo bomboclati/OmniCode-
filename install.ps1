@@ -28,7 +28,7 @@ function Get-Architecture {
 
 function Get-LatestVersion {
     try {
-        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/omnicode/omnicode/releases/latest" -ErrorAction SilentlyContinue
+        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/bomboclati/OmniCode-/releases/latest" -ErrorAction SilentlyContinue
         return $response.tag_name -replace "^v", ""
     } catch {
         return "0.1.0"
@@ -38,52 +38,44 @@ function Get-LatestVersion {
 function Install-Binary {
     param($Version, $Arch)
 
-    $archive = "omnicode-windows-${Arch}.tar.gz"
-    $url = "https://github.com/omnicode/omnicode/releases/download/v${Version}/${archive}"
-    $tmpDir = "$env:TEMP\omnicode-install"
+    $archive = "omni-${Version}-windows-x86_64.zip"
+    $url = "https://github.com/bomboclati/OmniCode-/releases/download/v${Version}/${archive}"
+    $tmpDir = "$env:TEMP\omni-install"
     $installDir = "$env:LOCALAPPDATA\Programs\omnicode"
 
     New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
     New-Item -ItemType Directory -Path $installDir -Force | Out-Null
 
     Write-Host "Downloading OmniCode v${Version}..."
-    
+
     try {
-        Invoke-WebRequest -Uri $url -OutFile "$tmpDir\omnicode.tar.gz" -UseBasicParsing
+        Invoke-WebRequest -Uri $url -OutFile "$tmpDir\$archive" -UseBasicParsing
     } catch {
         Write-Host "Download failed: $_" -ForegroundColor Red
-        Write-Host "Falling back to manual install instructions..."
+        Write-Host "Falling back to manual install..."
         Write-Host ""
         Write-Host "Please install Rust from https://rustup.rs and run:"
         Write-Host "  cargo install omnicode"
         exit 1
     }
 
-    # Try to verify checksum
     try {
         $checksumUrl = "${url}.sha256"
         $checksum = (Invoke-WebRequest -Uri $checksumUrl -UseBasicParsing).Content.Trim()
-        $localHash = (Get-FileHash "$tmpDir\omnicode.tar.gz" -Algorithm SHA256).Hash.ToLower()
+        $localHash = (Get-FileHash "$tmpDir\$archive" -Algorithm SHA256).Hash.ToLower()
         if ($localHash -ne $checksum.ToLower()) {
             Write-Host "Warning: Checksum mismatch" -ForegroundColor Yellow
+        } else {
+            Write-Host "Checksum verified." -ForegroundColor Green
         }
     } catch {
         Write-Host "Checksum verification skipped" -ForegroundColor Yellow
     }
 
     Write-Host "Extracting..."
-    tar -xzf "$tmpDir\omnicode.tar.gz" -C "$tmpDir"
+    Expand-Archive -Path "$tmpDir\$archive" -DestinationPath "$tmpDir\extracted" -Force
 
-    # Find omni.exe
-    $binaryPath = Get-ChildItem -Path $tmpDir -Recurse -Filter "omni.exe" | Select-Object -First 1 -ExpandProperty FullName
-    if (-not $binaryPath) {
-        $binaryPath = Get-ChildItem -Path $tmpDir -Recurse -Filter "omnicode.exe" | Select-Object -First 1 -ExpandProperty FullName
-    }
-
-    if (-not $binaryPath) {
-        # Look for any exe
-        $binaryPath = Get-ChildItem -Path $tmpDir -Recurse -Filter "*.exe" | Select-Object -First 1 -ExpandProperty FullName
-    }
+    $binaryPath = Get-ChildItem -Path "$tmpDir\extracted" -Recurse -Filter "omni.exe" | Select-Object -First 1 -ExpandProperty FullName
 
     if (-not $binaryPath) {
         Write-Host "Binary not found in archive. Installing via cargo instead..." -ForegroundColor Yellow
@@ -99,9 +91,22 @@ function Install-Binary {
     }
 
     Copy-Item -Path $binaryPath -Destination "$installDir\omni.exe" -Force
-    Write-Host ""
 
-    # Add to PATH
+    $desktop = [Environment]::GetFolderPath("Desktop")
+    $shortcutPath = "$desktop\OmniCode.lnk"
+
+    $wsh = New-Object -ComObject WScript.Shell
+    $shortcut = $wsh.CreateShortcut($shortcutPath)
+    $shortcut.TargetPath = "$installDir\omni.exe"
+    $shortcut.Description = "OmniCode - Autonomous AI Coding Agent"
+    $shortcut.WorkingDirectory = "%USERPROFILE%"
+    $shortcut.Save()
+
+    $startMenu = [Environment]::GetFolderPath("StartMenu")
+    $startMenuPath = "$startMenu\Programs\OmniCode"
+    New-Item -ItemType Directory -Path $startMenuPath -Force | Out-Null
+    Copy-Item -Path $shortcutPath -Destination "$startMenuPath\OmniCode.lnk" -Force
+
     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
     if ($userPath -notlike "*$installDir*") {
         [Environment]::SetEnvironmentVariable("Path", "$userPath;$installDir", "User")
@@ -109,10 +114,13 @@ function Install-Binary {
         Write-Host "Added $installDir to your PATH" -ForegroundColor $Green
     }
 
-    # Cleanup
     Remove-Item -Path $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
 
-    Write-Host "✓ OmniCode installed to $installDir\omni.exe" -ForegroundColor $Green
+    Write-Host ""
+    Write-Host "✓ OmniCode installed!" -ForegroundColor $Green
+    Write-Host "  Binary: $installDir\omni.exe"
+    Write-Host "  Desktop shortcut created."
+    Write-Host "  Start menu shortcut created."
 }
 
 Write-Host "Installing OmniCode for Windows..."

@@ -1,9 +1,8 @@
-use axum::{Json, Router, extract::Path, routing::{get, post}};
+use axum::{Json, Router, extract::{Path, Query}, routing::{get, post}};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use crate::config::Config;
-use tower_http::services::ServeDir;
-use crate::server::http::{serve_index, serve_sw, serve_web_asset, serve_logo_asset, serve_icon_asset};
+use crate::server::http::{serve_index, serve_sw, serve_asset};
 
 #[derive(Debug, Deserialize)]
 pub struct ChatRequest {
@@ -62,8 +61,6 @@ pub fn create_router(config: &Config) -> Router {
         .route("/api/agent/chat", post(chat_handler))
         .route("/api/agent/swarm", post(swarm_handler))
         .route("/api/task", post(task_handler))
-        .route("/api/files", get(list_files))
-        .route("/api/files/{*path}", get(get_file))
         .route("/api/diff", get(get_diff))
         .route("/api/branch", get(get_branch))
         .route("/api/reviews", get(list_reviews))
@@ -78,12 +75,10 @@ pub fn create_router(config: &Config) -> Router {
         .route("/api/docs", get(docs_handler))
         .route("/api/heal", post(heal_handler))
         .route("/api/release", post(release_handler))
-        .route("/assets/logo/{*path}", get(serve_logo_asset))
-        .route("/assets/icon/{*path}", get(serve_icon_asset))
-        .route("/assets/css/{*path}", get(serve_web_asset))
-        .route("/assets/js/{*path}", get(serve_web_asset))
         .route("/sw.js", get(serve_sw))
-        .nest_service("/assets", ServeDir::new("src/web_ui"))
+        .route("/api/files", get(list_files))
+        .route("/api/read-file", get(get_file))
+        .route("/assets/{*path}", get(serve_asset))
 }
 
 pub async fn chat_handler(Json(req): Json<ChatRequest>) -> Json<ChatResponse> {
@@ -121,7 +116,8 @@ pub async fn list_files() -> Json<Vec<String>> {
     Json(files)
 }
 
-pub async fn get_file(Path(path): Path<String>) -> Json<HashMap<String, String>> {
+pub async fn get_file(axum::extract::Query(params): axum::extract::Query<HashMap<String, String>>) -> Json<HashMap<String, String>> {
+    let path = params.get("path").cloned().unwrap_or_default();
     let mut result = HashMap::new();
     match std::fs::read_to_string(&path) {
         Ok(content) => {

@@ -1,76 +1,9 @@
 use axum::{
     body::Body,
     http::{header, StatusCode},
-    response::{IntoResponse, Response},
+    response::Response,
 };
-
-pub async fn serve_index() -> Response<Body> {
-    let html = include_str!("../web_ui/index.html");
-    Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, "text/html; charset=utf-8")
-        .body(Body::from(html.to_string()))
-        .unwrap()
-}
-
-pub async fn serve_sw() -> Response<Body> {
-    let sw = include_str!("../web_ui/sw.js");
-    Response::builder()
-        .status(StatusCode::OK)
-        .header(header::CONTENT_TYPE, "application/javascript")
-        .header(header::CACHE_CONTROL, "public, max-age=3600")
-        .body(Body::from(sw.to_string()))
-        .unwrap()
-}
-
-pub async fn serve_web_asset(axum::extract::Path(path): axum::extract::Path<String>) -> Response<Body> {
-    let asset_path = format!("src/web_ui/{}", path);
-    match std::fs::read(&asset_path) {
-        Ok(content) => {
-            let mime = mime_for_path(&path);
-            Response::builder()
-                .status(StatusCode::OK)
-                .header(header::CONTENT_TYPE, mime)
-                .header(header::CACHE_CONTROL, "public, max-age=3600")
-                .body(Body::from(content))
-                .unwrap()
-        }
-        Err(_) => not_found(&path),
-    }
-}
-
-pub async fn serve_logo_asset(axum::extract::Path(path): axum::extract::Path<String>) -> Response<Body> {
-    let asset_path = format!("assets/logo/{}", path);
-    match std::fs::read(&asset_path) {
-        Ok(content) => {
-            let mime = mime_for_path(&path);
-            Response::builder()
-                .status(StatusCode::OK)
-                .header(header::CONTENT_TYPE, mime)
-                .header(header::CACHE_CONTROL, "public, max-age=86400")
-                .header(header::CONTENT_DISPOSITION, format!("inline; filename=\"{}\"", path.rsplit('/').next().unwrap_or(&path)))
-                .body(Body::from(content))
-                .unwrap()
-        }
-        Err(_) => not_found(&path),
-    }
-}
-
-pub async fn serve_icon_asset(axum::extract::Path(path): axum::extract::Path<String>) -> Response<Body> {
-    let asset_path = format!("assets/icon/{}", path);
-    match std::fs::read(&asset_path) {
-        Ok(content) => {
-            let mime = mime_for_path(&path);
-            Response::builder()
-                .status(StatusCode::OK)
-                .header(header::CONTENT_TYPE, mime)
-                .header(header::CACHE_CONTROL, "public, max-age=86400")
-                .body(Body::from(content))
-                .unwrap()
-        }
-        Err(_) => not_found(&path),
-    }
-}
+use rust_embed::RustEmbed;
 
 fn mime_for_path(path: &str) -> &'static str {
     if path.ends_with(".svg") {
@@ -91,6 +24,48 @@ fn mime_for_path(path: &str) -> &'static str {
         "application/wasm"
     } else {
         "application/octet-stream"
+    }
+}
+
+pub async fn serve_index() -> Response<Body> {
+    serve_embedded("index.html", "text/html; charset=utf-8")
+}
+
+pub async fn serve_sw() -> Response<Body> {
+    serve_embedded("sw.js", "application/javascript")
+}
+
+pub async fn serve_asset(axum::extract::Path(path): axum::extract::Path<String>) -> Response<Body> {
+    let mime = mime_for_path(&path);
+    let embedded_path = format!("assets/{}", path);
+    match crate::web_assets::WebAssets::get(&embedded_path) {
+        Some(content) => {
+            let data = content.data.to_vec();
+            Response::builder()
+                .status(StatusCode::OK)
+                .header(header::CONTENT_TYPE, mime)
+                .header(header::CACHE_CONTROL, "public, max-age=3600")
+                .body(Body::from(data))
+                .unwrap()
+        }
+        None => {
+            serve_embedded(&path, mime)
+        }
+    }
+}
+
+fn serve_embedded(path: &str, content_type: &str) -> Response<Body> {
+    match crate::web_assets::WebAssets::get(path) {
+        Some(content) => {
+            let data = content.data.to_vec();
+            Response::builder()
+                .status(StatusCode::OK)
+                .header(header::CONTENT_TYPE, content_type)
+                .header(header::CACHE_CONTROL, "public, max-age=3600")
+                .body(Body::from(data))
+                .unwrap()
+        }
+        None => not_found(path),
     }
 }
 
