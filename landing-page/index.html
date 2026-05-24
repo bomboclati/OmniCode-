@@ -1088,66 +1088,17 @@ footer {
   // Download functionality
   function triggerDownload(url, filename, progressId) {
     var progressEl = document.getElementById(progressId);
-    if (!progressEl) {
-      // Fallback: direct download without progress
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.target = '_blank';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      return;
+    if (progressEl) {
+      var statusEl = progressEl.querySelector('.dl-status');
+      var barFill = progressEl.querySelector('.bar-fill');
+      progressEl.classList.add('active');
+      statusEl.textContent = 'Opening download...';
+      barFill.style.width = '100%';
     }
-    var statusEl = progressEl.querySelector('.dl-status');
-    var barFill = progressEl.querySelector('.bar-fill');
-    progressEl.classList.add('active');
-    statusEl.textContent = 'Downloading...';
-    barFill.style.width = '0%';
-
-    fetch(url)
-      .then(function(response) {
-        if (!response.ok) throw new Error('Download failed');
-        var contentLength = response.headers.get('content-length');
-        var total = contentLength ? parseInt(contentLength, 10) : 0;
-        var loaded = 0;
-        var reader = response.body.getReader();
-
-        function read() {
-          return reader.read().then(function(result) {
-            if (result.done) {
-              statusEl.textContent = 'Download complete!';
-              barFill.style.width = '100%';
-              setTimeout(function() { progressEl.classList.remove('active'); }, 2000);
-              return;
-            }
-            loaded += result.value.length;
-            if (total > 0) {
-              var pct = Math.round((loaded / total) * 100);
-              barFill.style.width = pct + '%';
-              statusEl.textContent = 'Downloading... ' + pct + '%';
-            }
-            return read();
-          });
-        }
-        return read().then(function() {
-          return response.blob();
-        });
-      })
-      .then(function(blob) {
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-      })
-      .catch(function(err) {
-        statusEl.textContent = 'Failed — ' + err.message;
-        barFill.style.width = '0%';
-        setTimeout(function() { progressEl.classList.remove('active'); }, 3000);
-      });
+    window.open(url, '_blank');
+    if (progressEl) {
+      setTimeout(function() { progressEl.classList.remove('active'); }, 3000);
+    }
   }
 
   document.querySelectorAll('.download-btn').forEach(function(btn) {
