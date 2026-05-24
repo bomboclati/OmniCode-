@@ -50,24 +50,33 @@ install_binary() {
     local os="$2"
     local arch="$3"
 
-    if [ "$os" = "windows" ]; then
-        local ext="zip"
-        local binary_name="omnicode.exe"
-        local archive="OmniCode-v${version}-${os}-${arch}.zip"
-    elif [ "$os" = "linux" ]; then
-        local ext="tar.gz"
-        local binary_name="omnicode"
-        local archive="OmniCode-${version}-${os}-${arch}.tar.gz"
-    else
-        echo "No pre-built binary for $os/$arch"
-        echo "Installing via cargo instead..."
-        if command -v cargo &> /dev/null; then
-            cargo install omnicode
-        else
-            echo "Install Rust from https://rustup.rs and run: cargo install omnicode"
-        fi
-        return
-    fi
+    local ext=""
+    local binary_name="omni"
+    local archive=""
+
+    case "$os" in
+        windows)
+            ext="zip"
+            binary_name="omni.exe"
+            archive="omni-${version}-windows-x86_64.zip"
+            ;;
+        linux)
+            ext="tar.gz"
+            archive="omni-${version}-linux-x86_64.tar.gz"
+            ;;
+        macos)
+            ext="tar.gz"
+            if [ "$arch" = "aarch64" ]; then
+                archive="omni-${version}-macos-aarch64.tar.gz"
+            else
+                archive="omni-${version}-macos-x86_64.tar.gz"
+            fi
+            ;;
+        *)
+            echo "Unsupported OS: $os"
+            exit 1
+            ;;
+    esac
 
     local url="https://github.com/bomboclati/OmniCode-/releases/download/v${version}/${archive}"
     local tmp_dir="/tmp/omni-${RANDOM}"
@@ -76,9 +85,27 @@ install_binary() {
     echo "Downloading OmniCode v${version}..."
 
     if command -v curl &> /dev/null; then
-        curl -sL "$url" -o "${tmp_dir}/${archive}"
+        curl -sL "$url" -o "${tmp_dir}/${archive}" || {
+            echo "Download failed. Trying cargo install..."
+            if command -v cargo &> /dev/null; then
+                cargo install omnicode
+            else
+                echo "Install Rust from https://rustup.rs and run: cargo install omnicode"
+            fi
+            rm -rf "$tmp_dir"
+            return
+        }
     elif command -v wget &> /dev/null; then
-        wget -q "$url" -O "${tmp_dir}/${archive}"
+        wget -q "$url" -O "${tmp_dir}/${archive}" || {
+            echo "Download failed. Trying cargo install..."
+            if command -v cargo &> /dev/null; then
+                cargo install omnicode
+            else
+                echo "Install Rust from https://rustup.rs and run: cargo install omnicode"
+            fi
+            rm -rf "$tmp_dir"
+            return
+        }
     else
         echo "Error: Need curl or wget to download"
         exit 1
@@ -93,8 +120,7 @@ install_binary() {
     local binary_path=$(find "$tmp_dir" -name "$binary_name" -type f 2>/dev/null | head -1)
 
     if [ ! -f "$binary_path" ]; then
-        echo "Warning: Binary not found in archive"
-        echo "Installing via cargo instead..."
+        echo "Binary not found. Installing via cargo instead..."
         if command -v cargo &> /dev/null; then
             cargo install omnicode
         else
@@ -110,11 +136,11 @@ install_binary() {
         mkdir -p "$install_dir"
     fi
 
-    cp "$binary_path" "${install_dir}/omnicode"
-    chmod +x "${install_dir}/omnicode"
+    cp "$binary_path" "${install_dir}/omni"
+    chmod +x "${install_dir}/omni"
 
     echo ""
-    echo -e "${GREEN}✓ OmniCode installed to ${install_dir}/omnicode${NC}"
+    echo -e "${GREEN}✓ OmniCode installed to ${install_dir}/omni${NC}"
 
     case ":$PATH:" in
         *:${install_dir}:*) ;;
@@ -143,9 +169,9 @@ echo -e "${GREEN}║       OmniCode installed successfully!   ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════╝${NC}"
 echo ""
 echo "Quick start:"
-echo "  omnicode                # Launch TUI"
-echo "  omnicode serve          # Start web server at http://localhost:9420"
-echo '  omnicode "build my api" # Run an agent task'
-echo "  omnicode --help         # See all commands"
+echo "  omni                    # Launch TUI"
+echo "  omni serve              # Start web server at http://localhost:9420"
+echo '  omni "build my api"     # Run an agent task'
+echo "  omni --help             # See all commands"
 echo ""
 echo "For more info: https://omnicode.ai"

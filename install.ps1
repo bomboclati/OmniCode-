@@ -38,10 +38,10 @@ function Get-LatestVersion {
 function Install-Binary {
     param($Version, $Arch)
 
-    $archive = "OmniCode-v${Version}-windows-x86_64.zip"
+    $archive = "omni-${Version}-windows-x86_64.zip"
     $url = "https://github.com/bomboclati/OmniCode-/releases/download/v${Version}/${archive}"
-    $tmpDir = "$env:TEMP\omnicode-install"
-    $installDir = "$env:LOCALAPPDATA\Programs\omnicode"
+    $tmpDir = "$env:TEMP\omni-install"
+    $installDir = "$env:LOCALAPPDATA\Programs\OmniCode"
 
     New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
     New-Item -ItemType Directory -Path $installDir -Force | Out-Null
@@ -51,18 +51,27 @@ function Install-Binary {
     try {
         Invoke-WebRequest -Uri $url -OutFile "$tmpDir\$archive" -UseBasicParsing
     } catch {
-        Write-Host "Download failed: $_" -ForegroundColor Red
-        Write-Host "Falling back to manual install..."
-        Write-Host ""
-        Write-Host "Please install Rust from https://rustup.rs and run:"
-        Write-Host "  cargo install omnicode"
-        exit 1
+        Write-Host "Download failed. Trying old archive format..." -ForegroundColor Yellow
+        $archiveOld = "OmniCode-v${Version}-windows-x86_64.zip"
+        $urlOld = "https://github.com/bomboclati/OmniCode-/releases/download/v${Version}/${archiveOld}"
+        try {
+            Invoke-WebRequest -Uri $urlOld -OutFile "$tmpDir\$archiveOld" -UseBasicParsing
+            $archive = $archiveOld
+            $url = $urlOld
+        } catch {
+            Write-Host "Download failed. Install via cargo or build from source." -ForegroundColor Red
+            exit 1
+        }
     }
 
     Write-Host "Extracting..."
     Expand-Archive -Path "$tmpDir\$archive" -DestinationPath "$tmpDir\extracted" -Force
 
-    $binaryPath = Get-ChildItem -Path "$tmpDir\extracted" -Recurse -Filter "omnicode.exe" | Select-Object -First 1 -ExpandProperty FullName
+    # Try new binary name first (omni.exe), fall back to old (omnicode.exe)
+    $binaryPath = Get-ChildItem -Path "$tmpDir\extracted" -Recurse -Filter "omni.exe" | Select-Object -First 1 -ExpandProperty FullName
+    if (-not $binaryPath) {
+        $binaryPath = Get-ChildItem -Path "$tmpDir\extracted" -Recurse -Filter "omnicode.exe" | Select-Object -First 1 -ExpandProperty FullName
+    }
 
     if (-not $binaryPath) {
         Write-Host "Binary not found in archive. Installing via cargo instead..." -ForegroundColor Yellow
@@ -77,14 +86,14 @@ function Install-Binary {
         return
     }
 
-    Copy-Item -Path $binaryPath -Destination "$installDir\omnicode.exe" -Force
+    Move-Item -Path $binaryPath -Destination "$installDir\omni.exe" -Force
 
     $desktop = [Environment]::GetFolderPath("Desktop")
     $shortcutPath = "$desktop\OmniCode.lnk"
 
     $wsh = New-Object -ComObject WScript.Shell
     $shortcut = $wsh.CreateShortcut($shortcutPath)
-    $shortcut.TargetPath = "$installDir\omnicode.exe"
+    $shortcut.TargetPath = "$installDir\omni.exe"
     $shortcut.Description = "OmniCode - Autonomous AI Coding Agent"
     $shortcut.WorkingDirectory = "%USERPROFILE%"
     $shortcut.Save()
@@ -105,7 +114,7 @@ function Install-Binary {
 
     Write-Host ""
     Write-Host "✓ OmniCode installed!" -ForegroundColor $Green
-    Write-Host "  Binary: $installDir\omnicode.exe"
+    Write-Host "  Binary: $installDir\omni.exe"
     Write-Host "  Desktop shortcut created."
     Write-Host "  Start menu shortcut created."
 }
@@ -128,10 +137,10 @@ Write-Host @"
 "@ -ForegroundColor $Green
 Write-Host ""
 Write-Host "Quick start:"
-Write-Host "  omnicode                # Launch TUI"
-Write-Host "  omnicode serve          # Start web server"
-Write-Host '  omnicode "build my api" # Run an agent task'
-Write-Host "  omnicode --help         # See all commands"
+Write-Host "  omni                    # Launch TUI"
+Write-Host "  omni serve              # Start web server"
+Write-Host '  omni "build my api"     # Run an agent task'
+Write-Host "  omni --help             # See all commands"
 Write-Host ""
 Write-Host "For more info: https://omnicode.ai"
 Write-Host ""
