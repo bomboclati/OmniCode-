@@ -38,9 +38,9 @@ function Get-LatestVersion {
 function Install-Binary {
     param($Version, $Arch)
 
-    $archive = "omni-${Version}-windows-x86_64.zip"
+    $archive = "OmniCode-v${Version}-windows-x86_64.zip"
     $url = "https://github.com/bomboclati/OmniCode-/releases/download/v${Version}/${archive}"
-    $tmpDir = "$env:TEMP\omni-install"
+    $tmpDir = "$env:TEMP\omnicode-install"
     $installDir = "$env:LOCALAPPDATA\Programs\omnicode"
 
     New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
@@ -59,23 +59,10 @@ function Install-Binary {
         exit 1
     }
 
-    try {
-        $checksumUrl = "${url}.sha256"
-        $checksum = (Invoke-WebRequest -Uri $checksumUrl -UseBasicParsing).Content.Trim()
-        $localHash = (Get-FileHash "$tmpDir\$archive" -Algorithm SHA256).Hash.ToLower()
-        if ($localHash -ne $checksum.ToLower()) {
-            Write-Host "Warning: Checksum mismatch" -ForegroundColor Yellow
-        } else {
-            Write-Host "Checksum verified." -ForegroundColor Green
-        }
-    } catch {
-        Write-Host "Checksum verification skipped" -ForegroundColor Yellow
-    }
-
     Write-Host "Extracting..."
     Expand-Archive -Path "$tmpDir\$archive" -DestinationPath "$tmpDir\extracted" -Force
 
-    $binaryPath = Get-ChildItem -Path "$tmpDir\extracted" -Recurse -Filter "omni.exe" | Select-Object -First 1 -ExpandProperty FullName
+    $binaryPath = Get-ChildItem -Path "$tmpDir\extracted" -Recurse -Filter "omnicode.exe" | Select-Object -First 1 -ExpandProperty FullName
 
     if (-not $binaryPath) {
         Write-Host "Binary not found in archive. Installing via cargo instead..." -ForegroundColor Yellow
@@ -90,14 +77,14 @@ function Install-Binary {
         return
     }
 
-    Copy-Item -Path $binaryPath -Destination "$installDir\omni.exe" -Force
+    Copy-Item -Path $binaryPath -Destination "$installDir\omnicode.exe" -Force
 
     $desktop = [Environment]::GetFolderPath("Desktop")
     $shortcutPath = "$desktop\OmniCode.lnk"
 
     $wsh = New-Object -ComObject WScript.Shell
     $shortcut = $wsh.CreateShortcut($shortcutPath)
-    $shortcut.TargetPath = "$installDir\omni.exe"
+    $shortcut.TargetPath = "$installDir\omnicode.exe"
     $shortcut.Description = "OmniCode - Autonomous AI Coding Agent"
     $shortcut.WorkingDirectory = "%USERPROFILE%"
     $shortcut.Save()
@@ -118,7 +105,7 @@ function Install-Binary {
 
     Write-Host ""
     Write-Host "✓ OmniCode installed!" -ForegroundColor $Green
-    Write-Host "  Binary: $installDir\omni.exe"
+    Write-Host "  Binary: $installDir\omnicode.exe"
     Write-Host "  Desktop shortcut created."
     Write-Host "  Start menu shortcut created."
 }
@@ -141,10 +128,10 @@ Write-Host @"
 "@ -ForegroundColor $Green
 Write-Host ""
 Write-Host "Quick start:"
-Write-Host "  omni                    # Launch TUI"
-Write-Host "  omni serve              # Start web server"
-Write-Host '  omni "build my api"     # Run an agent task'
-Write-Host "  omni --help             # See all commands"
+Write-Host "  omnicode                # Launch TUI"
+Write-Host "  omnicode serve          # Start web server"
+Write-Host '  omnicode "build my api" # Run an agent task'
+Write-Host "  omnicode --help         # See all commands"
 Write-Host ""
 Write-Host "For more info: https://omnicode.ai"
 Write-Host ""

@@ -910,39 +910,17 @@ footer {
 <section id="download" class="section container">
 <div class="section-header reveal">
 <h2>Download</h2>
-<p>Available for Windows, macOS, and Linux.</p>
+<p>Available for Windows and Linux. macOS coming soon.</p>
 </div>
 <div class="download-grid reveal">
 <div class="download-card">
 <h3>Windows</h3>
-<div class="download-method"><code>winget install bomboclati.OmniCode</code><button class="copy-btn" data-cmd="winget install bomboclati.OmniCode">Copy</button></div>
 <div class="download-method"><code>iwr .../install.ps1 | iex</code><button class="copy-btn" data-cmd="iwr https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.ps1 | iex">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-windows-x86_64.zip" data-filename="omni-0.1.0-windows-x86_64.zip" data-progress="dl-win-progress">
-                    <span class="dl-icon">⬇</span> Download EXE (ZIP)
+<div class="download-method"><code>cargo install omnicode</code><button class="copy-btn" data-cmd="cargo install omnicode">Copy</button></div>
+                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/OmniCode-v0.1.0-windows-x86_64.zip" data-filename="OmniCode-v0.1.0-windows-x86_64.zip" data-progress="dl-win-progress">
+                    <span class="dl-icon">⬇</span> Download ZIP
                 </button>
                 <div class="download-progress" id="dl-win-progress">
-                    <span class="dl-status">Starting...</span>
-                    <div class="bar"><div class="bar-fill"></div></div>
-                </div>
-</div>
-<div class="download-card">
-<h3>macOS (Intel)</h3>
-<div class="download-method"><code>curl -sL .../install.sh | bash</code><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-macos-x86_64.tar.gz" data-filename="omni-0.1.0-macos-x86_64.tar.gz" data-progress="dl-mac-intel-progress">
-                    <span class="dl-icon">⬇</span> Download (Intel)
-                </button>
-                <div class="download-progress" id="dl-mac-intel-progress">
-                    <span class="dl-status">Starting...</span>
-                    <div class="bar"><div class="bar-fill"></div></div>
-                </div>
-</div>
-<div class="download-card">
-<h3>macOS (Apple Silicon)</h3>
-<div class="download-method"><code>curl -sL .../install.sh | bash</code><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-macos-aarch64.tar.gz" data-filename="omni-0.1.0-macos-aarch64.tar.gz" data-progress="dl-mac-arm-progress">
-                    <span class="dl-icon">⬇</span> Download (Apple Silicon)
-                </button>
-                <div class="download-progress" id="dl-mac-arm-progress">
                     <span class="dl-status">Starting...</span>
                     <div class="bar"><div class="bar-fill"></div></div>
                 </div>
@@ -951,7 +929,7 @@ footer {
 <h3>Linux</h3>
 <div class="download-method"><code>curl -sL .../install.sh | bash</code><button class="copy-btn" data-cmd="curl -sL https://raw.githubusercontent.com/bomboclati/OmniCode-/main/install.sh | bash">Copy</button></div>
 <div class="download-method"><code>cargo install omnicode</code><button class="copy-btn" data-cmd="cargo install omnicode">Copy</button></div>
-                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/omni-0.1.0-linux-x86_64.tar.gz" data-filename="omni-0.1.0-linux-x86_64.tar.gz" data-progress="dl-linux-progress">
+                <button class="download-btn" data-url="https://github.com/bomboclati/OmniCode-/releases/download/v0.1.0/OmniCode-0.1.0-linux-x86_64.tar.gz" data-filename="OmniCode-0.1.0-linux-x86_64.tar.gz" data-progress="dl-linux-progress">
                     <span class="dl-icon">⬇</span> Download tar.gz
                 </button>
                 <div class="download-progress" id="dl-linux-progress">

@@ -52,19 +52,23 @@ install_binary() {
 
     if [ "$os" = "windows" ]; then
         local ext="zip"
-        local binary_name="omni.exe"
-    else
+        local binary_name="omnicode.exe"
+        local archive="OmniCode-v${version}-${os}-${arch}.zip"
+    elif [ "$os" = "linux" ]; then
         local ext="tar.gz"
-        local binary_name="omni"
-    fi
-
-    if [ "$os" = "macos" ]; then
-        local platform="macos"
+        local binary_name="omnicode"
+        local archive="OmniCode-${version}-${os}-${arch}.tar.gz"
     else
-        local platform="$os"
+        echo "No pre-built binary for $os/$arch"
+        echo "Installing via cargo instead..."
+        if command -v cargo &> /dev/null; then
+            cargo install omnicode
+        else
+            echo "Install Rust from https://rustup.rs and run: cargo install omnicode"
+        fi
+        return
     fi
 
-    local archive="omni-${version}-${platform}-${arch}.${ext}"
     local url="https://github.com/bomboclati/OmniCode-/releases/download/v${version}/${archive}"
     local tmp_dir="/tmp/omni-${RANDOM}"
 
@@ -106,11 +110,11 @@ install_binary() {
         mkdir -p "$install_dir"
     fi
 
-    cp "$binary_path" "${install_dir}/${binary_name}"
-    chmod +x "${install_dir}/${binary_name}"
+    cp "$binary_path" "${install_dir}/omnicode"
+    chmod +x "${install_dir}/omnicode"
 
     echo ""
-    echo -e "${GREEN}✓ OmniCode installed to ${install_dir}/${binary_name}${NC}"
+    echo -e "${GREEN}✓ OmniCode installed to ${install_dir}/omnicode${NC}"
 
     case ":$PATH:" in
         *:${install_dir}:*) ;;
@@ -139,9 +143,9 @@ echo -e "${GREEN}║       OmniCode installed successfully!   ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════╝${NC}"
 echo ""
 echo "Quick start:"
-echo "  omni                    # Launch TUI"
-echo "  omni serve              # Start web server at http://localhost:9420"
-echo '  omni "build my api"     # Run an agent task'
-echo "  omni --help             # See all commands"
+echo "  omnicode                # Launch TUI"
+echo "  omnicode serve          # Start web server at http://localhost:9420"
+echo '  omnicode "build my api" # Run an agent task'
+echo "  omnicode --help         # See all commands"
 echo ""
 echo "For more info: https://omnicode.ai"
